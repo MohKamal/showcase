@@ -1,6 +1,7 @@
 <?php
 namespace Facade\Utils\HTTP\Links{
     use \Facade\AutoLoad;
+    use \Facade\Utils\IO\Debug\Log;
 
     class URL
     {
@@ -19,7 +20,7 @@ namespace Facade\Utils\HTTP\Links{
                 }
             }
             if($url) {
-                header("Location: ".$url);
+                header("Location: " . URL::BASE() . $url);
             } else {
                 header("Location: ".$_SERVER['HTTP_REFERER']);
             }
@@ -34,7 +35,8 @@ namespace Facade\Utils\HTTP\Links{
         {
             if (headers_sent() === false)
             {
-                header('Location: ' . $url, true, ($permanent === true) ? 301 : 302);
+                Log::print($url);
+                header('Location: ' . URL::BASE() . $url, true, ($permanent === true) ? 301 : 302);
             }
 
             exit();

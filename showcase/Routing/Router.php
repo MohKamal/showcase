@@ -23,7 +23,7 @@ namespace Facade\Routing {
       public function __call($name, $args)
       {
           list($route, $method) = $args;
-          $route = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '~', '', $route);
+          $route = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '/public~', '', $route);
           if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
               $this->invalidMethodHandler();
           }
@@ -36,8 +36,8 @@ namespace Facade\Routing {
        */
       private function formatRoute($route)
       {
-            $result = rtrim($route, AutoLoad::env('APP_SUBFOLDER'));
-            $result = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '~', '', $result);
+            $result = rtrim($route, AutoLoad::env('APP_SUBFOLDER') . '/public');
+            $result = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '/public~', '', $result);
             if ($result === '') {
                 return '/';
             }
@@ -60,7 +60,7 @@ namespace Facade\Routing {
       public function resolve()
       {
           $methodDictionary = $this->{strtolower($this->request->requestMethod)};
-          $formatedRoute = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '~', '', $this->formatRoute($this->request->requestUri));
+          $formatedRoute = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '/public~', '', $this->formatRoute($this->request->requestUri));
           Log::print($formatedRoute);
           if (!array_key_exists($formatedRoute, $methodDictionary)) {
               $this->defaultRequestHandler();
@@ -68,9 +68,7 @@ namespace Facade\Routing {
           }
 
           $method = $methodDictionary[$formatedRoute];
-          //var_dump($method);
-          //var_dump($this->request);
-          //echo call_user_func_array($method, array($this->request));
+          echo call_user_func_array($method, array($this->request));
       }
       public function __destruct()
       {

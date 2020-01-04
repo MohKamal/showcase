@@ -4,7 +4,7 @@ namespace Facade\Routing{
    * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
    */
   use \Facade\Utils\IO\Debug\Log;
-  include_once 'IRequest.php';
+  use \Facade\Routing\IRequest;
 
   class Request implements IRequest
   {
@@ -23,7 +23,6 @@ namespace Facade\Routing{
       private function toCamelCase($string)
       {
           $result = strtolower($string);
-          
           preg_match_all('/_[a-z]/', $result, $matches);
           foreach ($matches[0] as $match) {
               $c = str_replace('_', '', strtoupper($match));

@@ -3,7 +3,7 @@
  * More at : https://medium.com/@hfally/how-to-create-an-environment-variable-file-like-laravel-symphonys-env-37c20fc23e72
  */
 namespace Facade{
-    require_once 'env.php';
+    include_once 'env.php';
     class AutoLoad {
 
         static function env($key, $default = null){
