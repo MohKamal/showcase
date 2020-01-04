@@ -3,18 +3,19 @@
 namespace Showcase{
   /******************************************
    * 
+   * 
+   * 
+   * 
    *  Silence is a friend who never betrays.
    * 
+   * 
+   * 
+   * 
    *******************************************/
-  require_once '../autoload.php';
-  require_once '../Framwork/Initializer/AppSetting.php';
 
-  use \Showcase\Framwork\Initializer\AppSetting;
-  use \Showcase\AutoLoad;
 
-  AppSetting::Init();
-  AutoLoad::register();
+  require_once '../Framwork/Core/Showcase.php';
+  use \Showcase\Framwork\Core\Showcase;
 
-  require_once '../Framwork/HTTP/Routing/web.php';
-
+  Showcase::HakunaMatata();
 }

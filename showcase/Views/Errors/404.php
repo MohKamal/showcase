@@ -4,7 +4,7 @@ require '../../autoload.php';
 use \Showcase\Framwork\Initializer\AutoLoad;
 use \Showcase\Framwork\HTTP\Links\URL;
 
-AutoLoad::register();
+
 ?>
 
 <!DOCTYPE html>

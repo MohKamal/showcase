@@ -7,7 +7,7 @@ use \Showcase\Models\User;
 use \Showcase\Models\Degree;
 use \Showcase\Framwork\HTTP\Links\URL;
 
-AutoLoad::register();
+
 ?>
 
 <!DOCTYPE html>

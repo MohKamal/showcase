@@ -17,6 +17,12 @@ namespace Showcase {
     use \Showcase\Framwork\HTTP\Links\URL;
     use \Showcase\Models\User;
 
-    $router = new Router(new Request);
-    include_once(dirname(__FILE__) . '\..\..\..\route\web.php');
+    class Route{
+
+        private $router;
+
+        public static function Run(){
+            $router  = new Router(new Request);
+        }
+    }
 }

@@ -2,8 +2,9 @@
 namespace Showcase\Framwork\HTTP\Gards{
     use \Showcase\AutoLoad;
 
+    session_start(); //if you are copying this code, this line makes it work.
+    
     class csrf{ 
-        session_start(); //if you are copying this code, this line makes it work.
 
         function store_in_session($key,$value)
         {
@@ -92,6 +93,5 @@ namespace Showcase\Framwork\HTTP\Gards{
                 Notice: Use of undefined constant csrfguard_inject - assumed 'csrfguard_inject' */
             register_shutdown_function("csrfguard_inject");	
         }
-        csrfguard_start();
     }
 }

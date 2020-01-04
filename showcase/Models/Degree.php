@@ -5,7 +5,7 @@ namespace Showcase\Models{
     use \Showcase\Framwork\Session\SessionAlert;
     use \Exception;
 
-    AutoLoad::register();
+    
 
     class Degree
     {

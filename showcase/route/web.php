@@ -5,60 +5,71 @@
  * Routes for routing between requests
  */
 
-namespace Showcase {
+namespace Showcase\route {
+    require_once dirname(__FILE__) . '\..\Framwork\HTTP\Routing\Route.php';
 
-    $router->get('/', function () {
-        return URL::Redirect('login');
-    });
+    use \Showcase\Framwork\HTTP\Routing\Route;
 
-    //App Main Page
-    $router->get('/user-space', function () {
-        HomeController::Dashboard();
-    });
+    class Web extends Route{
 
-    //Authentification and registration
-    $router->get('/login', function () {
-        if (User::Current() != null)
-            return URL::Redirect('user-space');
-        else
-            return URL::Redirect('views/Auth/login.php');
-    });
+        function run(){
+            $router->get('/', function () {
+                return URL::Redirect('login');
+            });
 
-    $router->post('/auth',  function ($request) {
-        LoginController::Auth($request);
-    });
+            //App Main Page
+            $router->get('/user-space', function () {
+                HomeController::Dashboard();
+            });
 
-    $router->get('/register', function () {
-        return URL::Redirect('views/Auth/register.php');
-    });
+            //Authentification and registration
+            $router->get('/login', function () {
+                if (User::Current() != null) {
+                    return URL::Redirect('user-space');
+                } else {
+                    return URL::Redirect('views/Auth/login.php');
+                }
+            });
 
-    $router->post('/newregister',  function ($request) {
-        UserController::store($request);
-    });
+            $router->post('/auth', function ($request) {
+                LoginController::Auth($request);
+            });
 
-    $router->get('/logout',  function ($request) {
-        LoginController::logout();
-    });
+            $router->get('/register', function () {
+                return URL::Redirect('views/Auth/register.php');
+            });
 
-    //Error Pages
+            $router->post('/newregister', function ($request) {
+                UserController::store($request);
+            });
 
-    $router->get('/errors/404', function () {
-        return URL::Redirect('views/Errors/404.php');
-    });
+            $router->get('/logout', function ($request) {
+                LoginController::logout();
+            });
 
-    $router->get('/errors/500', function () {
-        return URL::Redirect('views/Errors/500.php');
-    });
+            //Error Pages
 
-    //Data Exchange
+            $router->get('/errors/404', function () {
+                return URL::Redirect('views/Errors/404.php');
+            });
 
-    //Degree
+            $router->get('/errors/500', function () {
+                return URL::Redirect('views/Errors/500.php');
+            });
 
-    $router->post('/degree/create',  function ($request) {
-        DegreeController::store($request);
-    });
+            //Data Exchange
 
-    $router->post('/degree/update',  function ($request) {
-        DegreeController::update($request);
-    });
+            //Degree
+
+            $router->post('/degree/create', function ($request) {
+                DegreeController::store($request);
+            });
+
+            $router->post('/degree/update', function ($request) {
+                DegreeController::update($request);
+            });
+        }
+    }
 }
+
+?>

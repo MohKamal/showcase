@@ -20,15 +20,15 @@ namespace Showcase\Framwork\Initializer{
             putenv("$key=$value");
         }
 
-        $string = file_get_contents(dirname(__FILE__) . "\..\..\appsettings.json");
-        if ($string === false) {
+        $_variables = file_get_contents(dirname(__FILE__) . "\..\..\appsettings.json");
+        if ($_variables === false) {
           Log::print("appsetting.json file was not found, create one from the example file.");
         }else{
-          $json_a = json_decode($string, true);
-          if ($json_a === null) {
+          $json_variables = json_decode($_variables, true);
+          if ($json_variables === null) {
             Log::print("appsetting.json file has error(s), please check the file or delete it and create another one from the example file.");
           }else{
-              foreach ($json_a as $key => $value) {
+              foreach ($json_variables as $key => $value) {
                   putenv("$key=$value");
             }
           }
