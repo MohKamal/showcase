@@ -1,7 +1,7 @@
 <?php
-namespace Facade\Utils\IO\Debug {
-    use \Facade\AutoLoad;
-    use \Facade\Models\User;
+namespace Showcase\Framwork\IO\Debug {
+    use \Showcase\AutoLoad;
+    use \Showcase\Models\User;
     
     class Log
     {

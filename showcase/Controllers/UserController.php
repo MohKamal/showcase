@@ -1,11 +1,11 @@
 <?php
 
-namespace Facade\Controllers{
+namespace Showcase\Controllers{
 
-    use \Facade\AutoLoad;
-    use \Facade\Utils\Validation\Validator;
-    use \Facade\Utils\HTTP\Links\URL;
-    use \Facade\Models\User;
+    use \Showcase\AutoLoad;
+    use \Showcase\Framwork\Validation\Validator;
+    use \Showcase\Framwork\HTTP\Links\URL;
+    use \Showcase\Models\User;
     
     class UserController{
         

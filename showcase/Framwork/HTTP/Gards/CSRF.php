@@ -1,6 +1,6 @@
 <?php
-namespace Facade\Utils\HTTP\Gards{
-    use \Facade\AutoLoad;
+namespace Showcase\Framwork\HTTP\Gards{
+    use \Showcase\AutoLoad;
 
     class csrf{ 
         session_start(); //if you are copying this code, this line makes it work.

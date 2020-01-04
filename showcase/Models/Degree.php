@@ -1,8 +1,8 @@
 <?php
-namespace Facade\Models{
-    use Facade\Utils\IO\CSVHandler;
-    use \Facade\AutoLoad;
-    use \Facade\Utils\Session\SessionAlert;
+namespace Showcase\Models{
+    use Showcase\Framwork\IO\CSVHandler;
+    use \Showcase\AutoLoad;
+    use \Showcase\Framwork\Session\SessionAlert;
     use \Exception;
 
     AutoLoad::register();

@@ -1,9 +1,9 @@
 <?php
-namespace Facade\Views\App;
+namespace Showcase\Views\App;
 require '../../autoload.php';
-use \Facade\AutoLoad;
-use \Facade\Utils\Session\SessionAlert;
-use \Facade\Utils\HTTP\Links\URL;
+use \Showcase\Framwork\Initializer\AutoLoad;
+use \Showcase\Framwork\Session\SessionAlert;
+use \Showcase\Framwork\HTTP\Links\URL;
 
 AutoLoad::register();
 ?>

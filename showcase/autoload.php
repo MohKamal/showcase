@@ -2,8 +2,9 @@
 /**
  * More at : https://medium.com/@hfally/how-to-create-an-environment-variable-file-like-laravel-symphonys-env-37c20fc23e72
  */
-namespace Facade{
-    include_once 'env.php';
+namespace Showcase{
+    use \Showcase\Initializer\AppSetting;
+    
     class AutoLoad {
 
         static function env($key, $default = null){

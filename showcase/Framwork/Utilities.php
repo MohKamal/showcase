@@ -1,5 +1,5 @@
 <?php
-namespace Facade\Util\Vendor{
+namespace Showcase\Util\Vendor{
     class Utilities{
         /**
          * Make random string

@@ -1,8 +1,8 @@
 <?php
-namespace Facade\Views\Errors;
+namespace Showcase\Views\Errors;
 require '../../autoload.php';
-use \Facade\AutoLoad;
-use \Facade\Utils\HTTP\Links\URL;
+use \Showcase\Framwork\Initializer\AutoLoad;
+use \Showcase\Framwork\HTTP\Links\URL;
 
 AutoLoad::register();
 ?>

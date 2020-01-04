@@ -1,7 +1,7 @@
 <?php
-namespace Facade\Models{
-    use Facade\Utils\IO\CSVHandler;
-    use \Facade\AutoLoad;
+namespace Showcase\Models{
+    use Showcase\Framwork\IO\CSVHandler;
+    use \Showcase\AutoLoad;
     use \Exception;
     
     class User

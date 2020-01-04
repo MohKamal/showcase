@@ -4,11 +4,10 @@ A micro mini php framework to make one page or no back-end web site, like a pres
 <h2>Routes</h2>
 <code>    
     $router->get('/path', function () {
-        //Code to exectue
+        /* Code to execute */
         return URL::Redirect('login');
-        //Another
+        /* Another */
         HomeController::Home();
-
     });
 
     $router->post('/path',  function ($request) {

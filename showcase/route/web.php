@@ -5,25 +5,7 @@
  * Routes for routing between requests
  */
 
-namespace Facade {
-
-    use \Facade\AutoLoad;
-    use \Facade\Routing\Router;
-    use \Facade\Routing\Request;
-    use \Facade\Utils\Validation\Validator;
-    use \Facade\Controllers\DegreeController;
-    use \Facade\Controllers\UserController;
-    use \Facade\Controllers\LoginController;
-    use \Facade\Controllers\HomeController;
-    use \Facade\Utils\HTTP\Links\URL;
-    use \Facade\Models\User;
-
-    AutoLoad::register();
-
-
-    $router = new Router(new Request);
-
-    // Home
+namespace Showcase {
 
     $router->get('/', function () {
         return URL::Redirect('login');
@@ -35,7 +17,6 @@ namespace Facade {
     });
 
     //Authentification and registration
-
     $router->get('/login', function () {
         if (User::Current() != null)
             return URL::Redirect('user-space');

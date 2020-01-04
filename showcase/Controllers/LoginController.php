@@ -1,12 +1,12 @@
 <?php
 
-namespace Facade\Controllers{
+namespace Showcase\Controllers{
 
-    use \Facade\AutoLoad;
-    use \Facade\Utils\HTTP\Links\URL;
-    use \Facade\Models\User;
-    use \Facade\Utils\Session\SessionAlert;
-    use \Facade\Utils\Validation\Validator;
+    use \Showcase\AutoLoad;
+    use \Showcase\Framwork\HTTP\Links\URL;
+    use \Showcase\Models\User;
+    use \Showcase\Framwork\Session\SessionAlert;
+    use \Showcase\Framwork\Validation\Validator;
     
     class LoginController{
 

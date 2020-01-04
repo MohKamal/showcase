@@ -2,7 +2,7 @@
 /**
  * More at : https://medium.com/@hfally/how-to-create-an-environment-variable-file-like-laravel-symphonys-env-37c20fc23e72
  */
-namespace Facade{
+namespace Showcase{
   $variables = [
     'APP_NAME' => 'Showcase',
     'APP_KEY' => '937a4a8c13e317dfd28effdd479cad2f',

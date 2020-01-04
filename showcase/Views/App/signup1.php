@@ -1,9 +1,9 @@
 <?php 
-namespace Facade\Views\App;
+namespace Showcase\Views\App;
 require "calcule.php";
-use \Facade\AutoLoad;
-use \Facade\Models\User;
-use \Facade\Models\Degree;
+use \Showcase\Framwork\Initializer\AutoLoad;
+use \Showcase\Models\User;
+use \Showcase\Models\Degree;
 
 $name = User::Current()->username;
 $degree = Degree::getByEmail(User::Current()->email);

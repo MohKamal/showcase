@@ -1,7 +1,7 @@
 <?php
-namespace Facade\Utils\HTTP\Links{
-    use \Facade\AutoLoad;
-    use \Facade\Utils\IO\Debug\Log;
+namespace Showcase\Framwork\HTTP\Links{
+    use \Showcase\AutoLoad;
+    use \Showcase\Framwork\IO\Debug\Log;
 
     class URL
     {

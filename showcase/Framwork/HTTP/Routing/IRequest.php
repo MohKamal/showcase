@@ -1,5 +1,5 @@
 <?php
-namespace Facade\Routing{
+namespace Showcase\Framwork\HTTP\Routing{
     /**
      * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
      */

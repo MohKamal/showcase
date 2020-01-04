@@ -1,6 +1,6 @@
 <?php
-namespace Facade\Utils\Views{
-    use \Facade\AutoLoad;
+namespace Showcase\Framwork\Views{
+    use \Showcase\AutoLoad;
     
     class View
     {
