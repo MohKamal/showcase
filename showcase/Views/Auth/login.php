@@ -1,7 +1,8 @@
 <?php
-namespace Showcase\Views\App;
-require '../../autoload.php';
-use \Showcase\Framwork\Initializer\AutoLoad;
+namespace Showcase\Views\Auth;
+require_once dirname(__FILE__) . '\..\..\Framwork\HTTP\Links\URL.php';
+require_once dirname(__FILE__) . '\..\..\autoload.php';
+use \Showcase\AutoLoad;
 use \Showcase\Framwork\Session\SessionAlert;
 use \Showcase\Framwork\HTTP\Links\URL;
 
