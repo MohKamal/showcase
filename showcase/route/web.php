@@ -21,11 +21,6 @@ namespace Showcase {
 
     
     $router->get('/', function () {
-        return URL::Redirect('login');
-    });
-
-    //App Main Page
-    $router->get('/user-space', function () {
         HomeController::dashboard();
     });
 
