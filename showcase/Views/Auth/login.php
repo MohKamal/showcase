@@ -1,8 +1,5 @@
 <?php
 namespace Showcase\Views\Auth;
-//require_once dirname(__FILE__) . '\..\..\Framework\HTTP\Links\URL.php';
-//require_once dirname(__FILE__) . '\..\..\Framework\Session\SessionAlert.php';
-//require_once dirname(__FILE__) . '\..\..\autoload.php';
 
 use \Showcase\AutoLoad;
 use \Showcase\Framework\Session\SessionAlert;

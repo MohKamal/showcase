@@ -12,7 +12,7 @@ namespace Showcase\Framework\Initializer{
         'RES_FOLDER' => dirname(__FILE__) . '\..\..\ressources',
         'LOG_FOLDER' => dirname(__FILE__) . '\..\..\Storage\logs',
         'RESOURCES' => dirname(__FILE__) .  '\..\..\ressources',
-        'VIEW' => 'views/',
+        'VIEW' => dirname(__FILE__) .  '\..\..\views/',
         'ROUTE_FOLDER' => 'route/',
       ];
     

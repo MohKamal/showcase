@@ -1,6 +1,6 @@
 <?php
 namespace Showcase\Views\App;
-require '../../autoload.php';
+
 use \Showcase\Framework\Initializer\AutoLoad;
 use \Showcase\Framework\Session\SessionAlert;
 use \Showcase\Models\User;

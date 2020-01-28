@@ -14,10 +14,6 @@ namespace Showcase{
       'APP_URL' => 'http://localhost/showcase/public/',
       'APP_SUBFOLDER' => '/showcase/public',
       'APP_ENV' => 'local',
-      'RES_FOLDER' => dirname(__FILE__) . '\ressources',
-      'LOG_FOLDER' => dirname(__FILE__) . '\Storage\logs',
-      'RESOURCES' => '/ressources/',
-      'VIEW' => 'Views/',
       'ROUTE_FOLDER' => 'route/',
   ];
   

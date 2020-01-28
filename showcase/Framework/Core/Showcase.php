@@ -1,7 +1,7 @@
 <?php
 namespace Showcase\Framework\Core{
-    require_once '\..\..\autoload.php';
-    require_once '\..\Initializer\AppSetting.php';
+    require_once dirname(__FILE__) . '\..\..\autoload.php';
+    require_once dirname(__FILE__) . '\..\Initializer\AppSetting.php';
     
     use \Showcase\AutoLoad;
 
