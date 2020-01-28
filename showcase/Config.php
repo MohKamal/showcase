@@ -17,7 +17,7 @@ namespace Showcase{
       'RES_FOLDER' => dirname(__FILE__) . '\ressources',
       'LOG_FOLDER' => dirname(__FILE__) . '\Storage\logs',
       'RESOURCES' => '/ressources/',
-      'VIEW' => 'views/',
+      'VIEW' => 'Views/',
       'ROUTE_FOLDER' => 'route/',
   ];
   

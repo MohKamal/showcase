@@ -18,4 +18,5 @@ namespace Showcase{
   use \Showcase\Framework\Core\Showcase;
 
   Showcase::HakunaMatata();
+  
 }

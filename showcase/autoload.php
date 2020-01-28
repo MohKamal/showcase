@@ -4,7 +4,7 @@
  * Last version : https://stackoverflow.com/questions/5280347/autoload-classes-from-different-folders
  */
 namespace Showcase{
-    require_once 'env.php';
+    require_once 'Config.php';
     class AutoLoad {
 
         static function env($key, $default = null){
