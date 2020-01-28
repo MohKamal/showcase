@@ -1,8 +1,8 @@
 <?php
 namespace Showcase\Models{
-    use Showcase\Framwork\IO\CSVHandler;
+    use Showcase\Framework\IO\CSVHandler;
     use \Showcase\AutoLoad;
-    use \Showcase\Framwork\Session\SessionAlert;
+    use \Showcase\Framework\Session\SessionAlert;
     use \Exception;
 
     

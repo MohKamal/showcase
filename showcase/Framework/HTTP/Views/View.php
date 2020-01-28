@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Framwork\Views{
+namespace Showcase\Framework\Views{
     use \Showcase\AutoLoad;
     
     class View

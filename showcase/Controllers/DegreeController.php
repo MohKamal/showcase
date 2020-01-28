@@ -2,8 +2,8 @@
 namespace Showcase\Controllers{
     
     use \Showcase\AutoLoad;
-    use \Showcase\Framwork\Validation\Validator;
-    use \Showcase\Framwork\HTTP\Links\URL;
+    use \Showcase\Framework\Validation\Validator;
+    use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Models\Degree;
     use \Showcase\Models\User;
     

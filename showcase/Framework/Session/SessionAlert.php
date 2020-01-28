@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Framwork\Session{
+namespace Showcase\Framework\Session{
     
     class SessionAlert{
         /**

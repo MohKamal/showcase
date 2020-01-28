@@ -1,11 +1,11 @@
 <?php
 namespace Showcase\Views\App;
 require '../../autoload.php';
-use \Showcase\Framwork\Initializer\AutoLoad;
-use \Showcase\Framwork\Session\SessionAlert;
+use \Showcase\Framework\Initializer\AutoLoad;
+use \Showcase\Framework\Session\SessionAlert;
 use \Showcase\Models\User;
 use \Showcase\Models\Degree;
-use \Showcase\Framwork\HTTP\Links\URL;
+use \Showcase\Framework\HTTP\Links\URL;
 
 
 ?>

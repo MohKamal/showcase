@@ -1,7 +1,10 @@
 <?php
-namespace Showcase\Framwork\HTTP\Links{
+namespace Showcase\Framework\HTTP\Links{
+
+    require_once dirname(__FILE__) . '\..\..\IO\Debug\Log.php';
+
     use \Showcase\AutoLoad;
-    use \Showcase\Framwork\IO\Debug\Log;
+    use \Showcase\Framework\IO\Debug\Log;
 
     class URL
     {
@@ -62,6 +65,8 @@ namespace Showcase\Framwork\HTTP\Links{
             if(AutoLoad::env('APP_SUBFOLDER') != null)
                 $assets = AutoLoad::env('APP_SUBFOLDER') . '/';
             
+            Log::print("SubFolder : " . AutoLoad::env('APP_SUBFOLDER'));
+            Log::print("Ressources folder : " . AutoLoad::env('RESOURCES'));
             return $assets . AutoLoad::env('RESOURCES');
         }
 

@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Framwork\Validation{
+namespace Showcase\Framework\Validation{
     class Validator
     {
 

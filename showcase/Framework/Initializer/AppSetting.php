@@ -2,8 +2,8 @@
 /**
  * More at : https://medium.com/@hfally/how-to-create-an-environment-variable-file-like-laravel-symphonys-env-37c20fc23e72
  */
-namespace Showcase\Framwork\Initializer{
-  use \Showcase\Framwork\IO\Debug\Log;
+namespace Showcase\Framework\Initializer{
+  use \Showcase\Framework\IO\Debug\Log;
   
   class AppSetting{
 
@@ -11,7 +11,7 @@ namespace Showcase\Framwork\Initializer{
         $variables = [
         'RES_FOLDER' => dirname(__FILE__) . '\..\..\ressources',
         'LOG_FOLDER' => dirname(__FILE__) . '\..\..\Storage\logs',
-        'RESOURCES' => dirname(__FILE__) .  '\..\..\ressources\\',
+        'RESOURCES' => dirname(__FILE__) .  '\..\..\ressources',
         'VIEW' => 'views/',
         'ROUTE_FOLDER' => 'route/',
       ];

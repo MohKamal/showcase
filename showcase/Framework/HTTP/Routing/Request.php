@@ -1,10 +1,10 @@
 <?php
-namespace Showcase\Framwork\HTTP\Routing{
+namespace Showcase\Framework\HTTP\Routing{
   /**
    * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
    */
-  use \Showcase\Framwork\IO\Debug\Log;
-  use \Showcase\Framwork\HTTP\Routing\IRequest;
+  use \Showcase\Framework\IO\Debug\Log;
+  use \Showcase\Framework\HTTP\Routing\IRequest;
 
   class Request implements IRequest
   {

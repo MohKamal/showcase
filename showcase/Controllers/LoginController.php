@@ -3,10 +3,10 @@
 namespace Showcase\Controllers{
 
     use \Showcase\AutoLoad;
-    use \Showcase\Framwork\HTTP\Links\URL;
+    use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Models\User;
-    use \Showcase\Framwork\Session\SessionAlert;
-    use \Showcase\Framwork\Validation\Validator;
+    use \Showcase\Framework\Session\SessionAlert;
+    use \Showcase\Framework\Validation\Validator;
     
     class LoginController{
 

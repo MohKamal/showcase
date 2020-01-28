@@ -1,8 +1,8 @@
 <?php
 namespace Showcase\Views\Errors;
 require '../../autoload.php';
-use \Showcase\Framwork\Initializer\AutoLoad;
-use \Showcase\Framwork\HTTP\Links\URL;
+use \Showcase\Framework\Initializer\AutoLoad;
+use \Showcase\Framework\HTTP\Links\URL;
 
 
 ?>

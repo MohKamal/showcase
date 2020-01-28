@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Framwork\HTTP\Gards{
+namespace Showcase\Framework\HTTP\Gards{
     use \Showcase\AutoLoad;
 
     session_start(); //if you are copying this code, this line makes it work.

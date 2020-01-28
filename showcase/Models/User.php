@@ -1,6 +1,6 @@
 <?php
 namespace Showcase\Models{
-    use Showcase\Framwork\IO\CSVHandler;
+    use Showcase\Framework\IO\CSVHandler;
     use \Showcase\AutoLoad;
     use \Exception;
     

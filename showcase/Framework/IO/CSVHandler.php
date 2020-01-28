@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Framwork\IO {
+namespace Showcase\Framework\IO {
     
     class CSVHandler{
 

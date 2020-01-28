@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Framwork\IO\Debug {
+namespace Showcase\Framework\IO\Debug {
     use \Showcase\AutoLoad;
     use \Showcase\Models\User;
     

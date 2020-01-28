@@ -1,7 +1,7 @@
 <?php 
 namespace Showcase\Views\App;
 require "calcule.php";
-use \Showcase\Framwork\Initializer\AutoLoad;
+use \Showcase\Framework\Initializer\AutoLoad;
 use \Showcase\Models\User;
 use \Showcase\Models\Degree;
 

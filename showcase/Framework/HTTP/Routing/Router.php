@@ -1,10 +1,10 @@
 <?php
 
-namespace Showcase\Framwork\HTTP\Routing {
+namespace Showcase\Framework\HTTP\Routing {
 
     use \Showcase\AutoLoad;
-    use \Showcase\Framwork\HTTP\Links\URL;
-    use \Showcase\Framwork\IO\Debug\Log;
+    use \Showcase\Framework\HTTP\Links\URL;
+    use \Showcase\Framework\IO\Debug\Log;
 
     /**
      * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241

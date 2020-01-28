@@ -14,8 +14,8 @@ namespace Showcase{
    *******************************************/
 
 
-  require_once '../Framwork/Core/Showcase.php';
-  use \Showcase\Framwork\Core\Showcase;
+  require_once '../Framework/Core/Showcase.php';
+  use \Showcase\Framework\Core\Showcase;
 
   Showcase::HakunaMatata();
 }

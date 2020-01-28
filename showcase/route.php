@@ -1,24 +1,28 @@
 <?php
+
 /**
  * Require all file
  * Routes for routing between requests
  */
 
 namespace Showcase {
-
-    use \Showcase\Framework\HTTP\Routing\Router;
-    use \Showcase\Framework\HTTP\Routing\Request;
-    use \Showcase\Framework\Validation\Validator;
-    use \Showcase\Framework\HTTP\Links\URL;
-    use \Showcase\Controllers\DegreeController;
-    use \Showcase\Controllers\UserController;
-    use \Showcase\Controllers\LoginController;
-    use \Showcase\Controllers\HomeController;
-    use \Showcase\Models\User;
-
-    $router  = new Router(new Request);
-
     
+    AutoLoad::register();
+
+    use \Showcase\Framework\AutoLoad;
+    use \Showcase\Framework\Routing\Router;
+    use \Showcase\Framework\Routing\Request;
+    use \Showcase\Framework\Showcase\Validation\Validator;
+    use \Showcase\Framework\Controllers\DegreeController;
+    use \Showcase\Framework\Controllers\UserController;
+    use \Showcase\Framework\Controllers\LoginController;
+    use \Showcase\Framework\Controllers\HomeController;
+    use \Showcase\Framework\Showcase\HTTP\Links\URL;
+    use \Showcase\Framework\Models\User;
+
+    $router = new Router(new Request);
+
+    // Home
     $router->get('/', function () {
         return URL::Redirect('login');
     });
@@ -29,15 +33,15 @@ namespace Showcase {
     });
 
     //Authentification and registration
+
     $router->get('/login', function () {
-        if (User::Current() != null) {
+        if (User::Current() != null)
             return URL::Redirect('user-space');
-        } else {
+        else
             return URL::Redirect('views/Auth/login.php');
-        }
     });
 
-    $router->post('/auth', function ($request) {
+    $router->post('/auth',  function ($request) {
         LoginController::Auth($request);
     });
 
@@ -45,11 +49,11 @@ namespace Showcase {
         return URL::Redirect('views/Auth/register.php');
     });
 
-    $router->post('/newregister', function ($request) {
+    $router->post('/newregister',  function ($request) {
         UserController::store($request);
     });
 
-    $router->get('/logout', function ($request) {
+    $router->get('/logout',  function ($request) {
         LoginController::logout();
     });
 
@@ -67,13 +71,11 @@ namespace Showcase {
 
     //Degree
 
-    $router->post('/degree/create', function ($request) {
+    $router->post('/degree/create',  function ($request) {
         DegreeController::store($request);
     });
 
-    $router->post('/degree/update', function ($request) {
+    $router->post('/degree/update',  function ($request) {
         DegreeController::update($request);
     });
 }
-
-?>
