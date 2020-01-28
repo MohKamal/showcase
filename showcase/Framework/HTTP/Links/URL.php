@@ -1,8 +1,6 @@
 <?php
 namespace Showcase\Framework\HTTP\Links{
 
-    require_once dirname(__FILE__) . '\..\..\IO\Debug\Log.php';
-
     use \Showcase\AutoLoad;
     use \Showcase\Framework\IO\Debug\Log;
 
@@ -57,17 +55,11 @@ namespace Showcase\Framework\HTTP\Links{
          * Get base Url
          */
         static function BASE(){
-            return AutoLoad::env('APP_URL');
+            return rtrim(AutoLoad::env('APP_URL'), '/');
         }
 
         static function assets(){
-            $assets = '';
-            if(AutoLoad::env('APP_SUBFOLDER') != null)
-                $assets = AutoLoad::env('APP_SUBFOLDER') . '/';
-            
-            Log::print("SubFolder : " . AutoLoad::env('APP_SUBFOLDER'));
-            Log::print("Ressources folder : " . AutoLoad::env('RESOURCES'));
-            return $assets . AutoLoad::env('RESOURCES');
+            return str_replace('/public', '', rtrim(AutoLoad::env('APP_URL'), '/') . '/' . AutoLoad::env('RESOURCES'));
         }
 
     }

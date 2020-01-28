@@ -10,10 +10,7 @@ namespace Showcase\Framework\Initializer{
     public static function Init(){
         $variables = [
         'RES_FOLDER' => dirname(__FILE__) . '\..\..\ressources',
-        'LOG_FOLDER' => dirname(__FILE__) . '\..\..\Storage\logs',
-        'RESOURCES' => dirname(__FILE__) .  '\..\..\ressources',
-        'VIEW' => dirname(__FILE__) .  '\..\..\views/',
-        'ROUTE_FOLDER' => 'route/',
+        'RESOURCES' => 'ressources',
       ];
     
         foreach ($variables as $key => $value) {

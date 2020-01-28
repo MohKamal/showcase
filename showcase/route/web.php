@@ -10,6 +10,7 @@ namespace Showcase {
     use \Showcase\Framework\HTTP\Routing\Request;
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\HTTP\Links\URL;
+    use \Showcase\Framework\Views\View;
     use \Showcase\Controllers\DegreeController;
     use \Showcase\Controllers\UserController;
     use \Showcase\Controllers\LoginController;
@@ -25,7 +26,7 @@ namespace Showcase {
 
     //App Main Page
     $router->get('/user-space', function () {
-        HomeController::Dashboard();
+        HomeController::dashboard();
     });
 
     //Authentification and registration
@@ -33,7 +34,8 @@ namespace Showcase {
         if (User::Current() != null) {
             return URL::Redirect('user-space');
         } else {
-            return URL::Redirect('views/Auth/login.php');
+            View::show('Auth/login.view.php');
+            //return URL::Redirect('views/Auth/login.php');
         }
     });
 

@@ -4,7 +4,7 @@
  * Last version : https://stackoverflow.com/questions/5280347/autoload-classes-from-different-folders
  */
 namespace Showcase{
-    require_once dirname(__FILE__) . '\App\Config.php';
+    //require_once dirname(__FILE__) . '\App\Config.php';
     class AutoLoad {
 
         static function env($key, $default = null){
@@ -32,12 +32,6 @@ namespace Showcase{
                 require_once( $Class );
                 return true;
             }
-            /*
-            if(strpos($class, __NAMESPACE__ . '\\') === 0){
-                $class = str_replace(__NAMESPACE__ . '\\', '', $class);
-                $class = str_replace('\\', '/', $class);
-                require $class . '.php';
-            }*/
         }
     }
 

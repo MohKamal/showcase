@@ -1,13 +1,3 @@
-<?php
-namespace Showcase\Views\Auth;
-
-use \Showcase\AutoLoad;
-use \Showcase\Framework\Session\SessionAlert;
-use \Showcase\Framework\HTTP\Links\URL;
-
-
-?>
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -16,7 +6,7 @@ use \Showcase\Framework\HTTP\Links\URL;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- STYLE CSS -->
-		<link rel="stylesheet" href="<?php echo URL::assets(); ?>css/style.css">
+		<link rel="stylesheet" href="@{{Assets}}/css/style.css">
 
 	</head>
 
@@ -26,9 +16,9 @@ use \Showcase\Framework\HTTP\Links\URL;
 		<div class="wrapper">
 			<div class="inner">
 				<div class="image-holder">
-					<img src="<?php echo URL::assets(); ?>images/images.jpg" alt="">
+					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
-				<form method="post" action='<?php echo AutoLoad::env('APP_URL') ?>auth'>
+				<form method="post" action='@{{Base}}/auth'>
 					<h3>Sign Up</h3>
 					<?php
 						if(!is_null(SessionAlert::Show())){
@@ -45,12 +35,12 @@ use \Showcase\Framework\HTTP\Links\URL;
 					</div>
 					<div class="form-login">
 						<button type="submit"> Login </button>
-						<a href="<?php echo AutoLoad::env('APP_URL') ?>register" > Créer </a>
+						<a href="@{{Base}}/register" > Créer </a>
 					</div>
 				</form>
 			</div>
 		</div>
-		<script src="<?php echo URL::assets(); ?>js/jquery-3.3.1.min.js"></script>
-		<script src="<?php echo URL::assets(); ?>js/main.js"></script>
+		<script src="@{{Assets}}/js/jquery-3.3.1.min.js"></script>
+		<script src="@{{Assets}}/js/main.js"></script>
 	</body>
 </html>
