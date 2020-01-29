@@ -5,14 +5,25 @@ namespace Showcase\Controllers{
 
     class NameController extends BaseController{
 
+        /**
+         * @return View
+         */
         static function index(){
             return self::view('App/welcome');
         }
         
+        /**
+         * @return View
+         */
         static function create(){
-            //return
+            return self::view('App/welcome');
         }
         
+        /**
+         * Post method
+         * @param \Showcase\Framework\HTTP\Routing\Request
+         * @return Redirection
+         */
         static function store($request){
             if(Validator::Validate($request->getBody(), ['email', 'password'])){
                 if($auth->login($request->getBody()['email'], $request->getBody()['password']))

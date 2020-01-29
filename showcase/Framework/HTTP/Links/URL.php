@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ * This class regroup all most every link in the showcase
+ * 
+ * Link to Resources, Base Url, & Boostrap
+ * 
+ */
 namespace Showcase\Framework\HTTP\Links{
 
     use \Showcase\AutoLoad;
@@ -7,7 +14,7 @@ namespace Showcase\Framework\HTTP\Links{
     class URL
     {
         /**
-         * Make a redireciton with a message
+         * Make a redirection with a message
          */
         static function RedirectWithMessage($url=NULL, $message=NULL, $message_type=NULL){
             $_SESSION['sess_flash_message']= array();
@@ -30,7 +37,9 @@ namespace Showcase\Framework\HTTP\Links{
         }
 
         /**
-         * Redirection
+         * Redirection to an url
+         * 
+         * @param string url to be redirected to
          */
         function Redirect($url, $permanent = false)
         {
@@ -58,26 +67,44 @@ namespace Showcase\Framework\HTTP\Links{
             return rtrim(AutoLoad::env('APP_URL'), '/');
         }
 
+        /**
+         * Url to get css files
+         */
         static function styles(){
             return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=css');
         }
 
+        /**
+         * Url to get script files
+         */
         static function scripts(){
             return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=js');
         }
 
+        /**
+         * Url to get any file from resources
+         */
         static function assets(){
             return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=');
         }
 
+        /**
+         * Url to the bootstrap.min.css
+         */
         static function bootstrapStyle(){
             return self::assets() . 'css/bootstrap/bootstrap-4.3.1-dist/css/bootstrap.min.css';
         }
 
+        /**
+         * Url to the bootstrap.min.js
+         */
         static function bootstrapScript(){
             return self::assets() . 'css/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js';
         }
 
+        /**
+         * Url to the jquery-3.3.1.min.js
+         */
         static function Jquery(){
             return self::assets() . '/js/jquery-3.3.1.min.js';
         }

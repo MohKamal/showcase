@@ -1,5 +1,8 @@
 <?php
 namespace Showcase\Framework\Utils{
+    /**
+     * Regroup the functions that can be Used by all files
+     */
     class Utilities{
         /**
          * Make random string

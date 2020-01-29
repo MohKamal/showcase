@@ -1,21 +1,14 @@
 <?php
 namespace Showcase\Framework\IO\Debug {
-    use \Showcase\Models\User;
-    
+    /**
+     * Create log files to Storage/Logs
+     */
     class Log
     {
-        private static function UserVerification(){
-            $log = "";
-            if (User::Current() != null) {
-                $log  = "User: ". User::Current()->email;
-            }else{
-                $log = "Anonymous";
-            }
-            $log  .= ' - '.date("F j, Y, g:i a").PHP_EOL;
-
-            return $log;
-        }
-
+        /**
+         * Print a message to the day files
+         * @param sring/array message to display
+         */
         public static function print($message){
             $log = Log::UserVerification();
             if(is_array($message)){
@@ -29,6 +22,10 @@ namespace Showcase\Framework\IO\Debug {
             file_put_contents(dirname(__FILE__) . '\..\..\..\Storage\logs\log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
         }
 
+        /**
+         * Log closure to the day file
+         * @param Closure
+         */
         public static function closure_dump(Closure $c) {
             $str = 'function (';
             $r = new ReflectionFunction($c);

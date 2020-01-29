@@ -1,8 +1,20 @@
 <?php
+/**
+ * 
+ * To create controllers/Models and other files
+ * This Cmd class regroup all those functions
+ * 
+ * Creator file use this file to execute the command line commands
+ * 
+ */
 namespace Showcase\Framework\Command{
 
     class Cmd{
         
+        /**
+         * Create new controller
+         * @param string  New controller name
+         */
         public function createController($name){
             if(!empty($name)){
                 $file = file_get_contents(dirname(__FILE__) . '\..\Resources\Controllers\Controller.php');
@@ -11,6 +23,10 @@ namespace Showcase\Framework\Command{
             }
         }
         
+        /**
+         * Create new Model file
+         * @param string new model name
+         */
         public function createModel($name){
             if(!empty($name)){
                 $file = file_get_contents(dirname(__FILE__) . '\..\Resources\Models\Model.php');

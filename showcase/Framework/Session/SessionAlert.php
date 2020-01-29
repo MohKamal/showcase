@@ -1,6 +1,10 @@
 <?php
 namespace Showcase\Framework\Session{
     
+    /**
+     * Session alert to save message in the session
+     * So it can be displayed in the views
+     */
     class SessionAlert{
         /**
          * Create a session message
@@ -28,6 +32,9 @@ namespace Showcase\Framework\Session{
                 return $_SESSION['sess_flash_message'];
         }
 
+        /**
+         * Clear session
+         */
         public static function Clear(){
             $_SESSION['sess_flash_message'] = null;
         }

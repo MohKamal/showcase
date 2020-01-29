@@ -7,7 +7,14 @@ namespace Showcase\Framework\Initializer{
   
   class AppSetting{
 
+    /**
+     * Add variables to the global from the appsettings.json
+     */
     public static function Init(){
+      /**
+       * Global variables
+       * @var array
+       */
         $variables = [
         'RES_FOLDER' => dirname(__FILE__) . '\..\..\ressources',
         'RESOURCES' => 'ressources',
@@ -17,6 +24,7 @@ namespace Showcase\Framework\Initializer{
             putenv("$key=$value");
         }
 
+        //Check if the files exists or not
         $_variables = file_get_contents(dirname(__FILE__) . "\..\..\appsettings.json");
         if ($_variables === false) {
           Log::print("appsetting.json file was not found, create one from the example file.");
@@ -25,6 +33,7 @@ namespace Showcase\Framework\Initializer{
           if ($json_variables === null) {
             Log::print("appsetting.json file has error(s), please check the file or delete it and create another one from the example file.");
           }else{
+            //if exist add all to the global variables
               foreach ($json_variables as $key => $value) {
                   putenv("$key=$value");
             }

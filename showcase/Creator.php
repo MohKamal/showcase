@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Command line executer
+ * example: php Creator.php function_name arg
+ */
 namespace Showcase{
     require_once dirname(__FILE__) . '\autoload.php';
     require_once dirname(__FILE__) . '\Framework\Command\Cmd.php';
@@ -12,6 +15,10 @@ namespace Showcase{
 
     Extract($argv);
 
+    /**
+     * Extract the command
+     * @param array @argv from the command line
+     */
     function Extract($command){
         $cmd = new Cmd();
             if($command[0] != 'Creator.php')

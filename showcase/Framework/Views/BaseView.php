@@ -1,4 +1,7 @@
 <?php
+/**
+ * Includes must be on the views
+ */
 namespace Showcase\Framework\Views;
 
 use \Showcase\AutoLoad;
