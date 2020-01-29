@@ -118,3 +118,17 @@ Example
 ```bash
 php Creator.php createModel ContactModel
 ```
+
+## Run it
+
+go to the public folder with the command line
+
+```bash
+cd /public
+```
+
+And run the php server
+
+```bash
+php -S localhost:8000
+```
