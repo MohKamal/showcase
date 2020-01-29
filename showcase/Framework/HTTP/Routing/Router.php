@@ -4,7 +4,6 @@ namespace Showcase\Framework\HTTP\Routing {
 
     use \Showcase\AutoLoad;
     use \Showcase\Framework\HTTP\Links\URL;
-    use \Showcase\Framework\IO\Debug\Log;
 
     /**
      * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
@@ -63,7 +62,6 @@ namespace Showcase\Framework\HTTP\Routing {
         {
             $methodDictionary = $this->{strtolower($this->request->requestMethod)};
             $formatedRoute = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '/public~', '', $this->formatRoute($this->request->requestUri));
-            Log::print($formatedRoute);
             if (!array_key_exists($formatedRoute, $methodDictionary)) {
                 $this->defaultRequestHandler();
                 return;
