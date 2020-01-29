@@ -58,16 +58,24 @@ namespace Showcase\Framework\HTTP\Links{
             return rtrim(AutoLoad::env('APP_URL'), '/');
         }
 
+        static function styles(){
+            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=css');
+        }
+
+        static function scripts(){
+            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=js');
+        }
+
         static function assets(){
-            return str_replace('/public', '', (rtrim(AutoLoad::env('APP_URL'), '/') . '/' . AutoLoad::env('RESOURCES')));
+            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=');
         }
 
         static function bootstrapStyle(){
-            return self::assets() . '/bootstrap/bootstrap-4.3.1-dist/css/bootstrap.min.css';
+            return self::assets() . 'css/bootstrap/bootstrap-4.3.1-dist/css/bootstrap.min.css';
         }
 
         static function bootstrapScript(){
-            return self::assets() . '/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js';
+            return self::assets() . 'css/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js';
         }
 
         static function Jquery(){

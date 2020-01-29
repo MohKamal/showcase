@@ -10,7 +10,7 @@ use \Showcase\Framework\HTTP\Links\URL;
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="<?php echo URL::assets();?>css/fonts.googleapis.css" rel="stylesheet">
+        <link href="@{{Assets}}css/fonts.googleapis.css" rel="stylesheet">
         <style>
         /**/
         :root {
@@ -174,6 +174,6 @@ use \Showcase\Framework\HTTP\Links\URL;
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="<?php echo URL::assets();?>js/500.js" type="text/javascript"></script>
+        <script src="@{{Assets}}js/500.js" type="text/javascript"></script>
     </body>
 </html>

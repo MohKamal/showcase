@@ -1,12 +1,3 @@
-<?php
-namespace Showcase\Views\Errors;
-
-use \Showcase\Framework\Initializer\AutoLoad;
-use \Showcase\Framework\HTTP\Links\URL;
-
-
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -71,7 +62,7 @@ use \Showcase\Framework\HTTP\Links\URL;
             }
 
             .bg-purple{
-                background: url(/ressources/png/bg_purple.png);
+                background: url(@{{Assets}}png/bg_purple.png);
                 background-repeat: repeat-x;
                 background-size: cover;
                 background-position: left top;
@@ -238,7 +229,7 @@ use \Showcase\Framework\HTTP\Links\URL;
             }
 
             .stars{
-                background: url(/ressources/svg/overlay_stars.svg);
+                background: url(@{{Assets}}svg/overlay_stars.svg);
                 background-repeat: repeat;
                 background-size: contain;
                 background-position: left top;
@@ -311,17 +302,17 @@ use \Showcase\Framework\HTTP\Links\URL;
                 </div>
             </div>
             <div class="central-body">
-                <img class="image-404" src="<?php echo URL::assets(); ?>svg/404.svg" width="300px">
+                <img class="image-404" src="@{{Assets}}svg/404.svg" width="300px">
                 <a href="/" class="btn-go-home">Retour à l'accueil</a>
             </div>
             <div class="objects">
-                <img class="object_rocket" src="<?php echo URL::assets(); ?>svg/rocket.svg" width="40px">
+                <img class="object_rocket" src="@{{Assets}}svg/rocket.svg" width="40px">
                 <div class="earth-moon">
-                    <img class="object_earth" src="<?php echo URL::assets(); ?>svg/earth.svg" width="100px">
-                    <img class="object_moon" src="<?php echo URL::assets(); ?>svg/moon.svg" width="80px">
+                    <img class="object_earth" src="@{{Assets}}svg/earth.svg" width="100px">
+                    <img class="object_moon" src="@{{Assets}}svg/moon.svg" width="80px">
                 </div>
                 <div class="box_astronaut">
-                    <img class="object_astronaut" src="<?php echo URL::assets(); ?>svg/astronaut.svg" width="140px">
+                    <img class="object_astronaut" src="@{{Assets}}svg/astronaut.svg" width="140px">
                 </div>
             </div>
             <div class="glowing_stars">

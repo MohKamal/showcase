@@ -3,5 +3,8 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?url=$1 [NC,L]
+
+    RewriteEngine On
+    RewriteRule ^css/(*.).css$ /style.php?sheet=$1 [L]
 </IfModule>
 ErrorDocument 500 /errors/500

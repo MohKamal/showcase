@@ -30,6 +30,12 @@ namespace Showcase\Framework\Views {
          */
         static function parsingFunctions($function){
             switch(strtolower($function)){
+                case 'styles':
+                    return URL::styles();
+                break;
+                case 'scripts':
+                    return URL::scripts();
+                break;
                 case 'assets':
                     return URL::assets();
                 break;

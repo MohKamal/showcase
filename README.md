@@ -30,13 +30,6 @@ Views
 
 Your views files need to end with .view.php, so they can be found, if not, you will get a 404 status
 
-```html
-<!-- Adding resources url to image -->
-<img src="@{{Assets}}/images/logo.png" class="img-fluid" alt="logo"/>
-<!-- Adding Base url to a link tag -->
-<a href="@{{Base}}/Contact">Contact-Us</a>
-```
-
 ### include
 
 To include a view inside another, simply use @include tag
@@ -70,11 +63,47 @@ You have to put the @render() tag inside the main view in the position where you
 
 ```
 
-
 ```html
 <!-- contact.view.php -->
 @extend("App/main")
 <body>
     <!-- You page Code -->
 </body>
+```
+
+## Styles & Javascript & other Files
+
+To include files from the resources folder to your views, you need to use a tag :
+
+Assets : Main folder for all the resources, even images
+Styles : CSS folder
+Scripts : Javascript folder
+
+```html
+<!-- Adding resources url to style -->
+<link href="@{{Styles}}main.min.css">
+```
+
+```html
+<!-- Adding resources url to image -->
+<img src="@{{Assets}}images/logo.png" class="img-fluid" alt="logo"/>
+<!-- Adding Base url to a link tag -->
+<a href="@{{Base}}/Contact">Contact-Us</a>
+```
+
+## Controllers and Models
+
+### Attention
+Please use Good Frameworks for huge projects, for more security and easy project management
+
+To create a new controller use php command line
+
+```bash
+php Creator.php createController ContactController
+```
+
+To create a new model use php command line
+
+```bash
+php Creator.php createModel ContactModel
 ```

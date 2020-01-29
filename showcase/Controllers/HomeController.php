@@ -5,7 +5,7 @@ namespace Showcase\Controllers{
 
     class HomeController extends BaseController{
 
-        static function dashboard(){
+        static function Index(){
             return self::view('App/welcome');
         }
     }
