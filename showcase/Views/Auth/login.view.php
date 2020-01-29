@@ -20,13 +20,6 @@
 				</div>
 				<form method="post" action='@{{Base}}/auth'>
 					<h3>Sign Up</h3>
-					<?php
-						if(!is_null(SessionAlert::Show())){
-							foreach(SessionAlert::Show() as $msg)
-								echo $msg;
-							SessionAlert::Clear();
-						}
-					?>
 					<div class="form-holder">
 						<input type="email" name="email" placeholder="e-mail" class="form-control" required>
 					</div>
@@ -40,7 +33,7 @@
 				</form>
 			</div>
 		</div>
-		<script src="@{{Assets}}/js/jquery-3.3.1.min.js"></script>
+		<script src="@{{Jquery}}"></script>
 		<script src="@{{Assets}}/js/main.js"></script>
 	</body>
 </html>

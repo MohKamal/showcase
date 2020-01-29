@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- STYLE CSS -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-		<link rel="stylesheet" href="@{{Assets}}/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="@{{Bootsrap-style}}">
 		<style>
 			body{background: #000;}
 			.banner{position: absolute; text-align: center; top:50%; left:50%; transform:translate(-50%,-50%);}
@@ -35,31 +35,18 @@
 					margin-bottom: -40px;
 				}
 			}
+
+			@media (min-width: 320px) and (max-width: 480px) {
+				.banner .text_1{font-size: 45px;}
+				.banner .text_2{font-size: 20px;}
+			}
 		</style>
 	</head>
 
 	<body>
-		<div class="wrapper">
-			<div class="inner">
-			<section class="banner">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-lg-12">
-							<span class="text_1">Showcase</span>
-						
-							<span class="text_2">Simple and Powerful
-							<div class="bg_hover">
-							</div>
-							</span>
-						
-						</div>
-					</div>
-				</div>
-			</section>
-			</div>
-		</div>
-		<script src="@{{Assets}}/js/jquery-3.3.1.min.js"></script>
-		<link rel="stylesheet" href="@{{Assets}}/bootstrap/js/bootstrap.min.js">
+		@render()
+		<script src="@{{Jquery}}"></script>
+		<link rel="stylesheet" href="@{{Bootsrap-script}}">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	</body>
 </html>

@@ -1,4 +1,5 @@
-# php-Showcase-template
+# Showcase Micro Framework
+
 A micro mini php framework to make one page or no back-end web site, like a presentation with no models
 
 ## Routes
@@ -34,4 +35,46 @@ Your views files need to end with .view.php, so they can be found, if not, you w
 <img src="@{{Assets}}/images/logo.png" class="img-fluid" alt="logo"/>
 <!-- Adding Base url to a link tag -->
 <a href="@{{Base}}/Contact">Contact-Us</a>
+```
+
+### include
+
+To include a view inside another, simply use @include tag
+```html
+
+<!-- Include footer to page -->
+<body>
+    @include("App/footer")
+</body>
+```
+
+### Extend
+
+Extend is used to call a layout page. for example, you have same nav and footer, so you create a page with nav and footer and html structure and you call it main.view.php
+
+Every page you call gonna extend from the main view
+
+### Attention
+
+You have to put the @render() tag inside the main view in the position where you with the child view would display
+
+
+
+```html
+<!-- main.view.php -->
+<body>
+    <nav></nav>
+    @render()
+    <footer></footer>
+</body>
+
+```
+
+
+```html
+<!-- contact.view.php -->
+@extend("App/main")
+<body>
+    <!-- You page Code -->
+</body>
 ```

@@ -59,7 +59,19 @@ namespace Showcase\Framework\HTTP\Links{
         }
 
         static function assets(){
-            return str_replace('/public', '', rtrim(AutoLoad::env('APP_URL'), '/') . '/' . AutoLoad::env('RESOURCES'));
+            return str_replace('/public', '', (rtrim(AutoLoad::env('APP_URL'), '/') . '/' . AutoLoad::env('RESOURCES')));
+        }
+
+        static function bootstrapStyle(){
+            return self::assets() . '/bootstrap/bootstrap-4.3.1-dist/css/bootstrap.min.css';
+        }
+
+        static function bootstrapScript(){
+            return self::assets() . '/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js';
+        }
+
+        static function Jquery(){
+            return self::assets() . '/js/jquery-3.3.1.min.js';
         }
 
     }
