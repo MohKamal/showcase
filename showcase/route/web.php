@@ -19,57 +19,21 @@ namespace Showcase {
 
     $router  = new Router(new Request);
 
-    
     $router->get('/', function () {
         HomeController::dashboard();
     });
 
-    //Authentification and registration
-    $router->get('/login', function () {
-        if (User::Current() != null) {
-            return URL::Redirect('user-space');
-        } else {
-            View::show('Auth/login.view.php');
-            //return URL::Redirect('views/Auth/login.php');
-        }
-    });
-
-    $router->post('/auth', function ($request) {
-        LoginController::Auth($request);
-    });
-
-    $router->get('/register', function () {
-        return URL::Redirect('views/Auth/register.php');
-    });
-
-    $router->post('/newregister', function ($request) {
-        UserController::store($request);
-    });
-
-    $router->get('/logout', function ($request) {
-        LoginController::logout();
+    $router->get('/documentation', function () {
+        return View::show('App/doc');
     });
 
     //Error Pages
-
     $router->get('/errors/404', function () {
-        return URL::Redirect('views/Errors/404.php');
+        return View::show('Errors/404');
     });
 
     $router->get('/errors/500', function () {
-        return URL::Redirect('views/Errors/500.php');
-    });
-
-    //Data Exchange
-
-    //Degree
-
-    $router->post('/degree/create', function ($request) {
-        DegreeController::store($request);
-    });
-
-    $router->post('/degree/update', function ($request) {
-        DegreeController::update($request);
+        return View::show('Errors/500');
     });
 }
 
