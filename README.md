@@ -75,9 +75,11 @@ You have to put the @render() tag inside the main view in the position where you
 
 To include files from the resources folder to your views, you need to use a tag :
 
-Assets : Main folder for all the resources, even images
-Styles : CSS folder
-Scripts : Javascript folder
+Assets : Main folder for all the resources, even images.
+
+Styles : CSS folder.
+
+Scripts : Javascript folder.
 
 ```html
 <!-- Adding resources url to style -->
@@ -99,11 +101,20 @@ Please use Good Frameworks for huge projects, for more security and easy project
 To create a new controller use php command line
 
 ```bash
+php Creator.php createController Controller_Name
+```
+Example
+
+```bash
 php Creator.php createController ContactController
 ```
 
 To create a new model use php command line
 
+```bash
+php Creator.php createModel Model_Name
+```
+Example
 ```bash
 php Creator.php createModel ContactModel
 ```
