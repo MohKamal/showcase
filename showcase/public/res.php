@@ -40,10 +40,18 @@ namespace Showcase{
     $position = strpos(file_get_contents($file), $find_string);
     
     $svg_file_new = substr(file_get_contents($file), $position);
+    header('Content-type: image/svg+xml');
     echo $svg_file_new;
     exit;
-    }
-  header('Content-type: text/' . $ext);
+  }
+  
+  if(in_array($ext, array("png", "jpg", "jpeg", "bmp", "gif")))
+    header('Content-type: image/' . $ext);
+  else if(in_array($ext, array("ttf", "amfm", "etx", "fnt", "otf")))
+    header('Content-type: font/opentype');
+  else
+    header('Content-type: text/' . $ext);
+  
   echo file_get_contents($file);
   exit;
   

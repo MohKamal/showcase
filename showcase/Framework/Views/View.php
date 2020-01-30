@@ -22,7 +22,7 @@ namespace Showcase\Framework\Views {
                 return http_response_code(404);
 
             echo $page;
-            return http_response_code(200);       
+            //return http_response_code(200);       
         }
 
         /**

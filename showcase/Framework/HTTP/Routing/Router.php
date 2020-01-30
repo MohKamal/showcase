@@ -4,6 +4,7 @@ namespace Showcase\Framework\HTTP\Routing {
 
     use \Showcase\AutoLoad;
     use \Showcase\Framework\HTTP\Links\URL;
+    use \Showcase\Framework\Views\View;
 
     /**
      * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
@@ -48,11 +49,14 @@ namespace Showcase\Framework\HTTP\Routing {
         private function invalidMethodHandler()
         {
             header("{$this->request->serverProtocol} 405 Method Not Allowed");
+            View::show("Errors/500");
         }
 
         private function defaultRequestHandler()
         {
             header("{$this->request->serverProtocol} 404 Not Found");
+            View::show("Errors/404");
+
         }
 
         /**

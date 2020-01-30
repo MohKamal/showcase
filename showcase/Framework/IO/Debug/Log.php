@@ -10,7 +10,8 @@ namespace Showcase\Framework\IO\Debug {
          * @param sring/array message to display
          */
         public static function print($message){
-            $log = Log::UserVerification();
+            //$log = Log::UserVerification();
+            $log = '';
             if(is_array($message)){
                 $log .= '------------------------------------'.PHP_EOL;
                 $log = serialize($message);

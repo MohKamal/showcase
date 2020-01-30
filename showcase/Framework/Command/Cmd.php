@@ -9,6 +9,8 @@
  */
 namespace Showcase\Framework\Command{
 
+    use \Showcase\Framework\Database\Wrapper;
+
     class Cmd{
         
         /**
@@ -33,6 +35,14 @@ namespace Showcase\Framework\Command{
                 $content = str_replace('NameModel', $name, $file);
                 file_put_contents(dirname(__FILE__) . '\..\..\Models\\' . $name . '.php', $content);
             }
+        }
+
+        /**
+         * Merge tables to the databse
+         */
+        public function merge(){
+            $db = new Wrapper();
+            $db->createTable();
         }
 
     }

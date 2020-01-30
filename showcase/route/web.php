@@ -26,6 +26,11 @@ namespace Showcase {
     $router->get('/documentation', function () {
         return View::show('App/doc');
     });
+    
+
+    $router->get('/login', function () {
+        return View::show('Auth/login');
+    });
 
     //Error Pages
     $router->get('/errors/404', function () {

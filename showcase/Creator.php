@@ -23,8 +23,11 @@ namespace Showcase{
         $cmd = new Cmd();
             if($command[0] != 'Creator.php')
                 return false;
+        $param = '';
+        if(array_key_exists(2, $command))
+            $param = $command[2];
         if(method_exists($cmd, $command[1])){
-            call_user_func( array($cmd,$command[1]), $command[2]);
+            call_user_func( array($cmd,$command[1]), $param);
         }
     }
 }
