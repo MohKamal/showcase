@@ -1,7 +1,7 @@
 <?php
 namespace Showcase\Framework\Database\SQLite {
     use \Showcase\AutoLoad;
-    use \Showcase\Framewok\IO\Debug\Log;
+    use \Showcase\Framework\IO\Debug\Log;
 
     /**
      * SQLite connnection

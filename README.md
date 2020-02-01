@@ -135,11 +135,17 @@ To edit the columns, you open the migration file and edit it.
     /**
      * Migration details
      */
-    function __construct(){
-        $this->name = 'users';
-        $this->column('id', ['int', 'not null']);
-        $this->column('name', ['varchar(100)', 'not null']);
-        $this->column('column_name', ['option1', 'option2']);
+    function handle(){
+        $this->name = 'MigrationName';
+        $this->column(
+            Column::factory()->name('id')->int()
+        );
+        $this->column(
+            Column::factory()->name('name')->string()
+        );
+        $this->column(
+            Column::factory()->name('phone')->string()->nullable()
+        );
     }
 ```
 

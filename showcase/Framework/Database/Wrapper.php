@@ -46,6 +46,7 @@ namespace Showcase\Framework\Database {
                 $this->Initialize();
             switch($this->type){
                 case 'SQLite':
+                    $table->handle();
                     $create = new SQLiteTable($this->pdo);
                     $create->createTables($table->name, $table->columns);
                 break;

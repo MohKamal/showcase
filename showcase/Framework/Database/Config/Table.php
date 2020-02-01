@@ -1,7 +1,8 @@
 <?php
 namespace Showcase\Framework\Database\Config {
     use \Showcase\AutoLoad;
-    use \Showcase\Framewok\IO\Debug\Log;
+    use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\Database\Config\Column;
     
     class Table{
 
@@ -16,13 +17,16 @@ namespace Showcase\Framework\Database\Config {
          */
         public $columns = array();
 
-        public function column($name, array $params){
-            if(empty($name))
+        /**
+         * Add column to the table
+         * @var \Showcase\Framework\Database\Config\Column
+         * @return boolean
+         */
+        public function column(Column $column){
+            if($column == null)
                 return false;
-            
-            if(empty($params))
-                return false;
-            array_push($this->columns, ["name" => $name, "params" => $params]);
+            array_push($this->columns, ["name" => $column->name, "params" => $column->options]);
+            return true;
         }
     }
 }
