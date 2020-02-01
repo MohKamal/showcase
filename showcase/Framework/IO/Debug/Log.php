@@ -13,14 +13,30 @@ namespace Showcase\Framework\IO\Debug {
             //$log = Log::UserVerification();
             $log = '';
             if(is_array($message)){
+                $log .=  date('h:i', time()).PHP_EOL;
                 $log .= '------------------------------------'.PHP_EOL;
                 $log = serialize($message);
                 $log .= '------------------------------------'.PHP_EOL;
             }else{
-                $log .= $message.PHP_EOL;
+                $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
             }
             //Save string to log, use FILE_APPEND to append.
             file_put_contents(dirname(__FILE__) . '\..\..\..\Storage\logs\log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
+        }
+
+        public static function console($message){
+            //$log = Log::UserVerification();
+            $log = '';
+            if(is_array($message)){
+                $log .=  date('h:i', time()).PHP_EOL;
+                $log .= '------------------------------------'.PHP_EOL;
+                $log = serialize($message);
+                $log .= '------------------------------------'.PHP_EOL;
+            }else{
+                $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
+            }
+
+            echo $log;
         }
 
         /**

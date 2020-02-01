@@ -1,11 +1,18 @@
 <?php
 namespace Showcase\Framework\Database {
     use \Showcase\AutoLoad;
+    use \Showcase\Framework\Initializer\AppSetting;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\SQLite\SQLiteConnection;
-    use \Showcase\Framework\Database\SQLite\SQLiteCreateTable;
+    use \Showcase\Framework\Database\SQLite\SQLiteTable;
+    use \Showcase\Framework\Database\Config\Table;
     
     class Wrapper{
+
+        function __construct(){
+            //init the global settings
+            AppSetting::Init();
+        }
 
         /**
          * Database base type : SQLite or MySql
@@ -22,7 +29,6 @@ namespace Showcase\Framework\Database {
          */
         public function Initialize(){
             $this->type =  AutoLoad::env('DB_TYPE');
-            Log::print('Select db type : ' . $this->type);
             switch($this->type){
                 case 'SQLite':
                     $this->pdo = (new SQLiteConnection())->connect();
@@ -35,13 +41,13 @@ namespace Showcase\Framework\Database {
         /**
          * Migrate the tables to database
          */
-        public function createTable(){
+        public function createTable(Table $table){
             if($this->pdo == null)
                 $this->Initialize();
             switch($this->type){
                 case 'SQLite':
-                    $create = new SQLiteCreateTable($this->pdo);
-                    $create->createTables('User', array('id' => array('int', 'not null'), 'name' => array('varchar(100)', 'not null')));
+                    $create = new SQLiteTable($this->pdo);
+                    $create->createTables($table->name, $table->columns);
                 break;
             }
         }

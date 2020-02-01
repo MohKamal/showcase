@@ -8,13 +8,13 @@ namespace Showcase\Framework\Database\Config {
         /**
          * @var string table name
          */
-        private $name = "tabel_name";
+        public $name = "tabel_name";
 
         /**
          * Table columns
          * @var array
          */
-        protected $columns = array();
+        public $columns = array();
 
         public function column($name, array $params){
             if(empty($name))
@@ -22,7 +22,7 @@ namespace Showcase\Framework\Database\Config {
             
             if(empty($params))
                 return false;
-            array_push($this->columns, $params);
+            array_push($this->columns, ["name" => $name, "params" => $params]);
         }
     }
 }

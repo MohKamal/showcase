@@ -119,6 +119,36 @@ Example
 php Creator.php createModel ContactModel
 ```
 
+## Migration
+
+To create a migration you need to use the commande line on the root folder.
+
+```bash
+php Creator.php createMigration migration_name
+```
+
+A file will be created at Database\Migrations.
+
+To edit the columns, you open the migration file and edit it.
+
+```php
+    /**
+     * Migration details
+     */
+    function __construct(){
+        $this->name = 'users';
+        $this->column('id', ['int', 'not null']);
+        $this->column('name', ['varchar(100)', 'not null']);
+        $this->column('column_name', ['option1', 'option2']);
+    }
+```
+
+To create those migration, you need to execute another command line.
+
+```bash
+php Creator.php migrate
+```
+
 ## Run it
 
 go to the public folder with the command line

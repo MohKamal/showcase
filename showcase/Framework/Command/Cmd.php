@@ -10,6 +10,7 @@
 namespace Showcase\Framework\Command{
 
     use \Showcase\Framework\Database\Wrapper;
+    use \Showcase\Framework\IO\Debug\Log;
 
     class Cmd{
         
@@ -22,6 +23,7 @@ namespace Showcase\Framework\Command{
                 $file = file_get_contents(dirname(__FILE__) . '\..\Resources\Controllers\Controller.php');
                 $content = str_replace('NameController', $name, $file);
                 file_put_contents(dirname(__FILE__) . '\..\..\Controllers\\' . $name . '.php', $content);
+                Log::console($name . ' Controller added!');
             }
         }
         
@@ -34,15 +36,47 @@ namespace Showcase\Framework\Command{
                 $file = file_get_contents(dirname(__FILE__) . '\..\Resources\Models\Model.php');
                 $content = str_replace('NameModel', $name, $file);
                 file_put_contents(dirname(__FILE__) . '\..\..\Models\\' . $name . '.php', $content);
+                Log::console($name . ' Model added!');
+            }
+        }
+        
+        /**
+         * Create new Model file
+         * @param string new model name
+         */
+        public function createMigration($name){
+            if(!empty($name)){
+                $file = file_get_contents(dirname(__FILE__) . '\..\Database\Config\Migration.php');
+                $content = str_replace('MigrationName', $name, $file);
+                //$file_name = $name . '_table_' . date("Ymdhis") .'.php';
+                $file_name = $name . '.php';
+                $dir = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $file_name;
+                file_put_contents($dir, $content);
+                Log::console($name . ' migration file added succefully to ' . $dir);
             }
         }
 
         /**
          * Merge tables to the databse
          */
-        public function merge(){
+        public function migrate(){
+            $dir = dirname(__FILE__) . '\..\..\Database\Migrations';
             $db = new Wrapper();
-            $db->createTable();
+            foreach (glob($dir . '\*.php') as $file)
+            {
+                require_once $file;
+
+                // get the file name of the current file without the extension
+                // which is essentially the class name
+                $class = '\Showcase\Database\Migrations\\' . basename($file, '.php');
+
+                if (class_exists($class))
+                {
+                    $obj = new $class;
+                    $db->createTable($obj);
+                }
+            }
+            Log::console('Migration ended!');
         }
 
     }
