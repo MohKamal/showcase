@@ -7,11 +7,12 @@ namespace Showcase\Database\Migrations {
 
         /**
          * Migration details
+         * @return array of columns
          */
         function handle(){
             $this->name = 'MigrationName';
             $this->column(
-                Column::factory()->name('id')->int()
+                Column::factory()->name('id')->int()->primary()
             );
             $this->column(
                 Column::factory()->name('name')->string()

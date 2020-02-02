@@ -31,9 +31,9 @@ namespace Showcase\Framework\Database\SQLite {
                 foreach($col['params'] as $p){
                     $query .= ' ' . $p;
                 }
-                $query .= ' ,';
+                $query .= ', ';
             }
-            $query = rtrim($query, ",");
+            $query = rtrim($query, ", ");
             $query .= ')';
             $commands = [$query];
             // execute the sql commands to create new tables
@@ -65,13 +65,26 @@ namespace Showcase\Framework\Database\SQLite {
          * @param string $projectName
          * @return the id of the new project
          */
-        public function insertProject($projectName)
+        public function insertToTable($table, $data)
         {
-            $sql = 'INSERT INTO projects(project_name) VALUES(:project_name)';
+            $sql = 'INSERT INTO ' . $table . '(';
+            foreach($data as $key => $value){
+                $sql .= $key . ', ';
+            }
+
+            $sql = rtrim($sql, ", ");
+            $sql .= ') VALUES(';
+            foreach($data as $key => $value){
+                $sql .= ':' . $key . ', ';
+            }
+            $sql = rtrim($sql, ", ");
+            $sql .= ')';
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':project_name', $projectName);
+            foreach($data as $key => $value){
+                $stmt->bindValue(":".$key, $value);
+            }
+            
             $stmt->execute();
- 
             return $this->pdo->lastInsertId();
         }
  

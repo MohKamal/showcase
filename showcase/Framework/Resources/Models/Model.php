@@ -1,28 +1,16 @@
 <?php
 namespace Showcase\Models{
+    use \Showcase\Framework\Database\Models\BaseModel;
     use \Exception;
     
-    class NameModel
+    class NameModel extends BaseModel
     {
-
         /**
-         * Getter
-         * @return Exception
+         * Init the model
          */
-        public function __get($var) {
-            throw new Exception("Invalid property $var");
-        }
-
-        /**
-         * Setter
-         * @param string var/value
-         */
-        public function __set($var, $value) {
-            $this->__get($var);
-        }
-
         public function __construct(){
-            //Code goes here
+            BaseModel::__construct();
+            $this->migration = 'NameMigration';
         }
 
     }

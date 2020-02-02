@@ -6,6 +6,7 @@ namespace Showcase\Framework\Database {
     use \Showcase\Framework\Database\SQLite\SQLiteConnection;
     use \Showcase\Framework\Database\SQLite\SQLiteTable;
     use \Showcase\Framework\Database\Config\Table;
+    use \Showcase\Framework\Database\Config\Column;
     
     class Wrapper{
 
@@ -17,12 +18,12 @@ namespace Showcase\Framework\Database {
         /**
          * Database base type : SQLite or MySql
          */
-        private $type;
+        protected $type;
 
         /**
          * PDO object
          */
-        private $pdo;
+        protected $pdo;
         
         /**
          * Initialize the database and get the PDO Object

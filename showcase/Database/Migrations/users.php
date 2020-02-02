@@ -11,7 +11,7 @@ namespace Showcase\Database\Migrations {
         function handle(){
             $this->name = 'users';
             $this->column(
-                Column::factory()->name('id')->int()
+                Column::factory()->name('id')->autoIncrement()->primary()
             );
             $this->column(
                 Column::factory()->name('name')->string()

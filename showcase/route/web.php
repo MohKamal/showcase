@@ -15,11 +15,17 @@ namespace Showcase {
     use \Showcase\Controllers\UserController;
     use \Showcase\Controllers\LoginController;
     use \Showcase\Controllers\HomeController;
+    use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Models\User;
 
     $router  = new Router(new Request);
 
     $router->get('/', function () {
+        $user = new User();
+        $user->name = "Mohamed";
+        $user->phone = "67584848";
+        $user->save();
+        Log::print("user id " . $user->id);
         HomeController::Index();
     });
 
