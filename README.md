@@ -121,7 +121,7 @@ php Creator.php createModel ContactModel
 
 ### Save model to database
 
-### Waring
+### Warning
 
 For now, Showcase use only SQLite database, you can set-up at appsettings.json.
 
@@ -168,6 +168,43 @@ If you are using the soft delete columns, the row will not be removed from the d
 
 If you not using the soft delete columns, the row will removed for good.
 
+## Get model/Array of models from database
+
+### By Id
+
+To get one model from database, you create the object, and use the get function with the id:
+
+```php
+$model = new Model();
+$model->get(1); // get by id = 1
+print($model->paramName);
+```
+
+### By any column
+
+To get one model from database by any columns/properties you need, use where function:
+
+```php
+$model = new Model();
+$model->where([
+    'column_name' => 'value',
+    'column_name' => 'value'
+]);
+print($model->paramName);
+```
+
+### Get Array of objects
+
+To get array of models, you gonna use the static function toList() : 
+
+```php
+$models = Model::toList();
+print($models[0]->paramName);
+
+
+
+
+```
 ## Migration
 
 To create a migration you need to use the commande line on the root folder.

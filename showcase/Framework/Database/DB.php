@@ -106,7 +106,7 @@ namespace Showcase\Framework\Database {
          * @param array id name and value
          * @param array data to add
          */
-        public function getByColumn($migration, array $id){
+        public function getByIdColumn($migration, array $id){
             if(empty($migration))
                 return false;
             
@@ -129,6 +129,26 @@ namespace Showcase\Framework\Database {
             }
         }
 
+                /**
+         * Insert data to a table in database
+         * @param string migration name
+         * @param array id name and value
+         * @param array data to add
+         */
+        public function getByColumns($migration, array $columns){
+            if(empty($migration))
+                return false;
+            
+            if(empty($columns))
+                return false;
+            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            if(file_exists($file))
+            {
+                $get = new SQLiteTable($this->pdo);
+                return $get->getByColumns($migration, $columns);
+            }
+        }
+
         /**
          * Insert data to a table in database
          * @param string migration name
@@ -144,6 +164,30 @@ namespace Showcase\Framework\Database {
             {
                 $delete = new SQLiteTable($this->pdo);
                 return $delete->deleteRow($migration, $id);
+            }
+        }
+
+        public function getList($migration){
+            if(empty($migration))
+                return false;
+            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            if(file_exists($file))
+            {
+                require_once $file;
+
+                // get the file name of the current file without the extension
+                // which is essentially the class name
+                $class = '\Showcase\Database\Migrations\\' . basename($file, '.php');
+                if (class_exists($class))
+                {
+                    $table = new $class;
+                    $vars = get_object_vars($table);
+                    $soft = false;
+                    if (array_key_exists("deleted_at", $vars))
+                        $soft = true;
+                    $get = new SQLiteTable($this->pdo);
+                    return $get->getTable($migration, $soft);
+                }
             }
         }
     }

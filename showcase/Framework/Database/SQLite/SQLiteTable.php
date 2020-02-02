@@ -64,8 +64,11 @@ namespace Showcase\Framework\Database\SQLite {
          * Get all projects
          * @return array
          */
-        public function getTable($table) {
-            $stmt = $this->pdo->query('SELECT * ' . ' FROM ' . $table);
+        public function getTable($table, $soft=false) {
+            $sql = 'SELECT * ' . ' FROM ' . $table;
+            if($soft)
+                $sql .= ' WHERE deleted_at=null AND active=1';
+            $stmt = $this->pdo->query($sql);
             $data = [];
             while ($rows = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $data[] = $rows;
@@ -86,6 +89,38 @@ namespace Showcase\Framework\Database\SQLite {
             $stmt = $this->pdo->prepare($query);
             
             $stmt->execute([':'.$name => $value]);
+    
+            // for storing tasks
+            $record = [];
+    
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $record = $row;
+            }
+    
+            return $record;
+        }
+
+        /**
+         * Get tasks by the project id
+         * @param string table name
+         * @param string column name
+         * @param mixte column value
+         * @return an array of table row
+         */
+        public function getByColumns($table, array $columns) {
+            // prepare SELECT statement
+            $query = 'SELECT * FROM ' . $table . ' WHERE ';
+            foreach($columns as $name => $value){
+                $query .=  $name .' =:' . $name . ' AND ';
+            }
+            $query = rtrim($query, " AND ");
+
+            $stmt = $this->pdo->prepare($query);
+            $values = array();
+            foreach($columns as $name => $value){
+                $values[":".$name] = $value;
+            }
+            $stmt->execute($values);
     
             // for storing tasks
             $record = [];

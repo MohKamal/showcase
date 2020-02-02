@@ -73,7 +73,27 @@ namespace Showcase\Framework\Database\Models {
          * @return \Showcase\Framework\Database\Models\BaseModel
          */
         public function get($id){
-            $record = $this->db->getByColumn($this->migration, ["name" => $this->idDetails["name"], "value" => $id]);
+            $record = $this->db->getByIdColumn($this->migration, ["name" => $this->idDetails["name"], "value" => $id]);
+            if($record != null){
+                $class_vars = get_object_vars($this);
+                foreach($class_vars as $key => $value){
+                    if(array_key_exists($key, $record)){
+                        $this->{$key} = $record[$key];
+                        if($key == $this->idDetails["name"])
+                           $this->idDetails["value"] =  $record[$key];
+                    }
+                }
+            }
+            return $this;
+        }
+
+        /**
+         * Get an object by id
+         * @param mixte id value
+         * @return \Showcase\Framework\Database\Models\BaseModel
+         */
+        public function where(array $params){
+            $record = $this->db->getByColumns($this->migration, $params);
             if($record != null){
                 $class_vars = get_object_vars($this);
                 foreach($class_vars as $key => $value){
@@ -140,6 +160,31 @@ namespace Showcase\Framework\Database\Models {
             }else{
                 return $this->db->delete($this->migration, $this->idDetails);
             }
+        }
+
+        /**
+         * Get list of this model
+         * @return array \Showcase\Framework\Database\Models\BaseModel
+         */
+        public static function toList(){
+            $class = get_called_class();
+            $model = new $class();
+            $db = new DB();
+            $records = $db->getList($model->migration);
+            if(count($records) > 0){
+                $data = array();
+                foreach($records as $record){
+                    $obj = new $class();
+                    $class_vars = get_object_vars($obj);
+                    foreach($class_vars as $key => $value){
+                        if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
+                            $obj->{$key} = $record[$key];
+                    }
+                    $data[] =$obj;
+                }
+                return $data;
+            }
+            return array();
         }
     }
 }
