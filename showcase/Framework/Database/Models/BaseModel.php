@@ -13,6 +13,12 @@ namespace Showcase\Framework\Database\Models {
         public $migration = "migration_name";
 
         /**
+         * Id information for database requests
+         * @var array
+         */
+        protected $idDetails = array();
+
+        /**
          * Database object
          * @var \Showcase\Framework\Database\DB
          */
@@ -43,13 +49,17 @@ namespace Showcase\Framework\Database\Models {
                     $table = new $class;
                     $table->handle();
                     foreach($table->columns as $_col){
-                        $col = new Column($_col);
+                        $col = new Column();
+                        $col->instance($_col['name'], $_col['options']);
                         if($col != null){
                             $value = 0;
                             if($col->PHP_type == "string")
                                 $value = "";
                             else if($col->PHP_type == "bool")
                                 $value = true;
+
+                            if($col->isPrimary())
+                                $this->idDetails["name"] = $col->name;
                             $this->createProperty($col->name, $value);
                         }
                     }
@@ -58,24 +68,78 @@ namespace Showcase\Framework\Database\Models {
         }
 
         /**
+         * Get an object by id
+         * @param mixte id value
+         * @return \Showcase\Framework\Database\Models\BaseModel
+         */
+        public function get($id){
+            $record = $this->db->getByColumn($this->migration, ["name" => $this->idDetails["name"], "value" => $id]);
+            if($record != null){
+                $class_vars = get_object_vars($this);
+                foreach($class_vars as $key => $value){
+                    if(array_key_exists($key, $record)){
+                        $this->{$key} = $record[$key];
+                        if($key == $this->idDetails["name"])
+                           $this->idDetails["value"] =  $record[$key];
+                    }
+                }
+            }
+            return $this;
+        }
+
+        /**
          * Setters
+         * @param string property name
+         * @param Mixte property value
          */
         function __set($name,$value)
         {
+            if(array_key_exists("name", $this->idDetails)){
+                if($this->{$name} == $this->idDetails["name"])
+                    $this->idDetails["value"] = $value;
+            }
             $this->{$name} = $value;
         }
 
         /**
          * Getters
+         * @param string property name
+         * @return Mixte
          */
         function __get($name)
         {
-            return $this->{$name};
+            if (isset($this->{$name}))
+                return $this->{$name};
         }
 
+        /**
+         * Save/Update to database
+         * @return \Showcase\Framework\Database\Models\BaseModel
+         */
         public function save(){
             $class_vars = get_object_vars($this);
-            $this->id = $this->db->insertInto($this->migration, $class_vars);
+            if(!array_key_exists("value", $this->idDetails))
+                $this->{$this->idDetails["name"]} = $this->db->insertInto($this->migration, $class_vars);
+            else
+                $this->db->update($this->migration, $this->idDetails, $class_vars);
+
+            return $this;
+        }
+
+        /**
+         * Delete an \Showcase\Framework\Database\Models\BaseModel
+         * @return int count
+         */
+        public function delete(){
+            $class_vars = get_object_vars($this);
+            if (array_key_exists("deleted_at", $class_vars)){
+                $this->deleted_at = date("Y-m-d H:i:s");
+                $this->active = 0;
+                $class_vars = get_object_vars($this);
+                $this->db->update($this->migration, $this->idDetails, $class_vars);
+            }else{
+                return $this->db->delete($this->migration, $this->idDetails);
+            }
         }
     }
 }

@@ -25,8 +25,32 @@ namespace Showcase\Framework\Database\Config {
         public function column(Column $column){
             if($column == null)
                 return false;
-            array_push($this->columns, ["name" => $column->name, "params" => $column->options]);
+            array_push($this->columns, ["name" => $column->name, "options" => $column->options]);
             return true;
+        }
+
+        /**
+         * Add time column
+         */
+        public function timespan(){
+            $this->column(
+                Column::factory()->name('created_at')->datetime()
+            );
+            $this->column(
+                Column::factory()->name('updated_at')->datetime()
+            );
+        }
+        
+        /**
+         * Soft deleting from databse
+         */
+        public function softDelete(){
+            $this->column(
+                Column::factory()->name('deleted_at')->datetime()
+            );
+            $this->column(
+                Column::factory()->name('active')->bool()
+            );
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Showcase\Framework\Database\Config {
          * Columns types
          * @var array
          */
-        protected $types = array('VARACHAR', 'INT', 'INTEGER', 'tinyint', 'double', 'float', 'text', 'blob');
+        protected $types = array('DATETIME','INT', 'INTEGER', 'INT(1)', 'REAL', 'TEXT', 'BLOB');
 
         /**
          * Clean the column type every time the user call for a type function
@@ -37,11 +37,6 @@ namespace Showcase\Framework\Database\Config {
         /**
          * @var bool primary column
          */
-        public $PHP_primary = false;
-
-        /**
-         * @var bool primary column
-         */
         public $PHP_autoIncrement = false;
 
         /**
@@ -55,12 +50,45 @@ namespace Showcase\Framework\Database\Config {
         }
 
         /**
+         * Instance column from array of existing options
+         * @param string column name
+         * @param array column options
+         * @return \Showcase\Framework\Database\Config\Column
+         */
+        public function instance($name, array $options){
+            $this->name($name);
+            foreach($options as $opt){
+                if($opt == "TEXT")
+                    $this->string();
+                else if($opt == 'INT')
+                    $this->int();
+                else if($opt == "INT(1)")
+                    $this->bool();
+                else if($opt == "TEXT")
+                    $this->text();
+                else if($opt == "BLOB")
+                    $this->blob();
+                else if($opt == "DATETIME")
+                    $this->datetime();
+                else if($opt=="NOT NULL")
+                    $this->notnull();
+                else if($opt == "NULL")
+                    $this->nullable();
+                else if($opt == "PRIMARY KEY")
+                    $this->primary();
+                else if($opt == "INTEGER")
+                    $this->autoIncrement();
+            }
+            return $this;
+        }
+
+        /**
          * This column is string
          * @return \Framework\Database\Config\Column
          */
         public function string(){
             $this->clean();
-            array_push($this->options, 'VARACHAR');
+            array_push($this->options, 'TEXT');
             $this->PHP_type = "string";
             return $this;
         }
@@ -82,19 +110,8 @@ namespace Showcase\Framework\Database\Config {
          */
         public function double(){
             $this->clean();
-            array_push($this->options, 'double');
+            array_push($this->options, 'REAL');
             $this->PHP_type = "double";
-            return $this;
-        }
-
-        /**
-         * This column is float
-         * @return \Framework\Database\Config\Column
-         */
-        public function float(){
-            $this->clean();
-            array_push($this->options, 'float');
-            $this->PHP_type = "float";
             return $this;
         }
 
@@ -104,19 +121,8 @@ namespace Showcase\Framework\Database\Config {
          */
         public function bool(){
             $this->clean();
-            array_push($this->options, 'tinyint');
+            array_push($this->options, 'INT(1)');
             $this->PHP_type = "bool";
-            return $this;
-        }
-
-        /**
-         * This column is text
-         * @return \Framework\Database\Config\Column
-         */
-        public function text(){
-            $this->clean();
-            array_push($this->options, 'text');
-            $this->PHP_type = "string";
             return $this;
         }
 
@@ -126,7 +132,18 @@ namespace Showcase\Framework\Database\Config {
          */
         public function blob(){
             $this->clean();
-            array_push($this->options, 'blob');
+            array_push($this->options, 'BLOB');
+            $this->PHP_type = "string";
+            return $this;
+        }
+
+        /**
+         * This column is datetime
+         * @return \Framework\Database\Config\Column
+         */
+        public function datetime(){
+            $this->clean();
+            array_push($this->options, 'DATETIME');
             $this->PHP_type = "string";
             return $this;
         }
@@ -136,9 +153,9 @@ namespace Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Column
          */
         public function nullable(){            
-            if(array_key_exists('not null', $this->options))
-                unset($array['not null']);
-            array_push($this->options, 'null');
+            if(in_array('NOT NULL', $this->options))
+                unset($this->options['NOT NULL']);
+            array_push($this->options, 'NULL');
             return $this;
         }
 
@@ -159,7 +176,6 @@ namespace Showcase\Framework\Database\Config {
          */
         public function primary(){            
             array_push($this->options, 'PRIMARY KEY');
-            $this->PHP_primary = true;
             return $this;
         }
 
@@ -179,9 +195,9 @@ namespace Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Column
          */
         public function notnull(){
-            if(array_key_exists('null', $this->options))
-                unset($array['null']);
-            array_push($this->options, 'not null');
+            if(in_array('NULL', $this->options))
+                unset($this->options['NULL']);
+            array_push($this->options, 'NOT NULL');
             return $this;
         }
 
@@ -190,7 +206,7 @@ namespace Showcase\Framework\Database\Config {
          * @return boolean
          */
         public function isPrimary(){
-            return array_key_exists('PRIMARY KEY', $this->options);
+            return in_array('PRIMARY KEY', $this->options);
         }
     }
 }

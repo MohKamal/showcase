@@ -3,13 +3,13 @@ namespace Showcase\Models{
     use \Showcase\Framework\Database\Models\BaseModel;
     use \Exception;
     
-    class NameModel extends BaseModel
+    class Message extends BaseModel
     {
         /**
          * Init the model
          */
         public function __construct(){
-            $this->migration = 'NameMigration';
+            $this->migration = 'message';
             BaseModel::__construct();
         }
 

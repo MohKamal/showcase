@@ -28,7 +28,7 @@ namespace Showcase\Framework\Database\SQLite {
             $query = 'CREATE TABLE IF NOT EXISTS ' . $name . ' (';
             foreach($columns as $col){
                 $query .= $col['name'];
-                foreach($col['params'] as $p){
+                foreach($col['options'] as $p){
                     $query .= ' ' . $p;
                 }
                 $query .= ', ';
@@ -61,6 +61,43 @@ namespace Showcase\Framework\Database\SQLite {
         }
 
         /**
+         * Get all projects
+         * @return array
+         */
+        public function getTable($table) {
+            $stmt = $this->pdo->query('SELECT * ' . ' FROM ' . $table);
+            $data = [];
+            while ($rows = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $data[] = $rows;
+            }
+            return $data;
+        }
+
+        /**
+         * Get tasks by the project id
+         * @param string table name
+         * @param string column name
+         * @param mixte column value
+         * @return an array of table row
+         */
+        public function getByColumn($table, $name, $value) {
+            // prepare SELECT statement
+            $query = 'SELECT * FROM ' . $table . ' WHERE ' . $name .' = :' . $name . ';';
+            $stmt = $this->pdo->prepare($query);
+            
+            $stmt->execute([':'.$name => $value]);
+    
+            // for storing tasks
+            $record = [];
+    
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $record = $row;
+            }
+    
+            return $record;
+        }
+
+        /**
          * Insert a new project into the projects table
          * @param string $projectName
          * @return the id of the new project
@@ -87,55 +124,48 @@ namespace Showcase\Framework\Database\SQLite {
             $stmt->execute();
             return $this->pdo->lastInsertId();
         }
- 
-        /**
-         * Insert a new task into the tasks table
-         * @param type $taskName
-         * @param type $startDate
-         * @param type $completedDate
-         * @param type $completed
-         * @param type $projectId
-         * @return int id of the inserted task
-         */
-        public function insertTask($taskName, $startDate, $completedDate, $completed, $projectId)
-        {
-            $sql = 'INSERT INTO tasks(task_name,start_date,completed_date,completed,project_id) '
-                . 'VALUES(:task_name,:start_date,:completed_date,:completed,:project_id)';
- 
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
-            ':task_name' => $taskName,
-            ':start_date' => $startDate,
-            ':completed_date' => $completedDate,
-            ':completed' => $completed,
-            ':project_id' => $projectId,
-        ]);
- 
-            return $this->pdo->lastInsertId();
-        }
 
         /**
          * Mark a task specified by the task_id completed
-         * @param type $taskId
-         * @param type $completedDate
+         * @param string table name
+         * @param array id with column name and value
+         * @param array other columns with the names and values
          * @return bool true if success and falase on failure
          */
-        public function completeTask($taskId, $completedDate)
+        public function update($table,array $id,array $data)
         {
             // SQL statement to update status of a task to completed
-            $sql = "UPDATE tasks "
-                . "SET completed = 1, "
-                . "completed_date = :completed_date "
-                . "WHERE task_id = :task_id";
- 
+            $sql = "UPDATE " . $table . " SET ";
+            foreach($data as $key => $value){
+                $sql .= $key . "=:".$key . ", ";
+            }
+            $sql = rtrim($sql, ", ");
+            $sql .= " WHERE " . $id["name"] . "=:". $id["name"] . ";";
             $stmt = $this->pdo->prepare($sql);
- 
             // passing values to the parameters
-            $stmt->bindValue(':task_id', $taskId);
-            $stmt->bindValue(':completed_date', $completedDate);
+            foreach($data as $key => $value){
+                $stmt->bindValue(':'.$key, $value);
+            }
+            $stmt->bindValue(':'.$id["name"], $id["value"]);
  
             // execute the update statement
             return $stmt->execute();
+        }
+
+        /**
+         * Delete a task by task id
+         * @param int $taskId
+         * @return int the number of rows deleted
+         */
+        public function deleteRow($table, array $id) {
+            $sql = 'DELETE FROM ' . $table . ' WHERE ' . $id["name"] . '=:' . $id["name"];
+    
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':'.$id["name"], $id["value"]);
+    
+            $stmt->execute();
+    
+            return $stmt->rowCount();
         }
     }
 }

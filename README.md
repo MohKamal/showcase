@@ -119,6 +119,44 @@ Example
 php Creator.php createModel ContactModel
 ```
 
+### Save model to database
+
+To create new object from model, simple : 
+
+```php
+$model = new Model();
+$model->param = "value";
+$model->param = 10;
+$model->save();
+```
+
+When using the save function, the model data will be stored in the database.
+
+### Update model to database
+
+To update an exisitng model in the database, you need to get it first :
+
+```php
+$model = new Model();
+$model->get(1); // get by id = 1
+$model->param = "new value";
+$model->save();
+```
+
+When using the save function on exising model in database, the new data will be updated in the database
+
+### Delete model from database
+
+To delete model, use the delete function : 
+
+```php
+$model = new Model();
+$model->get(1)->delete(); // get by id = 1 and deleted
+```
+If you are using the soft delete columns, the row will not be removed from the database, only deleted_at and active will be updated.
+
+If you not using the soft delete columns, the row will removed for good.
+
 ## Migration
 
 To create a migration you need to use the commande line on the root folder.
@@ -146,6 +184,32 @@ To edit the columns, you open the migration file and edit it.
         $this->column(
             Column::factory()->name('phone')->string()->nullable()
         );
+        $this->timespan(); //created_at and updated_at columns
+    }
+```
+updated_at columns will be updated everytime you update your model.
+### Soft delete
+
+To add soft delete columns, add the function softDelete().
+
+```php
+    /**
+     * Migration details
+     */
+    function handle(){
+        $this->name = 'MigrationName';
+        $this->column(
+            Column::factory()->name('id')->int()
+        );
+        $this->column(
+            Column::factory()->name('name')->string()
+        );
+        $this->column(
+            Column::factory()->name('phone')->string()->nullable()
+        );
+        $this->timespan();
+        //Soft delete columns will be added
+        $this->softDelete();
     }
 ```
 

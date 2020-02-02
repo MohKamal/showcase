@@ -3,14 +3,14 @@ namespace Showcase\Database\Migrations {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Config\Column;
 
-    class users extends Table{
+    class message extends Table{
 
         /**
          * Migration details
          * @return array of columns
          */
         function handle(){
-            $this->name = 'users';
+            $this->name = 'message';
             $this->column(
                 Column::factory()->name('id')->autoIncrement()->primary()
             );
@@ -21,6 +21,7 @@ namespace Showcase\Database\Migrations {
                 Column::factory()->name('phone')->string()->nullable()
             );
             $this->timespan();
+            $this->softDelete();
         }
     }
 }

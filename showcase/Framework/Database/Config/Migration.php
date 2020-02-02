@@ -12,7 +12,7 @@ namespace Showcase\Database\Migrations {
         function handle(){
             $this->name = 'MigrationName';
             $this->column(
-                Column::factory()->name('id')->int()->primary()
+                Column::factory()->name('id')->autoIncrement()->primary()
             );
             $this->column(
                 Column::factory()->name('name')->string()
@@ -20,6 +20,7 @@ namespace Showcase\Database\Migrations {
             $this->column(
                 Column::factory()->name('phone')->string()->nullable()
             );
+            $this->timespan();
         }
     }
 }
