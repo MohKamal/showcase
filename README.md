@@ -121,6 +121,17 @@ php Creator.php createModel ContactModel
 
 ### Save model to database
 
+### Waring
+
+For now, Showcase use only SQLite database, you can set-up at appsettings.json.
+
+```json
+{
+    "DB_HOST": "your_file_name.db",
+    "DB_TYPE": "SQLite",
+}
+```
+
 To create new object from model, simple : 
 
 ```php
