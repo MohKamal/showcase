@@ -8,13 +8,13 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 		<link rel="stylesheet" href="@{{Bootsrap-style}}">
 		<style>
-			body{background: #000;}
+			body{background: #fff;}
 			.banner{position: absolute; text-align: center; top:50%; left:50%; transform:translate(-50%,-50%);}
-			.banner span{color: #fff; text-transform: uppercase; display: block; font-family:open sans;}
-			.banner .text_1{font-size: 60px; font-weight: 700; letter-spacing:8px; margin-bottom: 20px; background: #000; position: relative; animation: text 3s 1;     z-index: 999;}
+			.banner span{color: #000; text-transform: uppercase; display: block; font-family:open sans;}
+			.banner .text_1{font-size: 60px; font-weight: 700; letter-spacing:8px; margin-bottom: 20px; background: #fff; position: relative; animation: text 3s 1; z-index: 999;}
 			.banner .text_2{font-size: 30px; color: #e62424; position: relative;}
 			.text_2::before{ position: absolute;
-			content: ''; top:0;left: 0;width: 0;height: 100%;background-color: white; transform-origin:left;  transition:width 1s cubic-bezier(0.46, 0.03, 0.52, 0.96);  z-index:-1; overflow: hidden;}
+			content: ''; top:0;left: 0;width: 0;height: 100%;background-color: black; transform-origin:left;  transition:width 1s cubic-bezier(0.46, 0.03, 0.52, 0.96); z-index:-1; overflow: hidden;}
 
 			.text_2:hover::before{width: 100%;}
 			.banner .text_2:hover{font-style: italic; transition: ease 2s;}

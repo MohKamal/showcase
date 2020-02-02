@@ -39,6 +39,10 @@ namespace Showcase {
         return View::show('Errors/404');
     });
 
+    $router->get('/errors/405', function () {
+        return View::show('Errors/405');
+    });
+
     $router->get('/errors/500', function () {
         return View::show('Errors/500');
     });

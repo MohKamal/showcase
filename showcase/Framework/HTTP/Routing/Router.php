@@ -49,14 +49,13 @@ namespace Showcase\Framework\HTTP\Routing {
         private function invalidMethodHandler()
         {
             header("{$this->request->serverProtocol} 405 Method Not Allowed");
-            View::show("Errors/500");
+            View::show("Errors/405");
         }
 
         private function defaultRequestHandler()
         {
             header("{$this->request->serverProtocol} 404 Not Found");
             View::show("Errors/404");
-
         }
 
         /**
