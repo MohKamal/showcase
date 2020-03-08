@@ -2,6 +2,8 @@
 namespace Showcase\Controllers{
 
     use \Showcase\Framework\HTTP\Controllers\BaseController;
+    use \Showcase\Framework\Validation\Validator;
+    use \Showcase\Framework\HTTP\Links\URL;
 
     class NameController extends BaseController{
 
