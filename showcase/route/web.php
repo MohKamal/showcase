@@ -11,13 +11,8 @@ namespace Showcase {
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Views\View;
-    use \Showcase\Controllers\DegreeController;
-    use \Showcase\Controllers\UserController;
-    use \Showcase\Controllers\LoginController;
     use \Showcase\Controllers\HomeController;
     use \Showcase\Framework\IO\Debug\Log;
-    use \Showcase\Models\User;
-    use \Showcase\Models\Message;
 
     $router  = new Router(new Request);
 

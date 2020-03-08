@@ -18,6 +18,9 @@ namespace Showcase\Database\Migrations {
                 Column::factory()->name('name')->string()
             );
             $this->column(
+                Column::factory()->name('username')->string()->default('user')
+            );
+            $this->column(
                 Column::factory()->name('phone')->string()->nullable()
             );
             $this->timespan();

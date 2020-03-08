@@ -202,6 +202,17 @@ namespace Showcase\Framework\Database\Config {
         }
 
         /**
+         * Set this column default value
+         * @return \Framework\Database\Config\Column
+         */
+        public function default($value){
+            if(!$value)
+                return $this;
+            array_push($this->options, 'DEFAULT ' . $value);
+            return $this;
+        }
+
+        /**
          * Check if this columns is primary key
          * @return boolean
          */

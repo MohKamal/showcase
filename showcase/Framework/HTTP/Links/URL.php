@@ -71,21 +71,21 @@ namespace Showcase\Framework\HTTP\Links{
          * Url to get css files
          */
         static function styles(){
-            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=css');
+            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/public/res.php?sheet=css');
         }
 
         /**
          * Url to get script files
          */
         static function scripts(){
-            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=js');
+            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/public/res.php?sheet=js');
         }
 
         /**
          * Url to get any file from resources
          */
         static function assets(){
-            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/res.php?sheet=');
+            return (rtrim(AutoLoad::env('APP_URL'), '/') . '/public/res.php?sheet=');
         }
 
         /**
