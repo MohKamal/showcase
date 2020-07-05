@@ -24,6 +24,10 @@ namespace Showcase\Framework\IO\Debug {
             file_put_contents(dirname(__FILE__) . '\..\..\..\Storage\logs\log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
         }
 
+        /**
+         * Print a message to the console server
+         * @param string/array message to display
+         */
         public static function console($message){
             //$log = Log::UserVerification();
             $log = '';

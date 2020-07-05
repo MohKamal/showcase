@@ -87,8 +87,12 @@ namespace Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Column
          */
         public function string(){
+            $type =  AutoLoad::env('DB_TYPE');
             $this->clean();
-            array_push($this->options, 'TEXT');
+            if(strtolower($type) == 'sqlite')
+                array_push($this->options, 'TEXT');
+            else if(strtolower($type) == 'mysql')
+                array_push($this->options, "VARCHAR(250)");
             $this->PHP_type = "string";
             return $this;
         }
@@ -121,7 +125,11 @@ namespace Showcase\Framework\Database\Config {
          */
         public function bool(){
             $this->clean();
-            array_push($this->options, 'INT(1)');
+            $type =  AutoLoad::env('DB_TYPE');
+            if(strtolower($type) == 'sqlite')
+                array_push($this->options, 'INT(1)');
+            else if(strtolower($type) == 'mysql')
+                array_push($this->options, 'TINYINT');
             $this->PHP_type = "bool";
             return $this;
         }
@@ -208,7 +216,7 @@ namespace Showcase\Framework\Database\Config {
         public function default($value){
             if(!$value)
                 return $this;
-            array_push($this->options, 'DEFAULT ' . $value);
+            array_push($this->options, "DEFAULT '" . $value . "'");
             return $this;
         }
 

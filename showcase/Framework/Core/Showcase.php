@@ -16,6 +16,7 @@ namespace Showcase\Framework\Core{
     use \Showcase\Framework\Initializer\AppSetting;
     use \Showcase\Framework\Database\Wrapper;
     use \Showcase\Web;
+    use \Showcase\Framework\IO\Debug\Log;
 
     class Showcase{
 
@@ -28,8 +29,11 @@ namespace Showcase\Framework\Core{
             //init the global settings
             AppSetting::Init();
             //Database init
-            $db = new Wrapper();
-            $db->Initialize();
+            $use_db = AutoLoad::env('USE_DB');
+            if ($use_db) {
+                $db = new Wrapper();
+                $db->Initialize();
+            }
             //including the routes
             include_once dirname(__FILE__) .'\..\..\route\Web.php';
         }

@@ -123,14 +123,28 @@ php Creator.php createModel ContactModel
 
 ### Save model to database
 
-### Warning
+Showcase use SQLite/MySql database, you can set-up at appsettings.json.
 
-For now, Showcase use only SQLite database, you can set-up at appsettings.json.
+Database will not be initialized if not set to 'true' at appsettings.json file (USE_DB parametre).
+
+### Warning
+MySql it not fully test, if you find any bugs or error, please repport them to be fixed.
 
 ```json
 {
+    "USE_DB": "true",
     "DB_HOST": "your_file_name.db",
     "DB_TYPE": "SQLite",
+}
+
+{
+    "USE_DB": "true",
+    "DB_HOST": "localhost",
+    "DB_TYPE": "MySql",
+    "DB_NAME": "showcase_db",
+    "DB_USERNAME": "root",
+    "DB_PASSWORD": "",
+    "DB_PORT": "3306",
 }
 ```
 
@@ -267,6 +281,17 @@ To create those migration, you need to execute another command line.
 
 ```bash
 php Creator.php migrate
+```
+
+## Debug
+
+To print out data to a log file, use the Log Class.
+
+```bash
+use \Showcase\Framework\IO\Debug\Log;
+
+Log::print("Message to print in log file");
+Log::console("Message to print in the console");
 ```
 
 ## Run it
