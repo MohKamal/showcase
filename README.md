@@ -103,22 +103,22 @@ Please use Good Frameworks for huge projects, for more security and easy project
 To create a new controller use php command line
 
 ```bash
-php Creator.php createController Controller_Name
+php creator createController Controller_Name
 ```
 Example
 
 ```bash
-php Creator.php createController ContactController
+php creator createController ContactController
 ```
 
 To create a new model use php command line
 
 ```bash
-php Creator.php createModel Model_Name
+php creator createModel Model_Name
 ```
 Example
 ```bash
-php Creator.php createModel ContactModel
+php creator createModel ContactModel
 ```
 
 ### Save model to database
@@ -226,7 +226,7 @@ print($models[0]->paramName);
 To create a migration you need to use the commande line on the root folder.
 
 ```bash
-php Creator.php createMigration migration_name
+php creator createMigration migration_name
 ```
 
 A file will be created at Database\Migrations.
@@ -280,7 +280,7 @@ To add soft delete columns, add the function softDelete().
 To create those migration, you need to execute another command line.
 
 ```bash
-php Creator.php migrate
+php creator migrate
 ```
 
 ## Debug
