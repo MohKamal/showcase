@@ -21,12 +21,12 @@ A micro mini php framework to make one page or no back-end web site, like a pres
 ## Views
 
 Every view is in the Views folder, you can create a subfolders and add your views files in there. Example : 
-Views 
-- Home
-  - Welcome.view.php
-Contact
-- Contact.view.php
-  - About.view.php
+* Views 
+  - Home
+    - Welcome.view.php
+* Contact
+  - Contact.view.php
+    - About.view.php
 
 ### Attention
 
