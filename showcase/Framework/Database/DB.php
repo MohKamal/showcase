@@ -3,8 +3,10 @@ namespace Showcase\Framework\Database {
     use \Showcase\Framework\Database\Wrapper;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\SQLite\SQLiteTable;
+    use \Showcase\Framework\Database\MySql\MySqlTable;
     use \Showcase\Framework\Database\Config\Column;
     use \Showcase\Framework\Database\Config\Converter;
+    use \Showcase\AutoLoad;
 
     class DB extends Wrapper{
 
@@ -50,8 +52,18 @@ namespace Showcase\Framework\Database {
                             continue;
                         $_data[$col->name] = $data[$col->name];
                     }
-                    $insert = new SQLiteTable($this->pdo);
-                    return $insert->insertToTable($table->name, $_data);
+                    $db_type = AutoLoad::env('DB_TYPE');
+                    switch (strtolower($db_type)) {
+                        case 'sqlite':
+                            $insert = new SQLiteTable($this->pdo);
+                            return $insert->insertToTable($table->name, $_data);
+                        break;
+                        case 'mysql':
+                            $insert = new MySqlTable($this->pdo);
+                            return $insert->insertToTable($table->name, $_data);
+                        break;
+                    }
+                    
                 }
             }
         }
@@ -94,8 +106,16 @@ namespace Showcase\Framework\Database {
                             continue;
                         $_data[$col->name] = $data[$col->name];
                     }
-                    $insert = new SQLiteTable($this->pdo);
-                    return $insert->update($table->name, $id, $_data);
+                    switch(strtolower($db_type)){
+                        case 'slqlite':
+                            $insert = new SQLiteTable($this->pdo);
+                            return $insert->update($table->name, $id, $_data);
+                        break;
+                        case 'mysql':
+                            $insert = new MySqlTable($this->pdo);
+                            return $insert->update($table->name, $id, $_data);
+                        break;
+                    }
                 }
             }
         }
@@ -123,8 +143,19 @@ namespace Showcase\Framework\Database {
                 if (class_exists($class))
                 {
                     $table = new $class;
-                    $get = new SQLiteTable($this->pdo);
-                    return $get->getByColumn($migration, $id["name"], $id["value"]);
+                    $table->handle();
+                    $db_type = AutoLoad::env('DB_TYPE');
+                    switch(strtolower($db_type)){
+                        case 'slqlite':
+                            $get = new SQLiteTable($this->pdo);
+                            return $get->getByColumn($table->name, $id["name"], $id["value"]);
+                        break;
+                        case 'mysql':
+                            $get = new MySqlTable($this->pdo);
+                            return $get->getByColumn($table->name, $id["name"], $id["value"]);
+                        break;
+                    }
+                    
                 }
             }
         }
@@ -144,8 +175,26 @@ namespace Showcase\Framework\Database {
             $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
             if(file_exists($file))
             {
-                $get = new SQLiteTable($this->pdo);
-                return $get->getByColumns($migration, $columns);
+                // get the file name of the current file without the extension
+                // which is essentially the class name
+                $class = '\Showcase\Database\Migrations\\' . basename($file, '.php');
+
+                if (class_exists($class)) {
+                    $table = new $class;
+                    $table->handle();
+                    $db_type = AutoLoad::env('DB_TYPE');
+                }
+                
+                switch(strtolower($db_type)){
+                    case 'slqlite':
+                        $get = new SQLiteTable($this->pdo);
+                        return $get->getByColumns($table->name, $columns);
+                    break;
+                    case 'mysql':
+                        $get = new MySqlTable($this->pdo);
+                        return $get->getByColumns($table->name, $columns);
+                    break;
+                }
             }
         }
 
@@ -162,8 +211,25 @@ namespace Showcase\Framework\Database {
             $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
             if(file_exists($file))
             {
-                $delete = new SQLiteTable($this->pdo);
-                return $delete->deleteRow($migration, $id);
+                // get the file name of the current file without the extension
+                // which is essentially the class name
+                $class = '\Showcase\Database\Migrations\\' . basename($file, '.php');
+                if (class_exists($class)) {
+                    $table = new $class;
+                    $table->handle();
+                    $db_type = AutoLoad::env('DB_TYPE');
+                
+                    switch(strtolower($db_type)){
+                        case 'slqlite':
+                            $delete = new SQLiteTable($this->pdo);
+                            return $delete->deleteRow($table->name, $id);
+                        break;
+                        case 'mysql':
+                            $delete = new MySqlTable($this->pdo);
+                            return $delete->deleteRow($table->name, $id);
+                        break;
+                    }
+                }
             }
         }
 
@@ -181,12 +247,22 @@ namespace Showcase\Framework\Database {
                 if (class_exists($class))
                 {
                     $table = new $class;
+                    $table->handle();
                     $vars = get_object_vars($table);
                     $soft = false;
                     if (array_key_exists("deleted_at", $vars))
                         $soft = true;
-                    $get = new SQLiteTable($this->pdo);
-                    return $get->getTable($migration, $soft);
+                
+                    switch(strtolower($db_type)){
+                        case 'slqlite':
+                            $get = new SQLiteTable($this->pdo);
+                            return $get->getTable($table->name, $soft);
+                        break;
+                        case 'mysql':
+                            $get = new MySqlTable($this->pdo);
+                            return $get->getTable($table->name, $soft);
+                        break;
+                    };
                 }
             }
         }

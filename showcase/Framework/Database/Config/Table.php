@@ -9,7 +9,7 @@ namespace Showcase\Framework\Database\Config {
         /**
          * @var string table name
          */
-        public $name = "tabel_name";
+        public $name = "table_name";
 
         /**
          * Table columns

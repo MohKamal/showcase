@@ -173,8 +173,17 @@ namespace Showcase\Framework\Database\Config {
          */
         public function autoIncrement(){
             $this->clean();
-            array_push($this->options, 'INTEGER');
-            $this->PHP_autoIncrement = true;
+            $db_type = AutoLoad::env('DB_TYPE');
+            switch(strtolower($db_type)){
+                case 'slqlite':
+                    array_push($this->options, 'INTEGER');
+                    $this->PHP_autoIncrement = true;
+                break;
+                case 'mysql':
+                    array_push($this->options, 'INT NOT NULL AUTO_INCREMENT');
+                    $this->PHP_autoIncrement = true;
+                break;
+            }
             return $this;
         }
 

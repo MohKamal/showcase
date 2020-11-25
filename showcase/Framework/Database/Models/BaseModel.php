@@ -186,5 +186,22 @@ namespace Showcase\Framework\Database\Models {
             }
             return array();
         }
+
+        /**
+         * Hash string, can be used for password
+         */
+        public function bcrypt($password){
+            $options = [
+                'cost' => 12,
+            ];
+            $this->password = password_hash($password, PASSWORD_BCRYPT, $options);
+        }
+
+        /**
+         * Check if the hash is correcte
+         */
+        public function validHash($password, $hash){
+            return password_verify($password, $hash);
+        }
     }
 }
