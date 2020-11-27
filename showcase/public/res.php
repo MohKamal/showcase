@@ -27,7 +27,7 @@ namespace Showcase{
   }
   
     $ext = pathinfo($file, PATHINFO_EXTENSION);
-  /*if (substr($file, 0, strlen($Dir) != $Dir)) {
+    /*if (substr($file, 0, strlen($Dir) != $Dir)) {
     // because we've sanitized using realpath - this must match
     header('HTTP/1.1 404 Not Found'); // or 403 if you really want to - maybe log it in errors as an attack?
     exit;
@@ -47,7 +47,7 @@ namespace Showcase{
   
   if(in_array($ext, array("png", "jpg", "jpeg", "bmp", "gif")))
     header('Content-type: image/' . $ext);
-  else if(in_array($ext, array("ttf", "amfm", "etx", "fnt", "otf")))
+  else if(in_array($ext, array("ttf", "amfm", "etx", "fnt", "otf", "woff", "eot")))
     header('Content-type: font/opentype');
   else
     header('Content-type: text/' . $ext);
