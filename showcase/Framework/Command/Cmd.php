@@ -79,5 +79,14 @@ namespace Showcase\Framework\Command{
             Log::console('Migration ended!');
         }
 
+        /**
+         * Create auth tables to the databse
+         */
+        public function auth(){
+            $this->createModel('User');
+            $this->createMigration('User');
+            Log::console('Migration and Model created! Please run migration command');
+        }
+
     }
 }
