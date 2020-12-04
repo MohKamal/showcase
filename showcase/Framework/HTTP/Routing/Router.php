@@ -64,7 +64,7 @@ namespace Showcase\Framework\HTTP\Routing {
         public function resolve()
         {
             $methodDictionary = $this->{strtolower($this->request->requestMethod)};
-            $formatedRoute = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '/public~', '', $this->formatRoute($this->request->requestUri));
+            $formatedRoute = preg_replace('~' . AutoLoad::env('APP_SUBFOLDER') . '/public~', '', $this->formatRoute(strtok($this->request->requestUri,'?')));
             if (!array_key_exists($formatedRoute, $methodDictionary)) {
                 $this->defaultRequestHandler();
                 return;
