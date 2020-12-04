@@ -248,6 +248,7 @@ namespace Showcase\Framework\Database {
                 {
                     $table = new $class;
                     $table->handle();
+                    $db_type = AutoLoad::env('DB_TYPE');
                     $vars = get_object_vars($table);
                     $soft = false;
                     if (array_key_exists("deleted_at", $vars))
