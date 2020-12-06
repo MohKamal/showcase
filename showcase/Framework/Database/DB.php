@@ -93,6 +93,7 @@ namespace Showcase\Framework\Database {
                     $table = new $class;
                     $table->handle();
                     $_data = array();
+                    $db_type = AutoLoad::env('DB_TYPE');
                     foreach($table->columns as $_col){
                         $col = new Column($_col);
                         $col->instance($_col['name'], $_col['options']);
