@@ -57,6 +57,17 @@ namespace Showcase\Framework\Command{
         }
 
         /**
+         * Create new Model file
+         * @param string new model name
+         */
+        public function test($text){
+            if(!empty($text)){
+                Log::console($text);
+            }
+            Log::console("Showcase --version 1.0 working fine for now at " . date("Y-m-d h:i:sa"));
+        }
+
+        /**
          * Merge tables to the databse
          */
         public function migrate(){
