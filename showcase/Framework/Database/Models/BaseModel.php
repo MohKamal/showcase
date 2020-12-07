@@ -36,7 +36,7 @@ namespace Showcase\Framework\Database\Models {
          */
         public function __construct(){
             $this->db = new DB();
-            $file = dirname(__FILE__) . '\..\..\..\Database\Migrations\\' . $this->migration . '.php';
+            $file = dirname(__FILE__) . '/../../../Database/Migrations/' . $this->migration . '.php';
             if(file_exists($file))
             {
                 require_once $file;

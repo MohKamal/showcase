@@ -26,7 +26,7 @@ namespace Showcase\Framework\Database {
             
             if(empty($data))
                 return false;
-            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
             if(file_exists($file))
             {
                 require_once $file;
@@ -80,7 +80,7 @@ namespace Showcase\Framework\Database {
             
             if(empty($data))
                 return false;
-            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
             if(file_exists($file))
             {
                 require_once $file;
@@ -133,7 +133,7 @@ namespace Showcase\Framework\Database {
             
             if(empty($id))
                 return false;
-            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
             if(file_exists($file))
             {
                 require_once $file;
@@ -173,7 +173,7 @@ namespace Showcase\Framework\Database {
             
             if(empty($columns))
                 return false;
-            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
             if(file_exists($file))
             {
                 // get the file name of the current file without the extension
@@ -209,7 +209,7 @@ namespace Showcase\Framework\Database {
             if(empty($migration))
                 return false;
             
-            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
             if(file_exists($file))
             {
                 // get the file name of the current file without the extension
@@ -237,7 +237,7 @@ namespace Showcase\Framework\Database {
         public function getList($migration){
             if(empty($migration))
                 return false;
-            $file = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $migration . '.php';
+            $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
             if(file_exists($file))
             {
                 require_once $file;

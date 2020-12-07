@@ -65,12 +65,12 @@ namespace Showcase\Framework\Views {
             $file_parts = pathinfo($view);
             $file = "";
             if(empty($file_parts['extension']))
-                $file = dirname(__FILE__) . '\..\..\Views\\' . $view . '.view.php';
+                $file = dirname(__FILE__) . '/../../Views/' . $view . '.view.php';
             else{
                 if(Utilities::endsWith($view, '.view.php'))
-                    $file = dirname(__FILE__) . '\..\..\Views\\' . $view;
+                    $file = dirname(__FILE__) . '/../../Views/' . $view;
                 else
-                    $file = dirname(__FILE__) . '\..\..\Views\\' . substr_replace($view , 'view.php', strrpos($view , '.') +1);
+                    $file = dirname(__FILE__) . '/../../Views/' . substr_replace($view , 'view.php', strrpos($view , '.') +1);
             }
 
             //Checking if the file exist

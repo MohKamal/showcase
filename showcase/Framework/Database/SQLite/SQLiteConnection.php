@@ -20,7 +20,7 @@ namespace Showcase\Framework\Database\SQLite {
         public function connect() {
             try {
                 if ($this->pdo == null) {
-                    $dbfile = dirname(__FILE__) . '\..\..\..\Database\SQLite\\' . AutoLoad::env('DB_HOST');
+                    $dbfile = dirname(__FILE__) . '/../../../Database/SQLite/' . AutoLoad::env('DB_HOST');
                     $this->pdo = new \PDO("sqlite:" . $dbfile);
                 }
                 return $this->pdo;

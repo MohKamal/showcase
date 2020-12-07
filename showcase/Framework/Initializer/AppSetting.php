@@ -16,7 +16,7 @@ namespace Showcase\Framework\Initializer{
        * @var array
        */
         $variables = [
-        'RES_FOLDER' => dirname(__FILE__) . '\..\..\ressources',
+        'RES_FOLDER' => dirname(__FILE__) . '/../../ressources',
         'RESOURCES' => 'ressources',
       ];
     
@@ -25,7 +25,7 @@ namespace Showcase\Framework\Initializer{
         }
 
         //Check if the files exists or not
-        $_variables = file_get_contents(dirname(__FILE__) . "\..\..\appsettings.json");
+        $_variables = file_get_contents(dirname(__FILE__) . "/../../appsettings.json");
         if ($_variables === false) {
           Log::print("appsetting.json file was not found, create one from the example file.");
         }else{

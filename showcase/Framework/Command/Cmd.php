@@ -20,9 +20,9 @@ namespace Showcase\Framework\Command{
          */
         public function createController($name){
             if(!empty($name)){
-                $file = file_get_contents(dirname(__FILE__) . '\..\Resources\Controllers\Controller.php');
+                $file = file_get_contents(dirname(__FILE__) . '/../Resources/Controllers/Controller.php');
                 $content = str_replace('NameController', $name, $file);
-                file_put_contents(dirname(__FILE__) . '\..\..\Controllers\\' . $name . '.php', $content);
+                file_put_contents(dirname(__FILE__) . '/../../Controllers/' . $name . '.php', $content);
                 Log::console($name . ' Controller added!');
             }
         }
@@ -33,9 +33,9 @@ namespace Showcase\Framework\Command{
          */
         public function createModel($name){
             if(!empty($name)){
-                $file = file_get_contents(dirname(__FILE__) . '\..\Resources\Models\Model.php');
+                $file = file_get_contents(dirname(__FILE__) . '/../Resources/Models/Model.php');
                 $content = str_replace('NameModel', $name, $file);
-                file_put_contents(dirname(__FILE__) . '\..\..\Models\\' . $name . '.php', $content);
+                file_put_contents(dirname(__FILE__) . '/../../Models/' . $name . '.php', $content);
                 Log::console($name . ' Model added!');
             }
         }
@@ -46,11 +46,11 @@ namespace Showcase\Framework\Command{
          */
         public function createMigration($name){
             if(!empty($name)){
-                $file = file_get_contents(dirname(__FILE__) . '\..\Database\Config\Migration.php');
+                $file = file_get_contents(dirname(__FILE__) . '/../Database/Config/Migration.php');
                 $content = str_replace('MigrationName', $name, $file);
                 //$file_name = $name . '_table_' . date("Ymdhis") .'.php';
                 $file_name = $name . '.php';
-                $dir = dirname(__FILE__) . '\..\..\Database\Migrations\\' . $file_name;
+                $dir = dirname(__FILE__) . '/../../Database/Migrations/' . $file_name;
                 file_put_contents($dir, $content);
                 Log::console($name . ' migration file added succefully to ' . $dir);
             }
@@ -60,9 +60,9 @@ namespace Showcase\Framework\Command{
          * Merge tables to the databse
          */
         public function migrate(){
-            $dir = dirname(__FILE__) . '\..\..\Database\Migrations';
+            $dir = dirname(__FILE__) . '/../../Database/Migrations';
             $db = new Wrapper();
-            foreach (glob($dir . '\*.php') as $file)
+            foreach (glob($dir . '/*.php') as $file)
             {
                 require_once $file;
 

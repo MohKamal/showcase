@@ -3,8 +3,8 @@
  * The Main App Class to Start the Showcase
  */
 namespace Showcase\Framework\Core{
-    require_once dirname(__FILE__) . '\..\..\autoload.php';
-    require_once dirname(__FILE__) . '\..\Initializer\AppSetting.php';
+    require_once dirname(__FILE__) . '/../../autoload.php';
+    require_once dirname(__FILE__) . '/../Initializer/AppSetting.php';
     
     use \Showcase\AutoLoad;
 
@@ -35,7 +35,7 @@ namespace Showcase\Framework\Core{
                 $db->Initialize();
             }
             //including the routes
-            include_once dirname(__FILE__) .'\..\..\route\Web.php';
+            include_once dirname(__FILE__) .'/../../route/web.php';
         }
 
     }
