@@ -24,7 +24,9 @@ namespace Showcase\Framework\Database\MySql {
             $dbname = AutoLoad::env('DB_NAME');
             try {
                 if ($this->pdo == null) {
-                    $this->pdo = new \PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+                    $this->pdo = new \PDO("mysql:host=$servername;dbname=$dbname", $username, $password, [
+                        \PDO::ATTR_PERSISTENT => true
+                    ]);
                     // set the PDO error mode to exception
                     $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                 }
