@@ -38,6 +38,13 @@ namespace Showcase\Framework\HTTP\Routing{
             foreach ($_GET as $key => $value) {
                 $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
+            
+            $url = "//{$this->httpHost}{$this->requestUri}";
+            $query_str = parse_url($url, PHP_URL_QUERY);
+            parse_str($query_str, $query_params);
+            foreach ($query_params as $key => $value) {
+                $body[$key] = $value;
+            }
             return $body;
           }
           if ($this->requestMethod == "POST") {
