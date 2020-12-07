@@ -36,7 +36,7 @@ namespace Showcase\Framework\Database\MySql {
             $query = rtrim($query, ", ");
             $query .= ')';
             $commands = [$query];
-            Log::console("Query: $query");
+            //Log::console("Query: $query");
             // execute the sql commands to create new tables
             foreach ($commands as $command) {
                 $this->pdo->exec($command);
