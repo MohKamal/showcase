@@ -41,7 +41,7 @@ namespace Showcase\Framework\Database {
                 case 'mysql':
                     $this->pdo = (new MySqlConnection())->connect();
                     if ($this->pdo == null)
-                        Log::print("MySql Error : Wrapper.php 43 line \n Whoops, could not connect to the SQLite database!");
+                        Log::print("MySql Error : Wrapper.php 43 line \n Whoops, could not connect to the MySql database!");
                 break;
             }
         }
