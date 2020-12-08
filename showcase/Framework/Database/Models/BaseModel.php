@@ -166,11 +166,11 @@ namespace Showcase\Framework\Database\Models {
          * Get list of this model
          * @return array \Showcase\Framework\Database\Models\BaseModel
          */
-        public static function toList(){
+        public static function toList(array $columns=array()){
             $class = get_called_class();
             $model = new $class();
             $db = new DB();
-            $records = $db->getList($model->migration);
+            $records = $db->getList($model->migration, $columns);
             if(count($records) > 0){
                 $data = array();
                 foreach($records as $record){

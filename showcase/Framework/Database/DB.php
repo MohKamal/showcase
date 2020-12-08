@@ -4,6 +4,8 @@ namespace Showcase\Framework\Database {
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\SQLite\SQLiteTable;
     use \Showcase\Framework\Database\MySql\MySqlTable;
+    use \Showcase\Framework\Database\SQLite\SQLiteConnection;
+    use \Showcase\Framework\Database\MySql\MySqlConnection;
     use \Showcase\Framework\Database\Config\Column;
     use \Showcase\Framework\Database\Config\Converter;
     use \Showcase\AutoLoad;
@@ -234,7 +236,12 @@ namespace Showcase\Framework\Database {
             }
         }
 
-        public function getList($migration){
+        /**
+         * Get a array of objects for a migration
+         * @param string $migration name
+         * @param array $columns filter the results by columns
+         */
+        public function getList($migration, array $columns){
             if(empty($migration))
                 return false;
             $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
@@ -258,14 +265,40 @@ namespace Showcase\Framework\Database {
                     switch(strtolower($db_type)){
                         case 'slqlite':
                             $get = new SQLiteTable($this->pdo);
-                            return $get->getTable($table->name, $soft);
+                            return $get->getTable($table->name, $columns, $soft);
                         break;
                         case 'mysql':
                             $get = new MySqlTable($this->pdo);
-                            return $get->getTable($table->name, $soft);
+                            return $get->getTable($table->name, $columns, $soft);
                         break;
                     };
                 }
+            }
+        }
+
+        /**
+         * Execute a custom query
+         * @param string $query query to execute
+         */
+        public static function query($query){
+            if(empty($query))
+                return false;
+            $db_type = AutoLoad::env('DB_TYPE');
+            switch(strtolower($db_type)){
+                case 'slqlite':
+                    $pdo = (new SQLiteConnection())->connect();
+                    if ($pdo == null)
+                        Log::print("SQLite Error : DB.php 291 line \n Whoops, could not connect to the SQLite database!");
+                    $get = new SQLiteTable($pdo);
+                    return $get->query($query);
+                break;
+                case 'mysql':
+                    $pdo = (new MySqlConnection())->connect();
+                    if ($pdo == null)
+                        Log::print("MySql Error : DB.php 298 line \n Whoops, could not connect to the MySql database!");
+                    $get = new MySqlTable($pdo);
+                    return $get->query($query);
+                break;
             }
         }
     }

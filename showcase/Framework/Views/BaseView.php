@@ -9,3 +9,4 @@ use \Showcase\Framework\Session\SessionAlert;
 use \Showcase\Framework\HTTP\Links\URL;
 use \Showcase\Framework\IO\Debug\Log;
 use \Showcase\Framework\HTTP\Gards\Auth;
+use \Showcase\Framework\Session\Session;

@@ -62,14 +62,48 @@ namespace Showcase\Framework\Database\MySql {
         }
 
         /**
+         * Execute a custom query
+         * @return array
+         */
+        public function query($query) {
+            if(empty($query))
+                return false;
+            $stmt = $this->pdo->query($query);
+            $data = [];
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+
+        /**
          * Get all projects
          * @return array
          */
-        public function getTable($table, $soft=false) {
+        public function getTable($table, array $columns, $soft=false) {
             $sql = 'SELECT * ' . ' FROM ' . $table;
+            if($soft || (!is_null($columns) && !empty($columns)))
+                $sql .= ' WHERE ';
+
             if($soft)
-                $sql .= ' WHERE deleted_at=null AND active=1';
-            $stmt = $this->pdo->query($sql);
+                $sql .= ' deleted_at=null AND active=1';
+
+            if(!is_null($columns) && !empty($columns)){
+                if($soft)
+                    $sql .= ' AND ';
+                foreach($columns as $name => $value){
+                    $sql .=  $name .' =:' . $name . ' AND ';
+                }
+                $sql = rtrim($sql, " AND ");
+            }
+
+            $stmt = $this->pdo->prepare($sql);
+            $values = array();
+            foreach($columns as $name => $value){
+                $values[":".$name] = $value;
+            }
+            $stmt->execute($values);
+
             $data = [];
             while ($rows = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $data[] = $rows;
