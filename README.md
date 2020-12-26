@@ -73,6 +73,42 @@ You have to put the @render() tag inside the main view in the position where you
 </body>
 ```
 
+### Execute php inside a view
+
+To execute a custom php insdie a view, you can use the php function
+
+```html
+<!-- contact.view.php -->
+@extend("App/main")
+<body>
+    @php
+        $var = 1;
+        echo "this is a var $var";
+    @endphp
+    <!-- You page Code -->
+</body>
+```
+
+## Send variables from Controller to view
+
+To send a variable from controller to a view, add an array to the view method of the controller.
+
+```php  
+    /**
+     * Return the video single page
+     */
+    static function Play($request){
+        if(Validator::Validate($request->getBody(), ['id'])){
+            $url = Search::searchVideoById($request->getBody()['id']);
+            return self::view('App/video', array([
+                'url' => $url
+                ]));
+        }
+
+        return URL::Redirect('/errors/404');
+    }
+```
+
 ## Styles & Javascript & other Files
 
 To include files from the resources folder to your views, you need to use a tag :
@@ -217,8 +253,19 @@ To get array of models, you gonna use the static function toList() :
 $models = Model::toList();
 print($models[0]->paramName);
 
+```
+### Get Array of Objects with conditions
 
+To get array of models, with one, or more conditions, you gonna use the static function toList() : 
 
+```php
+if(empty($category))
+    $data = Picture::toList();
+else{
+    $data = Picture::toList([
+        'category' => $category
+    ]);
+}
 
 ```
 ## Migration
@@ -232,6 +279,9 @@ php creator createMigration migration_name
 A file will be created at Database\Migrations.
 
 To edit the columns, you open the migration file and edit it.
+
+Column Type :  int(), string(), double(), blob(), bool(), datetime()
+Column conditions : nullable(), autoIncrement(), primary(), notnull(), default($value)
 
 ```php
     /**
@@ -283,6 +333,40 @@ To create those migration, you need to execute another command line.
 php creator migrate
 ```
 
+## Session
+
+To display a message using $_SESSION, or to save a variable in the $_SESSION, to use it in different Controllers, you can use the session object
+
+```php
+    use \Showcase\Framework\Session\Session;
+    //Store value
+    Session::store('filter', 'drinks');
+
+    //Get the value of filter
+    echo Session::retrieve('filter'); //If filter dosen't exist, a null will be returned
+```
+
+## Session Alert
+
+To display a message using $_SESSION, you can use the sessionAlert object
+
+```php
+    use \Showcase\Framework\Session\SessionAlert;
+    //Store value
+    SessionAlert::Create('Email not found in the database', 'error');
+
+    // There is four stats to the message : info, error, waring and success
+    // info is the default
+
+    //To remove the message
+    SessionAlert::Clear();
+
+```
+```html
+<!-- To show the SessionAlert  -->
+@sessionAlert()
+<a href="@{{Base}}/Contact">Contact-Us</a>
+```
 ## Debug
 
 To print out data to a log file, use the Log Class.

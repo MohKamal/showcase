@@ -3,6 +3,7 @@
 namespace Showcase\Framework\Views {
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Utils\Utilities;
+    use \Showcase\Framework\IO\Debug\Log;
     
     /**
      * Loading and showing views files
@@ -14,8 +15,13 @@ namespace Showcase\Framework\Views {
          * Show the view by giving the sub folder and the name
          * @param $view view name example : Auth/Login Or Auth/Login.view.php
          */
-        static function show($view){
+        static function show($view, array $vars=array()){
             $page = self::printView($view);
+
+            $page = self::executeCode($page);
+
+            if(!empty($vars))
+                $page = self::checkVariables($page, $vars);
 
             //If no file found => 404 :(
             if(empty($page))
@@ -121,11 +127,36 @@ namespace Showcase\Framework\Views {
                         $page = $parent;
                     }
                 }
+                
                 //Displaying the page
                 return $page;
             }
             return '';
         }
 
+        static function executeCode($page){
+            //Chech for include function
+            $matches = array();
+            preg_match_all('#\@php(.*?)\@endphp#s', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $_subView = str_replace('@php', '', $subView);
+                $_subView = str_replace('@endphp', '', $_subView);
+                //Get the function results
+                $result = eval($_subView);
+                $page = str_replace($subView, $result, $page);
+            }
+            return $page;
+        }
+
+        static function checkVariables($page, array $vars){
+            //Chech for include function
+            $matches = array();
+            foreach ($vars[0] as $key => $value) {
+                //Replace special characters
+                $page = str_replace("$$key", $value, $page);
+            }
+            return $page;
+        }
     }
 }

@@ -19,8 +19,8 @@ namespace Showcase\Framework\HTTP\Controllers{
          * 
          * @param string view name
          */
-        function view($view){
-            return View::show($view);
+        function view($view, array $vars=array()){
+            return View::show($view, $vars);
         }
     }
 }
