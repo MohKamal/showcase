@@ -14,7 +14,7 @@ namespace Showcase\Controllers{
          * Return the welcome view
          */
         static function Index(){
-            return self::view('App/welcome');
+            return self::response()->view('App/welcome');
         }
     }
 }

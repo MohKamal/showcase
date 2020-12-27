@@ -8,13 +8,64 @@ A micro mini php framework to make one page or no back-end web site, like a pres
 ```php  
     $router->get('/path', function () {
         /* Code to execute */
-        return URL::Redirect('login');
+        return self::response()->redirect('login');
         /* Another */
-        HomeController::Home();
+        return HomeController::Home();
     });
 
     $router->post('/path',  function ($request) {
-        HomeController::Contact($request);
+        return HomeController::Contact($request);
+    });
+```
+
+## Validator
+To check if request body has a key, or any array has a key, use the validator.
+
+```php  
+    /**
+     * Return the video single page
+     */
+    static function Play($request){
+        if(Validator::Validate($request->getBody(), ['id'])){
+            $url = Search::searchVideoById($request->getBody()['id']);
+            return self::response()->view('App/video', array([
+                'url' => $url
+                ]));
+        }
+
+        return self::response()->redirect('/errors/404');
+    }
+```
+
+## Response
+Response is an object used to make user responses more easier.
+There is three response : view, redirect and json
+
+### Response View
+To return a view, use view response
+```php  
+    $router->get('/path', function () {
+        return self::response()->view('App/welcome');
+    });
+```
+
+### Response Redirect
+To redirect a user, use a redirect response
+```php  
+    $router->get('/path', function () {
+        return self::response()->redirect('/contact-us');
+    });
+```
+
+### Response Json
+To return any object as json response, use response json
+```php  
+    $router->get('/path', function () {
+        $data = User::toList([
+            'active' => 1
+        ]);
+
+        return self::response()->json($data);
     });
 ```
 
@@ -100,12 +151,12 @@ To send a variable from controller to a view, add an array to the view method of
     static function Play($request){
         if(Validator::Validate($request->getBody(), ['id'])){
             $url = Search::searchVideoById($request->getBody()['id']);
-            return self::view('App/video', array([
+            return self::response()->view('App/video', array([
                 'url' => $url
                 ]));
         }
 
-        return URL::Redirect('/errors/404');
+        return self::response()->redirect('/errors/404');
     }
 ```
 

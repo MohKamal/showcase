@@ -5,6 +5,7 @@ namespace Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Views\View;
+    use \Showcase\Framework\HTTP\Routing\Response;
     
     /**
      * 
@@ -21,6 +22,14 @@ namespace Showcase\Framework\HTTP\Controllers{
          */
         function view($view, array $vars=array()){
             return View::show($view, $vars);
+        }
+
+        /**
+         * Get a reponse object for an easy reponse
+         */
+        function response(){
+            $reponse = new Response();
+            return $reponse;
         }
     }
 }

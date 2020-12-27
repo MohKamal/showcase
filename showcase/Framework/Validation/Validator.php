@@ -13,8 +13,14 @@ namespace Showcase\Framework\Validation{
          */
         static function Validate($object, array $fields){
             foreach($fields as $field){
-                if($object[$field] == null)
+                if (array_key_exists($field, $object)) {
+                    if ($object[$field] == null) {
+                        return false;
+                    }
+                }
+                else
                     return false;
+
             }
 
             return true;
