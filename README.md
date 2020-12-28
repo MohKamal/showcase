@@ -69,6 +69,13 @@ To return any object as json response, use response json
     });
 ```
 
+### Response codes
+To return codes use :
+* 404 : response()->notFound()
+* 200 : response()->OK()
+* 403 : response()->unauthorized()
+* 500 : response()->internal()
+
 ## Views
 
 Every view is in the Views folder, you can create a subfolders and add your views files in there. Example : 
@@ -449,19 +456,65 @@ To display a message using $_SESSION, you can use the sessionAlert object
 ```php
     use \Showcase\Framework\Session\SessionAlert;
     //Store value
-    SessionAlert::Create('Email not found in the database', 'error');
+    SessionAlert::create('Email not found in the database', 'error');
 
     // There is four stats to the message : info, error, waring and success
     // info is the default
 
     //To remove the message
-    SessionAlert::Clear();
+    SessionAlert::clear();
 
 ```
 ```html
 <!-- To show the SessionAlert  -->
 @sessionAlert()
 <a href="@{{Base}}/Contact">Contact-Us</a>
+```
+## Authentication
+To use Authentication, there is one simple mecanisme in showcase to use a simple user with password hashing and saving data in session.
+To create the model and controller with the views run the command : 
+
+```bash
+php creator auth
+```
+After, you have to run the migrate command to create the user table in the database.
+
+```bash
+php creator migrate
+```
+And finaly, add the Auth routes to the web file.
+
+```php
+namespace Showcase {
+
+    //Other includes here
+    use \Showcase\Framework\HTTP\Gards\Auth;
+
+    $router  = new Router(new Request);
+
+    //Your routes
+
+    //Auth routes
+    Auth::routes($router);
+}
+```
+
+Now you have, login and register controllers, with login and register view at Views/Auth.
+
+You can use Auth object any where, to check if user is logged, or to get the current logged user.
+```php
+    //Get the user object
+    Auth::user(); //return \Showcase\Models\User object
+
+    //Get the user username
+    Auth::username(); //return string
+
+    //Check if the user is logged
+    if(Auth::check())
+        Log::console("User logged " . Auth:: username());
+    else
+        Log::console("Please login!!");
+
 ```
 ## Debug
 

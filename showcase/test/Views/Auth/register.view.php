@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- STYLE CSS -->
-		<link rel="stylesheet" href="../../ressources/css/style.css">
+		<link rel="stylesheet" href="@{{Styles}}/style.css">
 
 	</head>
 
@@ -14,12 +14,12 @@
 		<div class="wrapper">
 			<div class="inner">
 				<div class="image-holder">
-					<img src="../../ressources/images/images.jpg" alt="">
+					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
 				<form method="post" action='/newregister'>
 					<h3>Sign Up</h3>
 					<div class="form-holder active">
-						<input type="text" name="name" placeholder="name" class="form-control" required>
+						<input type="text" name="username" placeholder="name" class="form-control" required>
 					</div>
 					<div class="form-holder">
 						<input type="email" name="email" placeholder="e-mail" class="form-control" required>
@@ -34,7 +34,7 @@
 				</form>
 			</div>
 		</div>
-		<script src="../../ressources/js/jquery-3.3.1.min.js"></script>
-		<script src="../../ressources/js/main.js"></script>
+		<script src="@{{Scripts}}jquery-3.3.1.min.js"></script>
+		<script src="@{{Scripts}}main.js"></script>
 	</body>
 </html>

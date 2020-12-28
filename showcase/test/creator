@@ -1,0 +1,38 @@
+<?php
+/**
+ * Command line executer
+ * example: php Creator.php function_name arg
+ */
+namespace Showcase{
+    require_once dirname(__FILE__) . '/autoload.php';
+    require_once dirname(__FILE__) . '/Framework/Command/Cmd.php';
+    
+    use \Showcase\AutoLoad;
+
+    AutoLoad::register();
+    
+    use \Showcase\Framework\Command\Cmd;
+    
+    class Creator
+    {
+        /**
+     * Extract the command
+     * @param array @argv from the command line
+     */
+        public function Extract($command)
+        {
+            $cmd = new Cmd();
+            if (strtolower($command[0]) != 'creator') {
+                return false;
+            }
+            $param = '';
+            if (array_key_exists(2, $command)) {
+                $param = $command[2];
+            }
+            if (method_exists($cmd, $command[1])) {
+                call_user_func(array($cmd,$command[1]), $param);
+            }
+        }
+    }
+    (new Creator)->Extract($argv);
+}
