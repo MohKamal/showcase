@@ -17,12 +17,16 @@ namespace Showcase\Framework\Views {
          */
         static function show($view, array $vars=array()){
             $page = self::printView($view);
-
+            //check for php code
             $page = self::executeCode($page);
-
+            //check for variables
             if(!empty($vars))
                 $page = self::checkVariables($page, $vars);
-
+            //check for if
+            $page = self::checkForConditions($page);
+            //check for foreach and for
+            $page = self::checkForLoops($page);
+                
             //If no file found => 404 :(
             if(empty($page))
                 return http_response_code(404);
@@ -33,6 +37,10 @@ namespace Showcase\Framework\Views {
 
         /**
          * Returning a value based on the name of the function such as Assets Url or the app Base Url
+         * 
+         * @param string $function name
+         * 
+         * @return string correct path
          */
         static function parsingFunctions($function){
             switch(strtolower($function)){
@@ -65,6 +73,8 @@ namespace Showcase\Framework\Views {
         /**
          * Show the view by giving the sub folder and the name
          * @param $view view name example : Auth/Login Or Auth/Login.view.php
+         * 
+         * @return string view code
          */
         static function printView($view){
             //Checking the view name and its etension to call the correct file from the view folder
@@ -134,8 +144,15 @@ namespace Showcase\Framework\Views {
             return '';
         }
 
+        /**
+         * This function search for @php code to execute
+         * inside a view
+         * @param String $page view code
+         * 
+         * @return String view code with php executed
+         */
         static function executeCode($page){
-            //Chech for include function
+            //Chech for php function
             $matches = array();
             preg_match_all('#\@php(.*?)\@endphp#s', $page, $matches);
             foreach ($matches[0] as $subView) {
@@ -149,12 +166,74 @@ namespace Showcase\Framework\Views {
             return $page;
         }
 
+        /**
+         * This function search for variables sent from contollers
+         * to be printed inside a view, like url, title etc...
+         * @param String $page view code
+         * @param array $vars and variables, names and values
+         * 
+         * @return String view code with variables checked
+         */
         static function checkVariables($page, array $vars){
             //Chech for include function
             $matches = array();
             foreach ($vars[0] as $key => $value) {
                 //Replace special characters
                 $page = str_replace("$$key", $value, $page);
+            }
+            return $page;
+        }
+
+        /**
+         * check for loop like foreach and for
+         * @param string $page view code
+         * 
+         * @return string view code
+         */
+        static function checkForLoops($page){
+            //Chech for foreach or for loop
+            $matches = array();
+            preg_match_all('#\@foreach(.*?)\@endforeach#s', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $_subView = str_replace('@endforeach', '', $subView);
+                $_subView = str_replace('@', '', $_subView);
+                //Get the function results
+                $result = eval($_subView);
+                $page = str_replace($subView, $result, $page);
+            }
+
+            $matches = array();
+            preg_match_all('#\@for(.*?)\@endfor#s', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $_subView = str_replace('@endfor', '', $subView);
+                $_subView = str_replace('@', '', $_subView);
+                //Get the function results
+                $result = eval($_subView);
+                $page = str_replace($subView, $result, $page);
+            }
+            return $page;
+        }
+        
+        /**
+         * check for loop like foreach and for
+         * @param string $page view code
+         * 
+         * @return string view code
+         */
+        static function checkForConditions($page){
+            //Chech for foreach or for loop
+            $matches = array();
+            preg_match_all('#\@if(.*?)\@endif#s', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $_subView = str_replace('@endif', '', $subView);
+                $_subView = str_replace('@elseif', 'else if', $subView);
+                $_subView = str_replace('@', '', $_subView);
+                //Get the function results
+                $result = eval($_subView);
+                $page = str_replace($subView, $result, $page);
             }
             return $page;
         }

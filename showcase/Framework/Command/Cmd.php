@@ -22,7 +22,11 @@ namespace Showcase\Framework\Command{
             if(!empty($name)){
                 $file = file_get_contents(dirname(__FILE__) . '/../Resources/Controllers/Controller.php');
                 $content = str_replace('NameController', $name, $file);
-                file_put_contents(dirname(__FILE__) . '/../../Controllers/' . $name . '.php', $content);
+                $base_dir = dirname(__FILE__) . '/../../Controllers/';
+                if (!file_exists($base_dir)) {
+                    mkdir($base_dir, 0777, true);
+                }
+                file_put_contents($base_dir . $name . '.php', $content);
                 Log::console($name . ' Controller added!');
             }
         }
@@ -35,7 +39,11 @@ namespace Showcase\Framework\Command{
             if(!empty($name)){
                 $file = file_get_contents(dirname(__FILE__) . '/../Resources/Models/Model.php');
                 $content = str_replace('NameModel', $name, $file);
-                file_put_contents(dirname(__FILE__) . '/../../Models/' . $name . '.php', $content);
+                $base_dir = dirname(__FILE__) . '/../../Models/';
+                if (!file_exists($base_dir)) {
+                    mkdir($base_dir, 0777, true);
+                }
+                file_put_contents($base_dir . $name . '.php', $content);
                 Log::console($name . ' Model added!');
             }
         }
@@ -50,9 +58,13 @@ namespace Showcase\Framework\Command{
                 $content = str_replace('MigrationName', $name, $file);
                 //$file_name = $name . '_table_' . date("Ymdhis") .'.php';
                 $file_name = $name . '.php';
-                $dir = dirname(__FILE__) . '/../../Database/Migrations/' . $file_name;
+                $base_dir = dirname(__FILE__) . '/../../Database/Migrations/';
+                if (!file_exists($base_dir)) {
+                    mkdir($base_dir, 0777, true);
+                }
+                $dir = $base_dir . $file_name;
                 file_put_contents($dir, $content);
-                Log::console($name . ' migration file added succefully to ' . $dir);
+                Log::console($name . ' migration file added succefully');
             }
         }
 
@@ -85,6 +97,7 @@ namespace Showcase\Framework\Command{
                 {
                     $obj = new $class;
                     $db->createTable($obj);
+                    Log::console("Migration $obj->name created!");
                 }
             }
             Log::console('Migration ended!');

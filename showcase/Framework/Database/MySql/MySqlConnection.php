@@ -32,7 +32,7 @@ namespace Showcase\Framework\Database\MySql {
                 }
                 return $this->pdo;
             } catch(\PDOException $e) {
-                Log::print("PDOException MySql : MySqlConnection.php line 32 \n => " . $e->getMessage());
+                Log::print("PDOException MySql : MySqlConnection.php line 35 \n => " . $e->getMessage());
             }
             return null;
         }

@@ -140,6 +140,51 @@ To execute a custom php insdie a view, you can use the php function
 </body>
 ```
 
+### Foreach and for Loops
+To execute a loop without using the @php function, use the @foreach and @for loops.
+```html
+<!-- contact.view.php -->
+@extend("App/main")
+<body>
+    <!-- Foreach loop -->
+    @foreach(\Showcase\Models\User::toList() as $user){
+        if($user->isAdmin)
+            echo "<p>$user->name</p>";
+    }@endforeach
+
+    <!-- For loop -->
+    @for($i=0; $i < 5; $i++){
+        echo "number $i";
+    }@endfor
+    <!-- You page Code -->
+</body>
+```
+
+#### Note
+Use natice php code inside the loops.
+Don't forget the brakets '{}' inside the @foreach and @endforeach or the @for and @endfor, also @if and @elseif or @endif
+
+### Condition If
+If you want to check a condition without the php function, use the @if function.
+```html
+<!-- contact.view.php -->
+@extend("App/main")
+<body>
+    <!-- Simple if -->
+    @if($show){
+        echo "<p>Show it!</p>";
+    }@endif
+
+    <!-- If with Else -->
+    @if($show){
+        echo "<p>Show it!</p>";
+    }@elseif{
+        echo "<p>Not Showing it!</p>";
+    }@endif
+    <!-- You page Code -->
+</body>
+```
+
 ## Send variables from Controller to view
 
 To send a variable from controller to a view, add an array to the view method of the controller.

@@ -11,14 +11,14 @@ namespace Showcase\Controllers{
          * @return View
          */
         static function index(){
-            return self::view('App/welcome');
+            return self::response()->view('App/welcome');
         }
         
         /**
          * @return View
          */
         static function create(){
-            return self::view('App/welcome');
+            return self::response()->view('App/welcome');
         }
         
         /**
@@ -28,9 +28,9 @@ namespace Showcase\Controllers{
          */
         static function store($request){
             if(Validator::Validate($request->getBody(), ['email', 'password'])){
-                    return URL::Redirect('/'); 
+                    return self::response()->redirect('/'); 
             }
-            return URL::Redirect('/contact'); 
+            return self::response()->redirect('/contact'); 
         }
     }
 }

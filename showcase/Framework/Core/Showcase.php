@@ -23,7 +23,7 @@ namespace Showcase\Framework\Core{
         /**
          * Load the Env Variables
          * Include the routes
-         * Init the database
+         * Init the database (if the user want to use it)
          */
         public static function HakunaMatata(){
             //init the global settings
