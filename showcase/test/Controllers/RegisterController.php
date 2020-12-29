@@ -14,7 +14,7 @@ namespace Showcase\Controllers{
     class RegisterController extends BaseController{
 
         /**
-         * Return the welcome view
+         * Store new user
          */
         static function store($request){
             if (Validator::Validate($request->getBody(), ['email', 'password', 'username'])) {
@@ -26,7 +26,7 @@ namespace Showcase\Controllers{
 
                 //Log the user
                 Auth::loginWithEmail($user->email);
-                return self::response()->view('App/welcome');
+                return self::response()->redirect('/');
             }
             return self::response()->redirect('errors/500');
         }

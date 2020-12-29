@@ -141,7 +141,7 @@ To execute a custom php insdie a view, you can use the php function
 <body>
     @php
         $var = 1;
-        echo "this is a var $var";
+        display("this is a var $var");
     @endphp
     <!-- You page Code -->
 </body>
@@ -156,12 +156,12 @@ To execute a loop without using the @php function, use the @foreach and @for loo
     <!-- Foreach loop -->
     @foreach(\Showcase\Models\User::toList() as $user){
         if($user->isAdmin)
-            echo "<p>$user->name</p>";
+            display("<p>$user->name</p>");
     }@endforeach
 
     <!-- For loop -->
     @for($i=0; $i < 5; $i++){
-        echo "number $i";
+        display("number $i");
     }@endfor
     <!-- You page Code -->
 </body>
@@ -169,7 +169,7 @@ To execute a loop without using the @php function, use the @foreach and @for loo
 
 #### Note
 Use natice php code inside the loops.
-Don't forget the brakets '{}' inside the @foreach and @endforeach or the @for and @endfor, also @if and @elseif or @endif
+Don't forget the brakets '{}' inside the @foreach and @endforeach or the @for and @endfor, also @if and @else or @endif
 
 ### Condition If
 If you want to check a condition without the php function, use the @if function.
@@ -179,19 +179,45 @@ If you want to check a condition without the php function, use the @if function.
 <body>
     <!-- Simple if -->
     @if($show){
-        echo "<p>Show it!</p>";
+        display("<p>Show it!</p>");
     }@endif
 
     <!-- If with Else -->
     @if($show){
-        echo "<p>Show it!</p>";
-    }@elseif{
-        echo "<p>Not Showing it!</p>";
+        display("<p>Show it!</p>");
+    }@else{
+        display("<p>Not Showing it!</p>");
     }@endif
     <!-- You page Code -->
 </body>
 ```
 
+### Display to view
+To display a variable or a function result, use display function, inside @php, @foreach, @for and @if statement.
+```html
+<!-- contact.view.php -->
+@extend("App/main")
+<body>
+    @if($show){
+        <!-- Display -->
+        display("<p>Show it!</p>");
+    }@endif
+</body>
+```
+
+To display a simple variable sent from controller, use only the variable name
+```php
+return self::response()->view('App/welcome', array(
+                            'title' => 'post 1',
+                            ));
+```
+```html
+<!-- post.view.php -->
+@extend("App/main")
+<body>
+    <p>$title</p>
+</body>
+```
 ## Send variables from Controller to view
 
 To send a variable from controller to a view, add an array to the view method of the controller.
@@ -514,6 +540,12 @@ You can use Auth object any where, to check if user is logged, or to get the cur
         Log::console("User logged " . Auth:: username());
     else
         Log::console("Please login!!");
+
+    //Or
+    if(Auth::guest())
+        Log::console("Please login!!");
+    else
+        Log::console("User logged " . Auth:: username());
 
 ```
 ## Debug

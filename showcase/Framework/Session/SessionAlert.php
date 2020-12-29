@@ -10,7 +10,8 @@ namespace Showcase\Framework\Session{
          * Create a session message
          */
         public static function create($message, $message_type='info'){
-            session_start(); 
+            if (session_status() == PHP_SESSION_NONE)
+                session_start();
             self::Clear();
             if($message){
                 $html = "<style>
@@ -51,8 +52,10 @@ namespace Showcase\Framework\Session{
          * Get message html
          */
         public static function show(){
-            if(!isset($_SESSION))
-                session_start(); 
+            if (!isset($_SESSION)) {
+                if (session_status() == PHP_SESSION_NONE)
+                    session_start();
+            }
             if(array_key_exists('sess_flash_message', $_SESSION) && !empty($_SESSION['sess_flash_message']) && $_SESSION['sess_flash_message'] != null)
                 return $_SESSION['sess_flash_message'][0];
         }

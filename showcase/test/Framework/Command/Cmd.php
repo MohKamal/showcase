@@ -169,6 +169,7 @@ namespace Showcase\Framework\Command{
             //Views
             $loginView = $config_folder . 'View/login.view.php';
             $registerView = $config_folder . 'View/register.view.php';
+            $mainView = $config_folder . 'View/main.view.php';
 
             $base_dir = dirname(__FILE__) . '/../../Views/Auth/';
             if (!file_exists($base_dir)) {
@@ -177,6 +178,7 @@ namespace Showcase\Framework\Command{
 
             $loginView_newFolder = $base_dir . 'login.view.php';
             $registerView_newFolder = $base_dir . 'register.view.php';
+            $mainView_newFolder = dirname(__FILE__) . '/../../Views/App/' . 'main.view.php';
 
             if(!copy($loginView, $loginView_newFolder)){
                 Log::console("Can't create views");
@@ -184,6 +186,11 @@ namespace Showcase\Framework\Command{
             }
 
             if(!copy($registerView, $registerView_newFolder)){
+                Log::console("Can't create views");
+                return false;
+            }
+
+            if(!copy($mainView, $mainView_newFolder)){
                 Log::console("Can't create views");
                 return false;
             }

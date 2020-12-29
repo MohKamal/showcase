@@ -83,7 +83,9 @@ namespace Showcase\Framework\HTTP\Gards{
          */
         public static function logout(){
             if(self::check()){
-                Session::clear();
+                Session::clear('user_id');
+                Session::clear('user_email');
+                Session::clear('user_name');
                 if(!self::check())
                     return true;
             }
@@ -97,6 +99,16 @@ namespace Showcase\Framework\HTTP\Gards{
          */
         public static function check(){
             if(!empty(Session::retrieve('user_id')) && !is_null(Session::retrieve('user_id')))
+                return true;
+            return false;
+        }
+
+        /**
+         * Check if the user is not connected
+         * @return Boolean
+         */
+        public static function guest(){
+            if(empty(Session::retrieve('user_id')) && is_null(Session::retrieve('user_id')))
                 return true;
             return false;
         }

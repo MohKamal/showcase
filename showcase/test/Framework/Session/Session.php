@@ -39,5 +39,12 @@ namespace Showcase\Framework\Session{
                 return $_SESSION[$name];
             return null;
         }
+
+        /**
+         * Clear session
+         */
+        public static function clear($name){
+            $_SESSION[$name] = null;
+        }
     }
 }

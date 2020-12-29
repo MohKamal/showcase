@@ -17,7 +17,7 @@ namespace Showcase\Controllers{
             return self::response()->view('App/welcome', array(
                 'url' => 'https://google.com',
                 'title' => 'google',
-                'locations' => array(1, 5, 6, 7),
+                'locations' => array('a', 'b', 'c', 'd'),
             ));
         }
     }

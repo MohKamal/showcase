@@ -1,12 +1,30 @@
-12:19 - $url='https://google.com';$title='google';$locations=$0='1';$1='5';$2='6';$3='7';;
+08:06 - kamal.a@gmail.com
 
-12:20 - $url='https://google.com';$title='google';$locations=$0='1';$1='5';$2='6';$3='7';;
+08:06 - <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> kamal.a@gmail.com </a></li>
 
-12:21 - $url='https://google.com';$title='google';$locations=$0='1';$1='5';$2='6';$3='7';;
+08:06 - <li><a href="#" id="logout"><span class="glyphicon glyphicon-user"></span> Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>
 
-12:24 - $url='https://google.com';$title='google';$locations=$0='1';$1='5';$2='6';$3='7';;
+08:07 - <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>  </a></li>
 
-12:25 - $url='https://google.com';$title='google';$locations=array();
+08:07 - <li><a href="#" id="logout"><span class="glyphicon glyphicon-user"></span> Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>
 
-12:25 - $url='https://google.com';$title='google';$locations=array(1,5,6,7);
+08:07 - kamal.a@gmail.com
+
+08:07 - <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> kamal.a@gmail.com </a></li>
+
+08:07 - <li><a href="#" id="logout"><span class="glyphicon glyphicon-user"></span> Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>
+
+08:08 - 
+
+08:08 - <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+
+08:08 - <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+
+08:09 - 
+
+08:09 - <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+
+08:09 - <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+
+08:11 - Auth: user connected kamal.a@gmail.com
 

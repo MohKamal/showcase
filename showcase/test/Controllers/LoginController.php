@@ -14,14 +14,27 @@ namespace Showcase\Controllers{
     class LoginController extends BaseController{
 
         /**
-         * Return the welcome view
+         * Login a user
          */
         static function login($request){
+            if(Auth::check())
+                return self::response()->redirect('/');
+
             if (Validator::Validate($request->getBody(), ['email', 'password'])) {
                 if(!Auth::login($request->getBody()['email'], $request->getBody()['password']))
                     return self::response()->unauthorized();
             }
-            return self::response()->view('App/welcome');
+            return self::response()->redirect('/');
+        }
+
+        /**
+         * Logout user
+         */
+        static function logout(){
+            if(Auth::logout())
+                return self::response()->redirect('/');
+            
+            return self::response()->unauthorized();
         }
     }
 }

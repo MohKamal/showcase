@@ -24,7 +24,7 @@ namespace Showcase\Controllers{
                 if(!Auth::login($request->getBody()['email'], $request->getBody()['password']))
                     return self::response()->unauthorized();
             }
-            return self::response()->view('App/welcome');
+            return self::response()->redirect('/');
         }
 
         /**
@@ -32,7 +32,7 @@ namespace Showcase\Controllers{
          */
         static function logout(){
             if(Auth::logout())
-                return self::response()->view('App/welcome');
+                return self::response()->redirect('/');
             
             return self::response()->unauthorized();
         }

@@ -154,12 +154,17 @@ namespace Showcase\Framework\Views {
             //Chech for php function
             $matches = array();
             preg_match_all('#\@php(.*?)\@endphp#s', $page, $matches);
+            $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
                 $_subView = str_replace('@php', '', $subView);
                 $_subView = str_replace('@endphp', '', $_subView);
+                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){ function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
-                $result = eval($vars . $_subView);
+                $result = eval($program);
+                if(!empty($result_to_display))
+                    $result .= $result_to_display;
                 $page = str_replace($subView, $result, $page);
             }
             return $page;
@@ -192,27 +197,40 @@ namespace Showcase\Framework\Views {
          */
         static function checkForLoops($page, $vars){
             //Chech for foreach or for loop
+            //Log::print($page);
             $matches = array();
             preg_match_all('#\@foreach(.*?)\@endforeach#s', $page, $matches);
+            $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
                 $_subView = str_replace('@endforeach', '', $subView);
-                $_subView = str_replace('@', '', $_subView);
+                $_subView = str_replace('@foreach', 'foreach', $_subView);
+                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
-                $result = eval($vars . $_subView);
+                $result = eval($program);
+                if(!empty($result_to_display))
+                    $result .= $result_to_display;
+                //Get the function results
                 $page = str_replace($subView, $result, $page);
             }
 
             $matches = array();
             preg_match_all('#\@for(.*?)\@endfor#s', $page, $matches);
+            $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
                 $_subView = str_replace('@endfor', '', $subView);
-                $_subView = str_replace('@', '', $_subView);
+                $_subView = str_replace('@for', 'for', $_subView);
+                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
-                $result = eval($vars . $_subView);
+                $result = eval($program);
+                if(!empty($result_to_display))
+                    $result .= $result_to_display;
                 $page = str_replace($subView, $result, $page);
             }
+            //Log::print($page);
             return $page;
         }
         
@@ -226,13 +244,19 @@ namespace Showcase\Framework\Views {
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@if(.*?)\@endif#s', $page, $matches);
+            $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
                 $_subView = str_replace('@endif', '', $subView);
                 $_subView = str_replace('@elseif', 'else if', $_subView);
-                $_subView = str_replace('@', '', $_subView);
+                $_subView = str_replace('@if', 'if', $_subView);
+                $_subView = str_replace('@else', 'else', $_subView);
+                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
-                $result = eval($vars . $_subView);
+                $result = eval($program);
+                if(!empty($result_to_display))
+                    $result .= $result_to_display;
                 $page = str_replace($subView, $result, $page);
             }
             return $page;
@@ -249,9 +273,9 @@ namespace Showcase\Framework\Views {
             $string = '';
             foreach($vars as $key => $value){
                 if(is_array($value))
-                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");";
+                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
                 else
-                    $string .= "$$key=" . "'$value';";
+                    $string .= "$$key=" . "'$value';\n";
             }
 
             return $string;
@@ -268,8 +292,12 @@ namespace Showcase\Framework\Views {
             if(!is_array($vars))
                 return '';
             $string = '';
-            foreach($vars as $key => $value)
-                $string .= "$value,";
+            foreach ($vars as $key => $value) {
+                if(is_numeric($value))
+                    $string .= "$value,";
+                else
+                    $string .= "'$value',";
+            }
             
             return substr($string, 0, -1);
         }

@@ -26,7 +26,7 @@ namespace Showcase\Controllers{
 
                 //Log the user
                 Auth::loginWithEmail($user->email);
-                return self::response()->view('App/welcome');
+                return self::response()->redirect('/');
             }
             return self::response()->redirect('errors/500');
         }
