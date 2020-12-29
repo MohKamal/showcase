@@ -14,7 +14,11 @@ namespace Showcase\Controllers{
          * Return the welcome view
          */
         static function Index(){
-            return self::response()->view('App/welcome');
+            return self::response()->view('App/welcome', array(
+                'url' => 'https://google.com',
+                'title' => 'google',
+                'locations' => array(1, 5, 6, 7),
+            ));
         }
     }
 }

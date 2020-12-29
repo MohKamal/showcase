@@ -44,9 +44,11 @@
 	</head>
 
 	<body>
-		@if(\Showcase\Framework\HTTP\Gards\Auth::check()){
-			echo "<p>" . \Showcase\Framework\HTTP\Gards\Auth::user()->email. "</p>";
-		}@endif
+		@php
+			foreach($locations as $loc)
+				echo "<p>number : $loc</p>";
+		@endphp
+		<h2>$title</h2>
 		@render()
 		<script src="@{{Jquery}}"></script>
 		<link rel="stylesheet" href="@{{Bootsrap-script}}">

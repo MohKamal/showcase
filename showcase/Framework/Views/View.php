@@ -18,21 +18,20 @@ namespace Showcase\Framework\Views {
         static function show($view, array $vars=array()){
             $page = self::printView($view);
             //check for php code
-            $page = self::executeCode($page);
+            $page = self::executeCode($page, self::varsToString($vars));
+            //check for if
+            $page = self::checkForConditions($page, self::varsToString($vars));
+            //check for foreach and for
+            $page = self::checkForLoops($page, self::varsToString($vars));
             //check for variables
             if(!empty($vars))
                 $page = self::checkVariables($page, $vars);
-            //check for if
-            $page = self::checkForConditions($page);
-            //check for foreach and for
-            $page = self::checkForLoops($page);
-                
             //If no file found => 404 :(
             if(empty($page))
                 return http_response_code(404);
 
             echo $page;
-            //return http_response_code(200);       
+            //return http_response_code(200);
         }
 
         /**
@@ -151,7 +150,7 @@ namespace Showcase\Framework\Views {
          * 
          * @return String view code with php executed
          */
-        static function executeCode($page){
+        static function executeCode($page, $vars){
             //Chech for php function
             $matches = array();
             preg_match_all('#\@php(.*?)\@endphp#s', $page, $matches);
@@ -160,7 +159,7 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@php', '', $subView);
                 $_subView = str_replace('@endphp', '', $_subView);
                 //Get the function results
-                $result = eval($_subView);
+                $result = eval($vars . $_subView);
                 $page = str_replace($subView, $result, $page);
             }
             return $page;
@@ -177,9 +176,10 @@ namespace Showcase\Framework\Views {
         static function checkVariables($page, array $vars){
             //Chech for include function
             $matches = array();
-            foreach ($vars[0] as $key => $value) {
+            foreach ($vars as $key => $value) {
                 //Replace special characters
-                $page = str_replace("$$key", $value, $page);
+                if(!is_array($value))
+                    $page = str_replace("$$key", $value, $page);
             }
             return $page;
         }
@@ -190,7 +190,7 @@ namespace Showcase\Framework\Views {
          * 
          * @return string view code
          */
-        static function checkForLoops($page){
+        static function checkForLoops($page, $vars){
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@foreach(.*?)\@endforeach#s', $page, $matches);
@@ -199,7 +199,7 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@endforeach', '', $subView);
                 $_subView = str_replace('@', '', $_subView);
                 //Get the function results
-                $result = eval($_subView);
+                $result = eval($vars . $_subView);
                 $page = str_replace($subView, $result, $page);
             }
 
@@ -210,7 +210,7 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@endfor', '', $subView);
                 $_subView = str_replace('@', '', $_subView);
                 //Get the function results
-                $result = eval($_subView);
+                $result = eval($vars . $_subView);
                 $page = str_replace($subView, $result, $page);
             }
             return $page;
@@ -222,7 +222,7 @@ namespace Showcase\Framework\Views {
          * 
          * @return string view code
          */
-        static function checkForConditions($page){
+        static function checkForConditions($page, $vars){
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@if(.*?)\@endif#s', $page, $matches);
@@ -232,10 +232,46 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@elseif', 'else if', $_subView);
                 $_subView = str_replace('@', '', $_subView);
                 //Get the function results
-                $result = eval($_subView);
+                $result = eval($vars . $_subView);
                 $page = str_replace($subView, $result, $page);
             }
             return $page;
+        }
+
+        /**
+         * Convert the variables sent from controller to view to string to be included
+         * in eval function
+         */
+        static function varsToString(array $vars){
+            if(empty($vars))
+                return '';
+
+            $string = '';
+            foreach($vars as $key => $value){
+                if(is_array($value))
+                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");";
+                else
+                    $string .= "$$key=" . "'$value';";
+            }
+
+            return $string;
+        }
+
+        /***
+         * If the user send an array inside the variables sent to the view
+         * this function convert it to string
+         */
+        static function arrayToStringVar(array $vars){
+            if(empty($vars))
+                return '';
+
+            if(!is_array($vars))
+                return '';
+            $string = '';
+            foreach($vars as $key => $value)
+                $string .= "$value,";
+            
+            return substr($string, 0, -1);
         }
     }
 }
