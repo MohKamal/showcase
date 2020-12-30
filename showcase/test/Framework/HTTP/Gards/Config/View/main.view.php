@@ -44,23 +44,26 @@
 	</head>
 
 	<body>
-		<nav class="navbar navbar-inverse">
-			<div class="container-fluid">
-				<div class="navbar-header">
-				<a class="navbar-brand" href="#">Showcase</a>
-				</div>
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="/">Home</a></li>
-					<li><a href="/documentation">Documentation</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					@if(\Showcase\Framework\HTTP\Gards\Auth::guest()){
-						display('<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>');
-						display('<li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>');
-					}@else{
-						display('<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> @php display(\Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->email);  @endphp </a></li>');
-						display('<li><a href="#" id="logout"><span class="glyphicon glyphicon-user"></span> Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>');
-					}@endif
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="#">Showcase</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+				<li class="nav-item active">
+					<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/documentation">Documentation</a>
+				</li>
+				@if(\Showcase\Framework\HTTP\Gards\Auth::guest()){
+					display('<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>');
+					display('<li class="nav-item"><a class="nav-link" href="/register">Register</a></li>');
+				}@else{
+					display('<li class="nav-item"><a class="nav-link" href="#">@php display(\Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->email);  @endphp</a></li>');
+					display('<li class="nav-item"><a class="nav-link" href="#" id="logout">Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>');
+				}@endif
 				</ul>
 			</div>
 		</nav>

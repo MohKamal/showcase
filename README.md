@@ -193,15 +193,20 @@ If you want to check a condition without the php function, use the @if function.
 ```
 
 ### Display to view
-To display a variable or a function result, use display function, inside @php, @foreach, @for and @if statement.
+To display a variable or a function result, use @display function, inside @php, @foreach, @for and @if statement or in plain html.
 ```html
 <!-- contact.view.php -->
 @extend("App/main")
 <body>
     @if($show){
         <!-- Display -->
-        display("<p>Show it!</p>");
+        @display '<p>Show it!</p>' @enddisplay
     }@endif
+    <!-- Display -->
+    @display '<p>Out Side!</p>' @enddisplay
+    
+        <!-- Display -->
+    @display $number = $number + 5 @enddisplay
 </body>
 ```
 

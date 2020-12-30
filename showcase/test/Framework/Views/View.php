@@ -160,6 +160,7 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@php', '', $subView);
                 $_subView = str_replace('@endphp', '', $_subView);
                 $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){ function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $_subView = self::checkForDisplay($_subView, $vars);
                 $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
                 $result = eval($program);
@@ -206,6 +207,7 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@endforeach', '', $subView);
                 $_subView = str_replace('@foreach', 'foreach', $_subView);
                 $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $_subView = self::checkForDisplay($_subView, $vars);
                 $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
                 $result = eval($program);
@@ -223,6 +225,7 @@ namespace Showcase\Framework\Views {
                 $_subView = str_replace('@endfor', '', $subView);
                 $_subView = str_replace('@for', 'for', $_subView);
                 $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
+                $_subView = self::checkForDisplay($_subView, $vars);
                 $program = $vars . $diplayFunction . $_subView;
                 //Get the function results
                 $result = eval($program);
@@ -244,19 +247,44 @@ namespace Showcase\Framework\Views {
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@if(.*?)\@endif#s', $page, $matches);
-            $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
                 $_subView = str_replace('@endif', '', $subView);
                 $_subView = str_replace('@elseif', 'else if', $_subView);
                 $_subView = str_replace('@if', 'if', $_subView);
                 $_subView = str_replace('@else', 'else', $_subView);
-                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
-                $program = $vars . $diplayFunction . $_subView;
+                $result_to_display = '';
+                $diplayFunction = '$names = get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string, $add=true){global $result_to_display; if($add){$result_to_display .= $string;} return $result_to_display;}}' . "\n";
                 //Get the function results
+                $_subView = self::checkForDisplay($_subView, $vars);
+                $program = $vars . $diplayFunction . $_subView;
                 $result = eval($program);
                 if(!empty($result_to_display))
                     $result .= $result_to_display;
+                $page = str_replace($subView, $result, $page);
+            }
+            return $page;
+        }
+
+        /**
+         * check for loop like foreach and for
+         * @param string $page view code
+         * 
+         * @return string view code
+         */
+        static function checkForDisplay($page, $vars){
+            //Chech for foreach or for loop
+            $matches = array();
+            preg_match_all('#\@display(.*?)\@enddisplay#s', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $_subView = str_replace('@enddisplay', '', $subView);
+                $_subView = str_replace('@display', '', $_subView);
+                $result_to_display = '';
+                $program = $vars . " return " . $_subView . ";";
+                //Get the function results
+                $result = eval($program);
+                $result = "display('" . $result . "');";
                 $page = str_replace($subView, $result, $page);
             }
             return $page;
