@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Showcase v1.0</title>
+		<title>Showcase</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="icon" href="@{{Assets}}/images/favicon.ico" />
 		<!-- STYLE CSS -->

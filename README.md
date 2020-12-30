@@ -143,7 +143,7 @@ To execute a custom php insdie a view, you can use the php function
 <body>
     @php
         $var = 1;
-        display("this is a var $var");
+        @display "this is a var $var" @enddisplay;
     @endphp
     <!-- You page Code -->
 </body>
@@ -158,12 +158,12 @@ To execute a loop without using the @php function, use the @foreach and @for loo
     <!-- Foreach loop -->
     @foreach(\Showcase\Models\User::toList() as $user){
         if($user->isAdmin)
-            display("<p>$user->name</p>");
+            @display "<p>$user->name</p>" @enddisplay;
     }@endforeach
 
     <!-- For loop -->
     @for($i=0; $i < 5; $i++){
-        display("number $i");
+        @display "number $i" @enddisplay;
     }@endfor
     <!-- You page Code -->
 </body>
@@ -181,14 +181,14 @@ If you want to check a condition without the php function, use the @if function.
 <body>
     <!-- Simple if -->
     @if($show){
-        display("<p>Show it!</p>");
+        @display "<p>Show it!</p>" @enddisplay;
     }@endif
 
     <!-- If with Else -->
     @if($show){
-        display("<p>Show it!</p>");
+        @display "<p>Show it!</p>" @enddisplay;
     }@else{
-        display("<p>Not Showing it!</p>");
+        @display "<p>Not Showing it!</p>" @enddisplay;
     }@endif
     <!-- You page Code -->
 </body>
