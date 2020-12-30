@@ -17,3 +17,7 @@ if(\Showcase\Framework\HTTP\Gards\Auth::guest()){
 
 08:32 - 
 
+08:40 - Auth: user connected kamal.a@gmail.com
+
+08:40 - Auth: user connected khalid.a@gmail.com
+
