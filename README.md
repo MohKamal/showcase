@@ -234,7 +234,7 @@ To display a variable or a function result, use @display function, inside @php, 
     @display '<p>Out Side!</p>' @enddisplay
     
         <!-- Display -->
-    @display $number = $number + 5 @enddisplay
+    @display $number + 5 @enddisplay
 </body>
 ```
 

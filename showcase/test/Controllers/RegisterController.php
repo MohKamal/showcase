@@ -34,7 +34,7 @@ namespace Showcase\Controllers{
                 Auth::loginWithEmail($user->email);
                 return self::response()->redirect('/');
             }
-            return self::response()->view('Auth/register', array('errors' => $errors));
+            return self::response()->view('Auth/register', array('errors' => $errors, 'hasError' => empty($errors) ? false : true));
         }
     }
 }

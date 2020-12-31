@@ -9,7 +9,7 @@
     });
 
     $router->get('/register', function () {
-        return \Showcase\Framework\Views\View::show('Auth/register');
+        return \Showcase\Framework\Views\View::show('Auth/register', ['errors' => array(), 'hasError' => false]);
     });
 
     $router->post('/logout', function ($request) {
