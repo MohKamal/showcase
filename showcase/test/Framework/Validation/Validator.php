@@ -15,6 +15,8 @@ namespace Showcase\Framework\Validation{
             foreach($fields as $field){
                 if (!array_key_exists($field, $object))
                     return false;
+                if(!self::required($object[$field]))
+                    return false;
             }
 
             return true;
@@ -58,6 +60,15 @@ namespace Showcase\Framework\Validation{
             return $errors;
         }
 
+        /**
+         * Check the specifications and return the correct function
+         * 
+         * @param string $spec specification
+         * @param string $value value from the request
+         * @param numeric $lenght optional value lenght for max and mix function
+         * 
+         * @return boolean
+         */
         protected static function fieldSpecification($spec, $value, $lenght=0){
             switch(strtolower($spec)){
                 case 'required':
@@ -77,38 +88,75 @@ namespace Showcase\Framework\Validation{
             }
         }
 
+        /**
+         * required specification
+         * @param string $value
+         * @return boolean
+         */
         protected static function required($value){
             if(is_null($value) || empty($value))
                 return false;
             return true;
         }
 
+        /**
+         * string specification
+         * @param string $value
+         * @return boolean
+         */
         protected static function string($value){
             return is_string($value);
         }
 
+        /**
+         * numeric specification
+         * @param string $value
+         * @return boolean
+         */
         protected static function numeric($value){
             return is_numeric($value);
         }
 
+        /**
+         * required specification
+         * @param string $value
+         * @param numeric $lenght
+         * @return boolean
+         */
         protected static function max($value, $lenght){
             if(strlen($value) > $lenght)
                 return false;
             return true;
         }
 
+        /**
+         * required specification
+         * @param string $value
+         * @param numeric $lenght
+         * @return boolean
+         */
         protected static function min($value, $lenght){
             if(strlen($value) < $lenght)
                 return false;
             return true;
         }
 
+        /**
+         * required specification
+         * @param string $value
+         * @return boolean
+         */
         protected static function email($value){
             if (!filter_var($value, FILTER_VALIDATE_EMAIL))
                 return false;
             return true;
         }
 
+        /**
+         * required specification
+         * @param string $value
+         * @return boolean
+         */
         protected static function phone($value){
             if(!preg_match("/^[0-9]{3}-[0-9]{4}-[0-9]{4}$/", $value))
                 return false;
