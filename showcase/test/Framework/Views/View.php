@@ -214,6 +214,7 @@ namespace Showcase\Framework\Views {
                 $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
                 $_subView = self::checkForDisplay($_subView, $vars);
                 $program = $vars . $diplayFunction . $_subView;
+                Log::print($program);
                 //Get the function results
                 $result = eval($program);
                 if(!empty($result_to_display))
@@ -289,7 +290,8 @@ namespace Showcase\Framework\Views {
                 $program = $vars . " return " . $_subView . ";";
                 //Get the function results
                 $result = eval($program);
-                $result = "display('" . $result . "');";
+                $result = str_replace('"', "'", $result);
+                $result = 'display("' . $result . '");';
                 $page = str_replace($subView, $result, $page);
             }
             return $page;

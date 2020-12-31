@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Gestion Note</title>
+		<title>Showcase - Register</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- STYLE CSS -->
@@ -17,6 +17,9 @@
 					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
 				<form method="post" action='/newregister'>
+				@foreach($errors as $error){
+					@display "<div class='alert alert-danger' role='alert'>$error</div>" @enddisplay
+				}@endforeach
 					@sessionAlert
 					<h3>Sign Up</h3>
 					<div class="form-holder active">

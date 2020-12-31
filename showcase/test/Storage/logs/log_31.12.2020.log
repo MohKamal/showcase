@@ -1,88 +1,15 @@
-12:51 - email
+01:05 - $names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}
+foreach($errors as $error){
+					display('<div class='alert alert-danger' role='alert'> </div>');
+				}
 
-a:0:{}------------------------------------
+01:05 - $names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}
+foreach($errors as $error){
+					display("<div class='alert alert-danger' role='alert'> </div>");
+				}
 
-12:51 - password
-
-a:0:{}------------------------------------
-
-12:51 - username
-
-a:0:{}------------------------------------
-
-12:51 - Auth: Trying to log with empty coordinates
-
-12:52 - email
-
-a:3:{i:0;s:8:"required";i:1;s:6:"string";i:2;s:5:"email";}------------------------------------
-
-12:52 - required
-
-12:52 - string
-
-12:52 - email
-
-12:52 - password
-
-a:2:{i:0;s:8:"required";i:1;s:5:"min:8";}------------------------------------
-
-12:52 - required
-
-12:52 - min:8
-
-12:52 - username
-
-a:4:{i:0;s:8:"required";i:1;s:5:"min:3";i:2;s:6:"max:10";i:3;s:6:"string";}------------------------------------
-
-12:52 - required
-
-12:52 - min:3
-
-12:52 - max:10
-
-12:52 - string
-
-12:52 - email
-
-a:3:{i:0;s:8:"required";i:1;s:6:"string";i:2;s:5:"email";}------------------------------------
-
-12:52 - required
-
-12:52 - string
-
-12:52 - email
-
-12:52 - password
-
-a:2:{i:0;s:8:"required";i:1;s:5:"min:8";}------------------------------------
-
-12:52 - required
-
-12:52 - min:8
-
-a:2:{i:0;s:3:"min";i:1;s:1:"8";}------------------------------------
-
-12:52 - username
-
-a:4:{i:0;s:8:"required";i:1;s:5:"min:3";i:2;s:6:"max:10";i:3;s:6:"string";}------------------------------------
-
-12:52 - required
-
-12:52 - min:3
-
-a:2:{i:0;s:3:"min";i:1;s:1:"3";}------------------------------------
-
-12:52 - max:10
-
-a:2:{i:0;s:3:"max";i:1;s:2:"10";}------------------------------------
-
-12:52 - string
-
-a:4:{i:0;s:17:"email is required";i:1;s:22:"email need to be email";i:2;s:20:"username is required";i:3;s:27:"min lenght of username is 3";}------------------------------------
-
-a:1:{i:0;s:27:"min lenght of username is 3";}------------------------------------
-
-a:0:{}------------------------------------
-
-12:54 - Auth: user connected jao@gmail.com
+01:09 - $names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}
+foreach($errors as $error){
+					display("<div class='alert alert-danger' role='alert'> </div>");
+				}
 
