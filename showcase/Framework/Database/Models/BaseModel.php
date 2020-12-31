@@ -172,7 +172,7 @@ namespace Showcase\Framework\Database\Models {
             $class = get_called_class();
             $model = new $class();
             $db = new DB();
-            $records = $db->getList($model->migration, $columns);
+            $records = $db->getList($model->migration, $columns, $limit);
             if(count($records) > 0){
                 $data = array();
                 foreach($records as $record){

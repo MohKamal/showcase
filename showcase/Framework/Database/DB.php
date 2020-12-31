@@ -242,7 +242,7 @@ namespace Showcase\Framework\Database {
          * @param numeric $limit the result
          * @param array $columns filter the results by columns
          */
-        public function getList($migration, array $columns, $limit=-1){
+        public function getList($migration, array $columns, $limit){
             if(empty($migration))
                 return false;
             $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';

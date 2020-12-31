@@ -85,7 +85,7 @@ namespace Showcase\Framework\Database\MySql {
          * 
          * @return array
          */
-        public function getTable($table, array $columns, $soft=false,  $limit=-1) {
+        public function getTable($table, array $columns, $soft=false,  $limit) {
             $sql = 'SELECT * ' . ' FROM ' . $table;
             if($soft || (!is_null($columns) && !empty($columns)))
                 $sql .= ' WHERE ';
