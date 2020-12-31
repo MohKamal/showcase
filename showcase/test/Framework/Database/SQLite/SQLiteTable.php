@@ -64,7 +64,7 @@ namespace Showcase\Framework\Database\SQLite {
          * Get all projects
          * @return array
          */
-        public function getTable($table, array $columns, $soft=false) {
+        public function getTable($table, array $columns, $soft=false, $limit=-1) {
             $sql = 'SELECT * ' . ' FROM ' . $table;
             if($soft || (!is_null($columns) && !empty($columns)))
                 $sql .= ' WHERE ';
@@ -80,6 +80,10 @@ namespace Showcase\Framework\Database\SQLite {
                 }
                 $sql = rtrim($sql, " AND ");
             }
+
+            if($limit > 0)
+                $sql .=  " LIMIT $limit";
+                
             $stmt = $this->pdo->prepare($sql);
             $values = array();
             foreach($columns as $name => $value){

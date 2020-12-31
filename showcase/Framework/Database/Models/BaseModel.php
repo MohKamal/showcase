@@ -164,9 +164,11 @@ namespace Showcase\Framework\Database\Models {
 
         /**
          * Get list of this model
+         * @param array $columns to filter the results
+         * @param numeric $limit the results
          * @return array \Showcase\Framework\Database\Models\BaseModel
          */
-        public static function toList(array $columns=array()){
+        public static function toList(array $columns=array(), $limit=-1){
             $class = get_called_class();
             $model = new $class();
             $db = new DB();

@@ -78,9 +78,14 @@ namespace Showcase\Framework\Database\MySql {
 
         /**
          * Get all projects
+         * @param string $table name
+         * @param array $columns to filtre the results
+         * @param boolean $soft use soft delete
+         * @param numeric $limit the results
+         * 
          * @return array
          */
-        public function getTable($table, array $columns, $soft=false) {
+        public function getTable($table, array $columns, $soft=false,  $limit=-1) {
             $sql = 'SELECT * ' . ' FROM ' . $table;
             if($soft || (!is_null($columns) && !empty($columns)))
                 $sql .= ' WHERE ';
@@ -96,6 +101,9 @@ namespace Showcase\Framework\Database\MySql {
                 }
                 $sql = rtrim($sql, " AND ");
             }
+
+            if($limit > 0)
+                $sql .=  " LIMIT $limit";
 
             $stmt = $this->pdo->prepare($sql);
             $values = array();

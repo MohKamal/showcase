@@ -239,9 +239,10 @@ namespace Showcase\Framework\Database {
         /**
          * Get a array of objects for a migration
          * @param string $migration name
+         * @param numeric $limit the result
          * @param array $columns filter the results by columns
          */
-        public function getList($migration, array $columns){
+        public function getList($migration, array $columns, $limit=-1){
             if(empty($migration))
                 return false;
             $file = dirname(__FILE__) . '/../../Database/Migrations/' . $migration . '.php';
@@ -265,11 +266,11 @@ namespace Showcase\Framework\Database {
                     switch(strtolower($db_type)){
                         case 'slqlite':
                             $get = new SQLiteTable($this->pdo);
-                            return $get->getTable($table->name, $columns, $soft);
+                            return $get->getTable($table->name, $columns, $soft, $limit);
                         break;
                         case 'mysql':
                             $get = new MySqlTable($this->pdo);
-                            return $get->getTable($table->name, $columns, $soft);
+                            return $get->getTable($table->name, $columns, $soft, $limit);
                         break;
                     };
                 }
