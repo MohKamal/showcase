@@ -14,8 +14,8 @@ namespace Showcase\Framework\HTTP\Gards{
     class Auth{
         
         // current user email if connected
-        static $user_email = null;
-        static $user_name = null;
+        static $ses_user_email = null;
+        static $ses_user_name = null;
 
         /**
          * Login function  with email and password, classic function
@@ -39,9 +39,9 @@ namespace Showcase\Framework\HTTP\Gards{
             }
             
             if($user->validHash($password, $user->password)){
-                Session::store('user_id', $user->id);
-                Session::store('user_email', $user->email);
-                Session::store('user_name', $user->username);
+                Session::store('ses_user_id', $user->id);
+                Session::store('ses_user_email', $user->email);
+                Session::store('ses_user_name', $user->username);
                 Log::print("Auth: user connected " . $email);
                 return true;
             }
@@ -70,9 +70,9 @@ namespace Showcase\Framework\HTTP\Gards{
                 return false;
             }
             
-            Session::store('user_id', $user->id);
-            Session::store('user_email', $user->email);
-            Session::store('user_name', $user->username);
+            Session::store('ses_user_id', $user->id);
+            Session::store('ses_user_email', $user->email);
+            Session::store('ses_user_name', $user->username);
             Log::print("Auth: user connected " . $email);
             return true;
         }
@@ -83,9 +83,9 @@ namespace Showcase\Framework\HTTP\Gards{
          */
         public static function logout(){
             if(self::check()){
-                Session::clear('user_id');
-                Session::clear('user_email');
-                Session::clear('user_name');
+                Session::clear('ses_user_id');
+                Session::clear('ses_user_email');
+                Session::clear('ses_user_name');
                 if(!self::check())
                     return true;
             }
@@ -98,7 +98,7 @@ namespace Showcase\Framework\HTTP\Gards{
          * @return Boolean
          */
         public static function check(){
-            if(!empty(Session::retrieve('user_id')) && !is_null(Session::retrieve('user_id')))
+            if(!empty(Session::retrieve('ses_user_id')) && !is_null(Session::retrieve('ses_user_id')))
                 return true;
             return false;
         }
@@ -108,7 +108,7 @@ namespace Showcase\Framework\HTTP\Gards{
          * @return Boolean
          */
         public static function guest(){
-            if(empty(Session::retrieve('user_id')) && is_null(Session::retrieve('user_id')))
+            if(empty(Session::retrieve('ses_user_id')) && is_null(Session::retrieve('ses_user_id')))
                 return true;
             return false;
         }
@@ -120,7 +120,7 @@ namespace Showcase\Framework\HTTP\Gards{
         public static function user(){
             if(self::check()){
                 $user = new User();
-                $user->get(Session::retrieve('user_id'));
+                $user->get(Session::retrieve('ses_user_id'));
                 if($user != null)
                     return $user;
             }
@@ -134,7 +134,7 @@ namespace Showcase\Framework\HTTP\Gards{
         public static function username(){
             if(self::check()){
                 $user = new User();
-                $user->get(Session::retrieve('user_id'));
+                $user->get(Session::retrieve('ses_user_id'));
                 if($user != null)
                     return $user->name;
             }

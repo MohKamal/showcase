@@ -28,7 +28,7 @@ To check if request body has a key, or any array has a key, use the validator.
      * Return the video single page
      */
     static function Play($request){
-        if(Validator::Validate($request->getBody(), ['id'])){
+        if(Validator::validate($request->getBody(), ['id'])){
             $url = Search::searchVideoById($request->getBody()['id']);
             return self::response()->view('App/video', array([
                 'url' => $url
@@ -39,6 +39,32 @@ To check if request body has a key, or any array has a key, use the validator.
     }
 ```
 
+To get more validation and verification use the function validation, it has options : required, string, numeric, email, phone, min lenght, max lenght
+
+```php  
+        /**
+         * Store new user
+         */
+        static function store($request){
+            $errors = Validator::validation($request->getBody(), [
+                'email' => 'required | email', 
+                'password' => 'required | min:8', 
+                'username' => 'required | min:3 | max:10 | string'
+                ]);
+            if (empty($errors)) {
+                $user = new User();
+                $user->bcrypt($request->getBody()['password']);
+                $user->username = $request->getBody()['username'];
+                $user->email = $request->getBody()['email'];
+                $user->save();
+
+                //Log the user
+                Auth::loginWithEmail($user->email);
+                return self::response()->redirect('/');
+            }
+            return self::response()->view('Auth/register', array('errors' => $errors));
+        }
+```
 ## Response
 Response is an object used to make user responses more easier.
 There is three response : view, redirect and json
@@ -234,7 +260,7 @@ To send a variable from controller to a view, add an array to the view method of
      * Return the video single page
      */
     static function Play($request){
-        if(Validator::Validate($request->getBody(), ['id'])){
+        if(Validator::validate($request->getBody(), ['id'])){
             $url = Search::searchVideoById($request->getBody()['id']);
             return self::response()->view('App/video', array([
                 'url' => $url

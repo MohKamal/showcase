@@ -20,7 +20,7 @@ namespace Showcase\Controllers{
             if(Auth::check())
                 return self::response()->redirect('/');
 
-            if (Validator::Validate($request->getBody(), ['email', 'password'])) {
+            if (Validator::validate($request->getBody(), ['email', 'password'])) {
                 if(!Auth::login($request->getBody()['email'], $request->getBody()['password']))
                     return self::response()->unauthorized();
             }

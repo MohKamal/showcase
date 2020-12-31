@@ -17,7 +17,12 @@ namespace Showcase\Controllers{
          * Store new user
          */
         static function store($request){
-            if (Validator::Validate($request->getBody(), ['email', 'password', 'username'])) {
+            $errors = Validator::validation($request->getBody(), [
+                'email' => 'required | email', 
+                'password' => 'required | min:8', 
+                'username' => 'required | min:3 | max:10 | string'
+                ]);
+            if (empty($errors)) {
                 $user = new User();
                 $user->bcrypt($request->getBody()['password']);
                 $user->username = $request->getBody()['username'];
@@ -28,7 +33,7 @@ namespace Showcase\Controllers{
                 Auth::loginWithEmail($user->email);
                 return self::response()->redirect('/');
             }
-            return self::response()->redirect('errors/500');
+            return self::response()->view('Auth/register', array('errors' => $errors));
         }
     }
 }

@@ -17,15 +17,16 @@
 					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
 				<form method="post" action='/newregister'>
+					@sessionAlert
 					<h3>Sign Up</h3>
 					<div class="form-holder active">
-						<input type="text" name="username" placeholder="name" class="form-control" required>
+						<input type="text" name="username" placeholder="name" class="form-control" >
 					</div>
 					<div class="form-holder">
-						<input type="email" name="email" placeholder="e-mail" class="form-control" required>
+						<input type="text" name="email" placeholder="e-mail" class="form-control" >
 					</div>
 					<div class="form-holder">
-						<input type="password" name="password" placeholder="Password" class="form-control" style="font-size: 15px;" required>
+						<input type="password" name="password" placeholder="Password" class="form-control" style="font-size: 15px;" >
 					</div>
 					<div class="form-login">
 						<button type="submit" name="submit"> Créer </button>

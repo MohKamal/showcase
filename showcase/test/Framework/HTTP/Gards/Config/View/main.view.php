@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Showcase v1.0</title>
+		<title>Showcase</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="@{{Assets}}/images/favicon.ico" />
 		<!-- STYLE CSS -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 		<link rel="stylesheet" href="@{{Bootsrap-style}}">
@@ -58,11 +59,11 @@
 					<a class="nav-link" href="/documentation">Documentation</a>
 				</li>
 				@if(\Showcase\Framework\HTTP\Gards\Auth::guest()){
-					display('<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>');
-					display('<li class="nav-item"><a class="nav-link" href="/register">Register</a></li>');
+					@display '<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>' @enddisplay
+					@display '<li class="nav-item"><a class="nav-link" href="/register">Register</a></li>' @enddisplay
 				}@else{
-					display('<li class="nav-item"><a class="nav-link" href="#">@php display(\Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->email);  @endphp</a></li>');
-					display('<li class="nav-item"><a class="nav-link" href="#" id="logout">Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>');
+					@display '<li class="nav-item"><a class="nav-link disabled" href="#">' @enddisplay @display \Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->email @enddisplay @display '</a></li>' @enddisplay
+					@display '<li class="nav-item"><a class="nav-link" href="#" id="logout">Logout</a></li><form id="logout_form" style="display:none" method="post" action="/logout"></form>' @enddisplay
 				}@endif
 				</ul>
 			</div>

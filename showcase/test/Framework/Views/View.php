@@ -4,6 +4,7 @@ namespace Showcase\Framework\Views {
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Utils\Utilities;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\Session\SessionAlert;
     
     /**
      * Loading and showing views files
@@ -26,6 +27,10 @@ namespace Showcase\Framework\Views {
             //check for variables
             if(!empty($vars))
                 $page = self::checkVariables($page, $vars);
+            //Check for native display in html
+            $page = self::checkForDisplay($page, self::varsToString($vars));
+            //check for sessionAlert
+            $page = self::checkForSessionAlert($page);
             //If no file found => 404 :(
             if(empty($page))
                 return http_response_code(404);
@@ -238,7 +243,7 @@ namespace Showcase\Framework\Views {
         }
         
         /**
-         * check for loop like foreach and for
+         * check for if statement
          * @param string $page view code
          * 
          * @return string view code
@@ -267,7 +272,7 @@ namespace Showcase\Framework\Views {
         }
 
         /**
-         * check for loop like foreach and for
+         * check for display functions
          * @param string $page view code
          * 
          * @return string view code
@@ -287,6 +292,23 @@ namespace Showcase\Framework\Views {
                 $result = "display('" . $result . "');";
                 $page = str_replace($subView, $result, $page);
             }
+            return $page;
+        }
+
+        /**
+         * check for sessionAlert
+         * @param string $page view code
+         * 
+         * @return string view code
+         */
+        static function checkForSessionAlert($page){
+            //Chech for foreach or for loop
+            $matches = array();
+            preg_match_all('#\@sessionAlert#', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                $page = str_replace($subView, SessionAlert::show(), $page);
+            }
+            SessionAlert::clear();
             return $page;
         }
 

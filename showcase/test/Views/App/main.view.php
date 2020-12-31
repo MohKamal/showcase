@@ -68,7 +68,7 @@
 				</ul>
 			</div>
 		</nav>
-
+		@sessionAlert
 		@render()
 		<script src="@{{Jquery}}"></script>
 		<link rel="stylesheet" href="@{{Bootsrap-script}}">

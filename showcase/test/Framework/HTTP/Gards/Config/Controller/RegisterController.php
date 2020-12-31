@@ -17,7 +17,7 @@ namespace Showcase\Controllers{
          * Store new user
          */
         static function store($request){
-            if (Validator::Validate($request->getBody(), ['email', 'password', 'username'])) {
+            if (Validator::validate($request->getBody(), ['email', 'password', 'username'])) {
                 $user = new User();
                 $user->bcrypt($request->getBody()['password']);
                 $user->username = $request->getBody()['username'];

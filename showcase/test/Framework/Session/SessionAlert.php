@@ -12,7 +12,7 @@ namespace Showcase\Framework\Session{
         public static function create($message, $message_type='info'){
             if (session_status() == PHP_SESSION_NONE)
                 session_start();
-            self::Clear();
+            self::clear();
             if($message){
                 $html = "<style>
                 .info, .success, .warning, .error, .validation {
