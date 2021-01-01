@@ -92,24 +92,9 @@ namespace Showcase\Framework\Database\Models {
             return '';
         }
 
-        /**
-         * Get an object by id
-         * @param mixte id value
-         * @return \Showcase\Framework\Database\Models\BaseModel
-         */
-        public function get($id){
-            $record = $this->db->getByIdColumn($this->migration, ["name" => $this->idDetails["name"], "value" => $id]);
-            if($record != null){
-                $class_vars = get_object_vars($this);
-                foreach($class_vars as $key => $value){
-                    if(array_key_exists($key, $record)){
-                        $this->{$key} = $record[$key];
-                        if($key == $this->idDetails["name"])
-                           $this->idDetails["value"] =  $record[$key];
-                    }
-                }
-            }
-            return $this;
+        public function className(){
+            $reflect = new \ReflectionClass($this);
+            return $reflect->getShortName();
         }
 
         /**
@@ -163,10 +148,21 @@ namespace Showcase\Framework\Database\Models {
          */
         public function save(){
             $class_vars = get_object_vars($this);
-            if(!array_key_exists("value", $this->idDetails))
-                $this->{$this->idDetails["name"]} = $this->db->insertInto($this->migration, $class_vars);
-            else
-                $this->db->update($this->migration, $this->idDetails, $class_vars);
+            if(empty($this->{$this->idDetails["name"]})){
+                if(array_key_exists('created_at', $class_vars) && array_key_exists('updated_at', $class_vars)){
+                    $this->created_at = date("Y-m-d H:i:s");
+                    $this->updated_at = date("Y-m-d H:i:s");
+                }
+                if (array_key_exists("deleted_at", $class_vars))
+                    $this->active = true;
+
+                $class_vars = get_object_vars($this);
+                unset($class_vars['migration']);
+                unset($class_vars['idDetails']);
+                unset($class_vars['db']);
+                DB::model($this->className())->insert($class_vars)->run();
+            }else
+                DB::model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
 
             return $this;
         }
@@ -181,37 +177,13 @@ namespace Showcase\Framework\Database\Models {
                 $this->deleted_at = date("Y-m-d H:i:s");
                 $this->active = 0;
                 $class_vars = get_object_vars($this);
-                $this->db->update($this->migration, $this->idDetails, $class_vars);
-            }else{
-                return $this->db->delete($this->migration, $this->idDetails);
+                unset($class_vars['migration']);
+                unset($class_vars['idDetails']);
+                unset($class_vars['db']);
+                return DB::model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
             }
-        }
-
-        /**
-         * Get list of this model
-         * @param array $columns to filter the results
-         * @param numeric $limit the results
-         * @return array \Showcase\Framework\Database\Models\BaseModel
-         */
-        public static function toList(array $columns=array(), $limit=-1){
-            $class = get_called_class();
-            $model = new $class();
-            $db = new DB();
-            $records = $db->getList($model->migration, $columns, $limit);
-            if(count($records) > 0){
-                $data = array();
-                foreach($records as $record){
-                    $obj = new $class();
-                    $class_vars = get_object_vars($obj);
-                    foreach($class_vars as $key => $value){
-                        if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
-                            $obj->{$key} = $record[$key];
-                    }
-                    $data[] =$obj;
-                }
-                return $data;
-            }
-            return array();
+            else
+                return DB::model($this->className())->delete()->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
         }
 
         /**

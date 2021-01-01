@@ -7,6 +7,7 @@
 namespace Showcase\Controllers{
 
     use \Showcase\Framework\HTTP\Controllers\BaseController;
+    use \Showcase\Models\Unit;
     use \Showcase\Framework\Database\DB;
     use \Showcase\Framework\IO\Debug\Log;
 
@@ -16,11 +17,16 @@ namespace Showcase\Controllers{
          * Return the welcome view
          */
         static function Index(){
-            $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->where('firstname', 'a')->get();
-            //Log::print($user->email);
-            //$users = DB::table('users')->select()->get();
-            foreach($users as $user)
-                Log::print($user->email . " | " . $user->username);
+            /*$unit = new Unit();
+            $unit->name = "test";
+            $unit->value = 10;
+            $unit->save();*/
+            //$unit = DB::model('Unit')->select()->where('id', 1)->first();
+            //$r = DB::model('Unit')->insert(['name' => 'hola', 'value' => '55'])->run();
+            //Log::print($r);
+            //$r = DB::model('Unit')->delete()->where('id', 4)->run();
+            //$r = DB::model('Unit')->update(['value' => '27', 'name' => '<li class="nav-item">'])->where('id', 4)->run();
+            //Log::print($r);
             return self::response()->view('App/welcome');
         }
     }

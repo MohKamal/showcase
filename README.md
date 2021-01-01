@@ -89,9 +89,7 @@ To redirect a user, use a redirect response
 To return any object as json response, use response json
 ```php  
     $router->get('/path', function () {
-        $data = User::toList([
-            'active' => 1
-        ]);
+        $data = DB::model('User')->select()->where('active', 1)->get();
 
         return self::response()->json($data);
     });
@@ -362,8 +360,8 @@ When using the save function, the model data will be stored in the database.
 To update an exisitng model in the database, you need to get it first :
 
 ```php
-$model = new Model();
-$model->get(1); // get by id = 1
+use \Showcase\Framework\Database\DB;
+$model = DB::model('Model')->select()->where('id', 5)->first();
 $model->param = "new value";
 $model->save();
 ```
@@ -375,8 +373,8 @@ When using the save function on exising model in database, the new data will be 
 To delete model, use the delete function : 
 
 ```php
-$model = new Model();
-$model->get(1)->delete(); // get by id = 1 and deleted
+$model = DB::model('Model')->select()->where('id', 5)->first();
+$model->delete();
 ```
 If you are using the soft delete columns, the row will not be removed from the database, only deleted_at and active will be updated.
 
@@ -384,27 +382,13 @@ If you not using the soft delete columns, the row will removed for good.
 
 ## Get model/Array of models from database
 
-### By Id
-
-To get one model from database, you create the object, and use the get function with the id:
-
-```php
-$model = new Model();
-$model->get(1); // get by id = 1
-print($model->paramName);
-```
-
-### By any column
+### By any Column
 
 To get one model from database by any columns/properties you need, use where function:
 
 ```php
-$model = new Model();
-$model->where([
-    'column_name' => 'value',
-    'column_name' => 'value'
-]);
-print($model->paramName);
+$model = DB::model('Model')->select()->where('column', $value)->first();
+Log::print($model->paramName);
 ```
 
 ### Get Array of objects
@@ -412,26 +396,20 @@ print($model->paramName);
 To get array of models, you gonna use the static function toList() : 
 
 ```php
-$models = Model::toList();
-print($models[0]->paramName);
+$models = DB::model('Model')->select()->where('column', $value)->get();
+Log::print($models[0]->paramName);
 
 ```
-### Get Array of Objects with conditions
+### Get Array of Objects with trash
 
 To get array of models, with one, or more conditions, you gonna use the static function toList() : 
 
 ```php
-if(empty($category))
-    $data = Picture::toList();
-else{
-    $data = Picture::toList([
-        'category' => $category
-    ]);
-}
-
+$models = DB::model('Model')->select()->where('column', $value)->withTrash()->get();
+Log::print($models[0]->paramName);
 ```
 
-## Database 
+## Database object
 For an easy search and query build, use the DB object
 
 ```php
@@ -469,6 +447,20 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
     * limit($number) : to limit the query result
     * first() : get the first result
     * get() : get an array of results
+    * withTrash() : in case you are using soft delete, with this function, also the deleted records will be selected
+    * insert($columns) : insert to model/table at database
+        ```php
+        DB::table('User')->insert(['name' => 'test', 'email' => 'test@email.com'])->run();
+        ```
+    * update($columns) : update a model/table columns
+        ```php
+        DB::table('User')->update(['name' => 'test1'])->where('id', 12)->run();
+        ```
+    * delete() : delete a record in the database, this function don't take in concidiration the soft delete, to use the soft delete, use the delete function of the models
+        ```php
+        DB::table('User')->delete()->where('id', 12)->run();
+        ```
+    * run() : call this function when using the insert, update and delete functions, it return the numbers of lines affected
 
 ## Migration
 
