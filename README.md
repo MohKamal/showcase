@@ -430,6 +430,46 @@ else{
 }
 
 ```
+
+## Database 
+For an easy search and query build, use the DB object
+
+```php
+use \Showcase\Framework\Database\DB;
+use \Showcase\Framework\IO\Debug\Log;
+
+$users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+foreach($users as $user)
+    Log::print($user->email . " | " . $user->username);
+
+```
+
+To select from a table, use table function, and give the table name
+```php
+$users = DB::table('users')->select()->where('email', '%@gmail%', 'LIKE')->get();
+```
+This will return an array of data.
+
+To get an array of object for a model, use the model function, and give the model Name
+```php
+$users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+```
+
+*** To get an array of data use get() function, to get one object, use first() function
+
+* functions
+    * table($name) : table name to select from
+    * model($name) : model to convert data to after fetching it
+    * select($columns) : you can specify the columns to select in case you are using the table function
+        ```php
+        $users = DB::table('User')->select('username', 'email')->where('email', '%@gmail%', 'LIKE')->get();
+        ```
+        if you are using model function instead of table, the select columns with not be applied
+    * where($column, $value, $condition) : add where condition to you query, the condition value is '=' by default
+    * limit($number) : to limit the query result
+    * first() : get the first result
+    * get() : get an array of results
+
 ## Migration
 
 To create a migration you need to use the commande line on the root folder.
@@ -567,6 +607,10 @@ You can use Auth object any where, to check if user is logged, or to get the cur
 
     //Get the user username
     Auth::username(); //return string
+
+    //you can change the property name to return from username() function
+    Auth::username('lastname'); //return string
+
 
     //Check if the user is logged
     if(Auth::check())

@@ -5,6 +5,7 @@ namespace Showcase\Framework\HTTP\Gards{
     use \Showcase\Models\User;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Session\Session;
+    use \Showcase\Framework\Database\DB;
     
     /**
      * 
@@ -28,10 +29,7 @@ namespace Showcase\Framework\HTTP\Gards{
                 return false;
             }
 
-            $user = new User();
-            $user->where([
-                'email' => $email
-            ]);
+            $user = DB::model('User')->select()->where('email', $email)->first();
 
             if ($user == null) {
                 Log::print("Auth: No user was found with email " . $email);
@@ -60,10 +58,7 @@ namespace Showcase\Framework\HTTP\Gards{
                 return false;
             }
 
-            $user = new User();
-            $user->where([
-                'email' => $email
-            ]);
+            $user = DB::model('User')->select()->where('email', $email)->first();
 
             if ($user == null) {
                 Log::print("Auth: No user was found with email " . $email);
@@ -119,8 +114,7 @@ namespace Showcase\Framework\HTTP\Gards{
          */
         public static function user(){
             if(self::check()){
-                $user = new User();
-                $user->get(Session::retrieve('ses_user_id'));
+                $user = DB::model('User')->select()->where('id', Session::retrieve('ses_user_id'))->first();
                 if($user != null)
                     return $user;
             }
@@ -131,12 +125,11 @@ namespace Showcase\Framework\HTTP\Gards{
          * Get the user name
          * @return String
          */
-        public static function username(){
+        public static function username($col='email'){
             if(self::check()){
-                $user = new User();
-                $user->get(Session::retrieve('ses_user_id'));
+                $user = DB::model('User')->select()->where('id', Session::retrieve('ses_user_id'))->first();
                 if($user != null)
-                    return $user->name;
+                    return $user->$col;
             }
             return null;
         }

@@ -68,6 +68,31 @@ namespace Showcase\Framework\Database\Models {
         }
 
         /**
+         * Get the migration table name
+         * 
+         * @return string table name
+         */
+        public function tableName(){
+            $file = dirname(__FILE__) . '/../../../Database/Migrations/' . $this->migration . '.php';
+            if(file_exists($file))
+            {
+                require_once $file;
+
+                // get the file name of the current file without the extension
+                // which is essentially the class name
+                $class = '\Showcase\Database\Migrations\\' . basename($file, '.php');
+                if (class_exists($class))
+                {
+                    $table = new $class;
+                    $table->handle();
+                    return $table->name;
+                }
+            }
+
+            return '';
+        }
+
+        /**
          * Get an object by id
          * @param mixte id value
          * @return \Showcase\Framework\Database\Models\BaseModel
