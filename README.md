@@ -440,7 +440,7 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
     * model($name) : model to convert data to after fetching it
     * select($columns) : you can specify the columns to select in case you are using the table function
         ```php
-        $users = DB::table('User')->select('username', 'email')->where('email', '%@gmail%', 'LIKE')->get();
+        $users = DB::table('users')->select('username', 'email')->where('email', '%@gmail%', 'LIKE')->get();
         ```
         if you are using model function instead of table, the select columns with not be applied
     * where($column, $value, $condition) : add where condition to you query, the condition value is '=' by default
@@ -450,15 +450,15 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
     * withTrash() : in case you are using soft delete, with this function, also the deleted records will be selected
     * insert($columns) : insert to model/table at database
         ```php
-        DB::table('User')->insert(['name' => 'test', 'email' => 'test@email.com'])->run();
+        DB::table('users')->insert(['name' => 'test', 'email' => 'test@email.com'])->run();
         ```
     * update($columns) : update a model/table columns
         ```php
-        DB::table('User')->update(['name' => 'test1'])->where('id', 12)->run();
+        DB::table('users')->update(['name' => 'test1'])->where('id', 12)->run();
         ```
     * delete() : delete a record in the database, this function don't take in concidiration the soft delete, to use the soft delete, use the delete function of the models
         ```php
-        DB::table('User')->delete()->where('id', 12)->run();
+        DB::table('users')->delete()->where('id', 12)->run();
         ```
     * run() : call this function when using the insert, update and delete functions, it return the numbers of lines affected
 
