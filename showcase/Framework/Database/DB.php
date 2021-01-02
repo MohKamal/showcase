@@ -189,9 +189,9 @@ namespace Showcase\Framework\Database {
             self::$_query .= ') VALUES (';
             foreach($columns as $key => $value){
                 if(is_numeric($value))
-                    self::$_query .= htmlentities(trim($value)) . ",";
+                    self::$_query .= htmlentities(trim(str_replace("'", '', $value))) . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . htmlentities(trim($value)) . "',";
+                    self::$_query .= "'" . htmlentities(trim(str_replace("'", '', $value))) . "',";
             }
             self::$_query = substr(self::$_query, 0, -1);
             self::$_query .= ')';
