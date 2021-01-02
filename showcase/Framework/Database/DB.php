@@ -273,6 +273,19 @@ namespace Showcase\Framework\Database {
         }
 
         /**
+         * Add Destinct condition
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function distinct(){
+            if(empty(self::$_table) || is_null(self::$_instance))
+                return null;
+            if(strpos(self::$_query, "SELECT"))
+                self::$_query = substr_replace("SELECT", "SELECT DISTINCT", self::$_query);
+            return $this;
+        }
+
+        /**
          * Check for soft delete columns to add/remove them from the result
          */
         private function soft(){
