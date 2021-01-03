@@ -7,7 +7,6 @@ namespace Showcase\Framework\Database {
     use \Showcase\Framework\Database\SQLite\SQLiteConnection;
     use \Showcase\Framework\Database\MySql\MySqlConnection;
     use \Showcase\Framework\Database\Config\Column;
-    use \Showcase\Framework\Database\Config\Converter;
     use \Showcase\AutoLoad;
 
     class DB extends Wrapper{
@@ -191,7 +190,7 @@ namespace Showcase\Framework\Database {
                 if(is_numeric($value))
                     self::$_query .= htmlentities(trim(str_replace("'", '', $value))) . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . htmlentities(trim(str_replace("'", '', $value))) . "',";
+                    self::$_query .= "`" . htmlentities(trim(str_replace("'", '', $value))) . "`,";
             }
             self::$_query = substr(self::$_query, 0, -1);
             self::$_query .= ')';
@@ -218,7 +217,7 @@ namespace Showcase\Framework\Database {
                 if(is_numeric($value))
                     self::$_query .= htmlentities(trim($value)) . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . htmlentities(trim($value)) . "',";
+                    self::$_query .= "`" . htmlentities(trim($value)) . "`,";
             }
 
             self::$_query = substr(self::$_query, 0, -1);

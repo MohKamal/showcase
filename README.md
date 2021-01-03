@@ -95,6 +95,97 @@ To return any object as json response, use response json
     });
 ```
 
+### Json resource
+When return a model as json, the hidden properties aslo are send out there, to prevent that from happening, you can use JsonResource object.
+To create one, call the createJsonResource command : 
+
+```bash
+php creator createJsonResource resource_Name
+```
+And then, in the handle function, specify the data returned, or leave it blank, only the database columns will be returned.
+```php
+    use \Showcase\Framework\HTTP\Resources\JsonResource;
+    class UserResource extends JsonResource{       
+
+        /**
+         * Init the resource with model
+         * @return json
+         */
+        public function __construct($obj){
+            JsonResource::__construct($obj);
+        }
+
+        /**
+         * Set the properties to return
+         * @return array
+         */
+        function handle(){
+            return [
+                'Identification' => $this->id,
+                'user_email' => $this->email,
+                'parent_id' => "er15cc52",
+            ];
+        }
+    }
+```
+
+```php
+    use \Showcase\JsonResources\UserResource;
+
+    class HomeController extends BaseController{
+        static function Index(){
+            $user = DB::model('User')->select()->where('id', 5)->first();
+            return self::response()->json(new UserResource($user));
+        }
+    }
+```
+will return :
+```json
+    {
+        "Identification":"5",
+        "user_email":"email@gmail.com",
+        "parent_id":"er15cc52"
+    }
+```
+#### Json Resource for array
+To return an array of object as json, mapped datan you use the static function array of JsonResource.
+```php
+    use \Showcase\JsonResources\UserResource;
+
+    class HomeController extends BaseController{
+        static function Index(){
+            $users = DB::model('User')->select()->limit(15)->get();
+            return self::response()->json(UserResource::array($users));
+        }
+    }
+```
+
+will return : 
+```json
+[
+    {
+        "Identification":"1",
+        "user_email":"email@gmail.com",
+        "parent_id":"er15cc52"
+    },
+    {
+        "Identification":"2",
+        "user_email":"another@gmail.com",
+        "parent_id":"er15cc52"
+    },
+    {
+        "Identification":"3",
+        "user_email":"rtrtrtrt@email.com",
+        "parent_id":"er15cc52"
+    },
+    {
+        "Identification":"7",
+        "user_email":"jao@gmail.com",
+        "parent_id":"er15cc52"
+    }
+]
+```
+
 ### Response codes
 To return codes use :
 * 404 : response()->notFound()

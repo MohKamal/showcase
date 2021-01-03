@@ -18,6 +18,23 @@ namespace Showcase\Framework\Command{
          * Create new controller
          * @param string  New controller name
          */
+        public function createJsonResource($name){
+            if(!empty($name)){
+                $file = file_get_contents(dirname(__FILE__) . '/../Resources/JsonResources/JsonResrouce.php');
+                $content = str_replace('ResourceName', $name, $file);
+                $base_dir = dirname(__FILE__) . '/../../JsonResources/';
+                if (!file_exists($base_dir)) {
+                    mkdir($base_dir, 0777, true);
+                }
+                file_put_contents($base_dir . $name . '.php', $content);
+                Log::console($name . ' Json Resource added!');
+            }
+        }
+
+                /**
+         * Create new controller
+         * @param string  New controller name
+         */
         public function createController($name){
             if(!empty($name)){
                 $file = file_get_contents(dirname(__FILE__) . '/../Resources/Controllers/Controller.php');

@@ -161,9 +161,12 @@ namespace Showcase\Framework\Database\Models {
                 unset($class_vars['idDetails']);
                 unset($class_vars['db']);
                 DB::model($this->className())->insert($class_vars)->run();
-            }else
+            }else{
+                unset($class_vars['migration']);
+                unset($class_vars['idDetails']);
+                unset($class_vars['db']);
                 DB::model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
-
+            }
             return $this;
         }
 
@@ -201,6 +204,32 @@ namespace Showcase\Framework\Database\Models {
          */
         public function validHash($password, $hash){
             return password_verify($password, $hash);
+        }
+
+        /**
+         * Get the json of this object
+         * With removing the hidden properties
+         * @return json
+         */
+        public function toJson(){
+            $obj = $this;
+            unset($obj->migration);
+            unset($obj->idDetails);
+            unset($obj->db);
+            return json_encode($obj);
+        }
+
+        /**
+         * Get this object as array
+         * With removing the hidden properties
+         * @return array
+         */
+        public function toArray(){
+            $obj = $this;
+            unset($obj->migration);
+            unset($obj->idDetails);
+            unset($obj->db);
+            return (array)$obj;
         }
     }
 }

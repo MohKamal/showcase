@@ -356,6 +356,8 @@ namespace Showcase\Framework\Views {
             foreach($vars as $key => $value){
                 if(is_array($value))
                     $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
+                elseif (is_object($value)) 
+                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
                 else
                     $string .= "$$key=" . "'$value';\n";
             }
@@ -366,7 +368,7 @@ namespace Showcase\Framework\Views {
          * If the user send an array inside the variables sent to the view
          * this function convert it to string
          */
-        static function arrayToStringVar(array $vars){
+        static function arrayToStringVar(array $vars, $use_key=false){
             if(empty($vars))
                 return '';
 
@@ -374,10 +376,31 @@ namespace Showcase\Framework\Views {
                 return '';
             $string = '';
             foreach ($vars as $key => $value) {
-                if(is_numeric($value))
-                    $string .= "$value,";
-                else
-                    $string .= "'$value',";
+                if ($key != 'migration') {
+                    if (is_numeric($value)) {
+                        if($use_key)
+                            $string .= "'$key' => $value,";
+                        else
+                            $string .= "$value,";
+                    } elseif (is_string($value)) {
+                        if ($use_key) {
+                            if(!strpos($value, "'"))
+                                $string .= "'$key' => '" . str_replace('"', '', $value) . "',";
+                            else
+                                $string .= "'$key'" . '=> "' . str_replace('"', '', $value) . '",';
+                        }
+                        else{
+                            if(!strpos($value, "'"))
+                                $string .= "'". str_replace('"', '', $value) ."',";
+                            else
+                                $string .= '"' . str_replace('"', '', $value) . '",';
+                        }
+                    } elseif (is_array($value)) {
+                        $string .= "[" . self::arrayToStringVar($value, true) . "],";
+                    } elseif (is_object($value)) {
+                        $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
+                    }
+                }
             }
             
             return substr($string, 0, -1);

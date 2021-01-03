@@ -1,15 +1,7 @@
-<?php
-namespace Showcase\Views\Errors;
-
-use \Showcase\Framework\Initializer\AutoLoad;
-use \Showcase\Framework\HTTP\Links\URL;
-
-
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
+	    <title>500</title>
         <link href="@{{Assets}}css/fonts.googleapis.css" rel="stylesheet">
         <style>
         /**/

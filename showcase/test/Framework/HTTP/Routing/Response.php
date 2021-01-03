@@ -50,28 +50,32 @@ namespace Showcase\Framework\HTTP\Routing {
          * Return a 404 code
          */
         function notFound(){
-            return http_response_code(404);
+            http_response_code(404);
+            return View::show("Errors/404");
         }
 
         /**
          * Return a 200 code
          */
         function OK(){
-            return http_response_code(200);
+            http_response_code(200);
+            return $this->json("ok");
         }
 
         /**
          * Return a 200 code
          */
         function unauthorized(){
-            return http_response_code(403);
+            http_response_code(403);
+            return View::show("Errors/403");
         }
 
         /**
          * Return a 500 code
          */
         function internal(){
-            return http_response_code(500);
+            http_response_code(500);
+            return View::show("Errors/500");
         }
     }
 }
