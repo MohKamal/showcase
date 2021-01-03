@@ -188,9 +188,9 @@ namespace Showcase\Framework\Database {
             self::$_query .= ') VALUES (';
             foreach($columns as $key => $value){
                 if(is_numeric($value))
-                    self::$_query .= htmlentities(trim(str_replace("'", '', $value))) . ",";
+                    self::$_query .= $this->filterInput($value) . ",";
                 else if(is_string($value))
-                    self::$_query .= "`" . htmlentities(trim(str_replace("'", '', $value))) . "`,";
+                    self::$_query .= "'" . $this->filterInput($value) . "',";
             }
             self::$_query = substr(self::$_query, 0, -1);
             self::$_query .= ')';
@@ -215,14 +215,43 @@ namespace Showcase\Framework\Database {
             foreach($columns as $key => $value){
                 self::$_query .= " `$key`=";
                 if(is_numeric($value))
-                    self::$_query .= htmlentities(trim($value)) . ",";
+                    self::$_query .= $value . ",";
                 else if(is_string($value))
-                    self::$_query .= "`" . htmlentities(trim($value)) . "`,";
+                    self::$_query .= "'" . $this->filterInput($value) . "',";
             }
 
             self::$_query = substr(self::$_query, 0, -1);
 
             return $this;
+        }
+
+        /**
+         * Filter data going to database
+         * @param string $content to send to database
+         * 
+         * @return string
+         */
+        function filterInput($content)
+        {
+            Log::print($content);
+            $content = trim($content);
+            $content = stripslashes($content);
+            Log::print($content);
+            return $content;
+        }
+
+        /**
+         * Remove filting data for the viewing
+         * @param string $content data from database
+         * 
+         * @return string
+         */
+        function filterOutput($content)
+        {
+            $content = htmlentities($content, ENT_NOQUOTES);
+            $content = nl2br($content, false);
+
+            return $content;
         }
 
         /**
@@ -348,7 +377,7 @@ namespace Showcase\Framework\Database {
                 $class_vars = get_object_vars($obj);
                 foreach($class_vars as $key => $value){
                     if (array_key_exists($key, $class_vars) && array_key_exists($key, $data[0]))
-                        $obj->{$key} = $data[0][$key];
+                        $obj->{$key} = $this->filterOutput($data[0][$key]);
                 }
                 return $obj;
             }
@@ -414,7 +443,7 @@ namespace Showcase\Framework\Database {
                     $class_vars = get_object_vars($obj);
                     foreach($class_vars as $key => $value){
                         if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
-                            $obj->{$key} = $record[$key];
+                            $obj->{$key} = $this->filterOutput($record[$key]);
                     }
                     $objects[] =$obj;
                 }
