@@ -162,6 +162,7 @@ namespace Showcase\Framework\Database\Models {
                 unset($class_vars['db']);
                 DB::model($this->className())->insert($class_vars)->run();
             }else{
+                $this->updated_at = date("Y-m-d H:i:s");
                 unset($class_vars['migration']);
                 unset($class_vars['idDetails']);
                 unset($class_vars['db']);
