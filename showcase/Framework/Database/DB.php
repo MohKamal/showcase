@@ -190,7 +190,7 @@ namespace Showcase\Framework\Database {
                 if(is_numeric($value))
                     self::$_query .= $this->filterInput($value) . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . $this->filterInput($value) . "',";
+                    self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
             }
             self::$_query = substr(self::$_query, 0, -1);
             self::$_query .= ')';
@@ -217,7 +217,7 @@ namespace Showcase\Framework\Database {
                 if(is_numeric($value))
                     self::$_query .= $value . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . $this->filterInput($value) . "',";
+                    self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
             }
 
             self::$_query = substr(self::$_query, 0, -1);
@@ -225,27 +225,14 @@ namespace Showcase\Framework\Database {
             return $this;
         }
 
-        /**
-         * Filter data going to database
-         * @param string $content to send to database
-         * 
-         * @return string
-         */
         function filterInput($content)
         {
-            Log::print($content);
             $content = trim($content);
             $content = stripslashes($content);
-            Log::print($content);
             return $content;
         }
 
-        /**
-         * Remove filting data for the viewing
-         * @param string $content data from database
-         * 
-         * @return string
-         */
+        //filter for viewing data
         function filterOutput($content)
         {
             $content = htmlentities($content, ENT_NOQUOTES);
@@ -276,7 +263,34 @@ namespace Showcase\Framework\Database {
             if(is_numeric($value))
                 self::$_query .= "$value ";
             else if(is_string($value))
-                self::$_query .= "'$value' ";
+                self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
+            
+            return $this;
+        }
+
+                /**
+         * Add where condition to the query
+         * @param string $column names
+         * @param string $value to test
+         * @param string $condition to test with
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function orWhere($column, $value, $condition="="){
+            if(empty(self::$_table) || is_null(self::$_instance) || empty($column) || empty($value))
+                return null;
+
+            if(!strpos(self::$_query, "WHERE"))
+                self::$_query .= " WHERE ";
+            else
+                self::$_query .= " OR ";
+            
+            self::$_query .= " `$column`$condition";
+
+            if(is_numeric($value))
+                self::$_query .= "$value ";
+            else if(is_string($value))
+                self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
             
             return $this;
         }
@@ -301,15 +315,31 @@ namespace Showcase\Framework\Database {
         }
 
         /**
+         * Get count
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function count($column="*"){
+            if(empty(self::$_table) || is_null(self::$_instance))
+                return null;
+            if (strpos(self::$_query, "SELECT") !== false) {
+                $search = "#(SELECT).*?(FROM)#";
+                $replace = '$1' . " COUNT($column) " . '$2';
+                self::$_query = preg_replace($search, $replace, self::$_query);
+            }
+            return $this;
+        }
+
+        /**
          * Add Destinct condition
          * 
          * @return \Showcase\Framework\Database\DB
          */
-        public function distinct(){
+        public function distinct($column=""){
             if(empty(self::$_table) || is_null(self::$_instance))
                 return null;
-            if(strpos(self::$_query, "SELECT"))
-                self::$_query = substr_replace("SELECT", "SELECT DISTINCT", self::$_query);
+            if(strpos(self::$_query, "SELECT") !== false)
+                self::$_query = str_replace("SELECT", "SELECT DISTINCT $column", self::$_query);
             return $this;
         }
 
@@ -394,7 +424,6 @@ namespace Showcase\Framework\Database {
             if(empty(self::$_table) || is_null(self::$_instance))
                 return null;
             $db_type = AutoLoad::env('DB_TYPE');
-            Log::print(self::$_query);
             switch(strtolower($db_type)){
                 case 'slqlite':
                     $get = new SQLiteTable(self::$_pdo);

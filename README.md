@@ -535,7 +535,10 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
         ```
         if you are using model function instead of table, the select columns with not be applied
     * where($column, $value, $condition) : add where condition to you query, the condition value is '=' by default
+    * orWhere($column, $value, $condition) : add or condition to you query, the condition value is '=' by default
     * limit($number) : to limit the query result
+    * distinct($column) : get distinct result for all columns by default, or to specific column
+    * count($expression) : get all columns count by default, or an expression/column
     * first() : get the first result
     * get() : get an array of results
     * withTrash() : in case you are using soft delete, with this function, also the deleted records will be selected
