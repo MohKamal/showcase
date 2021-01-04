@@ -32,9 +32,25 @@ namespace Showcase\Framework\Views {
             //If no file found => 404 :(
             if(empty($page))
                 return http_response_code(404);
+
+            //add base files
             $file_include = dirname(__FILE__) . '/BaseView.php';
             $includes = file_get_contents($file_include);
-            $page = $includes . self::varsToString($vars) . "\n?>\n" . $page;
+
+            //add models
+            $include_models = "\n";
+            $dir_models = dirname(__FILE__) . '/../../Models';
+            if (file_exists($dir_models)) {
+                $models = scandir($dir_models, 1);
+                foreach($models as $model){
+                    $file_parts = pathinfo($model);
+                    if($file_parts['extension'] == "php"){
+                        $include_models .= "use \Showcase\Models\\" . basename($model,".php") . ";\n";
+                    }
+                }
+            }
+            //create file content
+            $page = $includes . "\n" . $include_models . "\n" . self::varsToString($vars) . "\n?>\n" . $page;
             file_put_contents("_temp.php", $page);
             ob_start();
             require_once '_temp.php';
@@ -42,6 +58,7 @@ namespace Showcase\Framework\Views {
             ob_end_clean();
             echo $contents;
             unlink("_temp.php");
+            SessionAlert::clear();
         }
 
         /**
@@ -188,7 +205,7 @@ namespace Showcase\Framework\Views {
             preg_match_all('#\{{(.*?)\}}#', $page, $matches);
             foreach ($matches[0] as $subView) {
                 //Replace special characters
-                $_subView = str_replace('{{', '<?php echo', $subView);
+                $_subView = str_replace('{{', '<?php echo ', $subView);
                 $_subView = str_replace('}}', ' ?>', $_subView);
                 //Get the function results
                 $page = str_replace($subView, $_subView, $page);
@@ -304,9 +321,8 @@ namespace Showcase\Framework\Views {
             $matches = array();
             preg_match_all('#\@sessionAlert#', $page, $matches);
             foreach ($matches[0] as $subView) {
-                $page = str_replace($subView, SessionAlert::show(), $page);
+                $page = str_replace($subView, '<?php echo SessionAlert::show(); ?>', $page);
             }
-            SessionAlert::clear();
             return $page;
         }
 

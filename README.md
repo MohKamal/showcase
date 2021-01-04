@@ -258,7 +258,7 @@ To execute a custom php insdie a view, you can use the php function
 <body>
     @php
         $var = 1;
-        @display "this is a var $var" @enddisplay;
+        echo "this is a var $var"; //dont use @display inside a @php function
     @endphp
     <!-- You page Code -->
 </body>
@@ -271,22 +271,19 @@ To execute a loop without using the @php function, use the @foreach and @for loo
 @extend("App/main")
 <body>
     <!-- Foreach loop -->
-    @foreach(\Showcase\Models\User::toList() as $user){
-        if($user->isAdmin)
-            @display "<p>$user->name</p>" @enddisplay;
-    }@endforeach
+    @foreach(\Showcase\Models\User::toList() as $user)
+        @if($user->isAdmin)
+            <p> @display $user->name @enddisplay </p>
+        @endif
+    @endforeach
 
     <!-- For loop -->
-    @for($i=0; $i < 5; $i++){
+    @for($i=0; $i < 5; $i++)
         @display "number $i" @enddisplay;
-    }@endfor
+    @endfor
     <!-- You page Code -->
 </body>
 ```
-
-#### Note
-Use natice php code inside the loops.
-Don't forget the brakets '{}' inside the @foreach and @endforeach or the @for and @endfor, also @if and @else or @endif
 
 ### Condition If
 If you want to check a condition without the php function, use the @if function.
@@ -295,16 +292,16 @@ If you want to check a condition without the php function, use the @if function.
 @extend("App/main")
 <body>
     <!-- Simple if -->
-    @if($show){
-        @display "<p>Show it!</p>" @enddisplay;
-    }@endif
+    @if($show)
+        @display "<p>Show it!</p>" @enddisplay
+    @endif
 
     <!-- If with Else -->
-    @if($show){
-        @display "<p>Show it!</p>" @enddisplay;
-    }@else{
-        @display "<p>Not Showing it!</p>" @enddisplay;
-    }@endif
+    @if($show)
+        @display "<p>Show it!</p>" @enddisplay
+    @else
+        @display "<p>Not Showing it!</p>" @enddisplay
+    @endif
     <!-- You page Code -->
 </body>
 ```
@@ -315,10 +312,10 @@ To display a variable or a function result, use @display function, inside @php, 
 <!-- contact.view.php -->
 @extend("App/main")
 <body>
-    @if($show){
+    @if($show)
         <!-- Display -->
         @display '<p>Show it!</p>' @enddisplay
-    }@endif
+    @endif
     <!-- Display -->
     @display '<p>Out Side!</p>' @enddisplay
     

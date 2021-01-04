@@ -56,7 +56,7 @@
 					<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="/documentation">Documentation</a>
+					<a class="nav-link" href="/documentation">{{$doc}}</a>
 				</li>
 				@if(Auth::guest())
 					<li class='nav-item'><a class='nav-link' href='/login'>Login</a></li>
@@ -68,7 +68,6 @@
 				</ul>
 			</div>
 		</nav>
-		@sessionAlert
 		@render()
 		<script src="@{{Jquery}}"></script>
 		<link rel="stylesheet" href="@{{Bootsrap-script}}">
