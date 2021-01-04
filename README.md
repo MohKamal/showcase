@@ -323,8 +323,8 @@ To display a variable or a function result, use @display function, inside @php, 
     @display $number + 5 @enddisplay
 </body>
 ```
-
-To display a simple variable sent from controller, use only the variable name
+#### Display a variable
+To display a simple variable sent from controller, use the variable function {{$var}}
 ```php
 return self::response()->view('App/welcome', array(
                             'title' => 'post 1',
@@ -334,7 +334,7 @@ return self::response()->view('App/welcome', array(
 <!-- post.view.php -->
 @extend("App/main")
 <body>
-    <p>$title</p>
+    <p>{{$title}}</p>
 </body>
 ```
 ## Send variables from Controller to view
