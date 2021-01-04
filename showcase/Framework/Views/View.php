@@ -19,24 +19,29 @@ namespace Showcase\Framework\Views {
         static function show($view, array $vars=array()){
             $page = self::printView($view);
             //check for php code
-            $page = self::executeCode($page, self::varsToString($vars));
+            $page = self::executeCode($page);
+            $page = self::checkVariables($page);
             //check for foreach and for
-            $page = self::checkForLoops($page, self::varsToString($vars));
+            $page = self::checkForLoops($page);
             //check for if
-            $page = self::checkForConditions($page, self::varsToString($vars));
-            //check for variables
-            if(!empty($vars))
-                $page = self::checkVariables($page, $vars);
+            $page = self::checkForConditions($page);
             //Check for native display in html
-            $page = self::checkForDisplay($page, self::varsToString($vars));
+            $page = self::checkForDisplay($page);
             //check for sessionAlert
             $page = self::checkForSessionAlert($page);
             //If no file found => 404 :(
             if(empty($page))
                 return http_response_code(404);
-
-            echo $page;
-            //return http_response_code(200);
+            $file_include = dirname(__FILE__) . '/BaseView.php';
+            $includes = file_get_contents($file_include);
+            $page = $includes . self::varsToString($vars) . "\n?>\n" . $page;
+            file_put_contents("_temp.php", $page);
+            ob_start();
+            require_once '_temp.php';
+            $contents = ob_get_contents();
+            ob_end_clean();
+            echo $contents;
+            unlink("_temp.php");
         }
 
         /**
@@ -96,7 +101,6 @@ namespace Showcase\Framework\Views {
             //Checking if the file exist
             if (file_exists($file)) { 
                 //requiering the views all the componements 
-                require_once 'BaseView.php';
 
                 //Checking the view function to replace them with the correct values
                 $matches = array();
@@ -155,26 +159,17 @@ namespace Showcase\Framework\Views {
          * 
          * @return String view code with php executed
          */
-        static function executeCode($page, $vars){
+        static function executeCode($page){
             //Chech for php function
             $matches = array();
             preg_match_all('#\@php(.*?)\@endphp#s', $page, $matches);
             $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
-                $_subView = str_replace('@php', '', $subView);
-                $_subView = str_replace('@endphp', '', $_subView);
-                //define display function if dosen't exist
-                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){ function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
-                $_subView = self::checkForDisplay($_subView, $vars);
+                $_subView = str_replace('@php', '<?php ', $subView);
+                $_subView = str_replace('@endphp', ' ?>', $_subView);
                 
-                //php to execute
-                $program = $vars . $diplayFunction . $_subView;
-                //Get the function results
-                $result = eval($program);
-                if(!empty($result_to_display))
-                    $result .= $result_to_display;
-                $page = str_replace($subView, $result, $page);
+                $page = str_replace($subView, $_subView, $page);
             }
             return $page;
         }
@@ -187,13 +182,16 @@ namespace Showcase\Framework\Views {
          * 
          * @return String view code with variables checked
          */
-        static function checkVariables($page, array $vars){
-            //Chech for include function
+        static function checkVariables($page){
+            //Chech for vars function
             $matches = array();
-            foreach ($vars as $key => $value) {
+            preg_match_all('#\{{(.*?)\}}#', $page, $matches);
+            foreach ($matches[0] as $subView) {
                 //Replace special characters
-                if(!is_array($value))
-                    $page = str_replace("$$key", $value, $page);
+                $_subView = str_replace('{{', '<?php echo', $subView);
+                $_subView = str_replace('}}', ' ?>', $_subView);
+                //Get the function results
+                $page = str_replace($subView, $_subView, $page);
             }
             return $page;
         }
@@ -204,62 +202,36 @@ namespace Showcase\Framework\Views {
          * 
          * @return string view code
          */
-        static function checkForLoops($page, $vars){
+        static function checkForLoops($page){
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@foreach(.*?)\@endforeach#s', $page, $matches);
-            $result_to_display = '';
             foreach ($matches[0] as $subView) {
-                $loop_vars = array();
                 //Replace special characters
-                $_subView = str_replace('@endforeach', '', $subView);
-                $_subView = str_replace('@foreach', 'foreach', $_subView);
-                //define display function if dosen't exist
-                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
-                
-                //get loop vars
-                $loop_f = explode("{", $_subView);
-                $foreach_v = explode("as", $loop_f[0]);
-                $var_semi = str_replace(' ', '', $foreach_v[1]);
-                $loop_vars[] = str_replace(')', '', $var_semi);
-                
-                $_subView = self::checkForDisplay($_subView, $vars, $loop_vars);
-                //php to execute
-                $program = $vars . $diplayFunction . $_subView;
-                //Get the function results
-                $result = eval($program);
-                if(!empty($result_to_display))
-                    $result .= $result_to_display;
-                //Get the function results
-                $page = str_replace($subView, $result, $page);
+                $search = "#@foreach.*?\n#";
+                preg_match($search, $subView, $match);
+                if (!empty($match)) {
+                    $foreach = str_replace('@foreach', '<?php foreach', $match[0]);
+                    $foreach = str_replace("\n", " { ?>\n", $foreach);
+                    $_subView = str_replace($match[0], $foreach, $subView);
+                }
+                $_subView = str_replace('@endforeach', '<?php } ?>', $_subView);
+                $page = str_replace($subView, $_subView, $page);
             }
 
             $matches = array();
             preg_match_all('#\@for(.*?)\@endfor#s', $page, $matches);
-            $result_to_display = '';
             foreach ($matches[0] as $subView) {
-                $loop_vars = array();
                 //Replace special characters
-                $_subView = str_replace('@endfor', '', $subView);
-                $_subView = str_replace('@for', 'for', $_subView);
-                //define display function if dosen't exist
-                $diplayFunction = '$names =  get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string){global $result_to_display; $result_to_display .= $string; return $result_to_display;}}' . "\n";
-                
-                //get loop vars
-                $loop_f = explode(";", $_subView);
-                $for_v = explode("(", $loop_f[0]);
-                $var_p = explode("=", $for_v[1]);
-                $loop_vars[] = str_replace(' ', '', $var_p[0]);
-                
-                $_subView = self::checkForDisplay($_subView, $vars, $loop_vars);
-                
-                //php to execute
-                $program = $vars . $diplayFunction . $_subView;
-                //Get the function results
-                $result = eval($program);
-                if(!empty($result_to_display))
-                    $result .= $result_to_display;
-                $page = str_replace($subView, $result, $page);
+                $search = "#@for.*?\n#";
+                preg_match($search, $subView, $_match);
+                if (!empty($_match)) {
+                    $for = str_replace('@for', '<?php for', $_match[0]);
+                    $for = str_replace("\n", " { ?>\n", $for);
+                    $_subView = str_replace($_match[0], $for, $subView);
+                }
+                $_subView = str_replace('@endfor', '<?php } ?>', $_subView);
+                $page = str_replace($subView, $_subView, $page);
             }
             return $page;
         }
@@ -270,25 +242,34 @@ namespace Showcase\Framework\Views {
          * 
          * @return string view code
          */
-        static function checkForConditions($page, $vars){
+        static function checkForConditions($page){
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@if(.*?)\@endif#s', $page, $matches);
             foreach ($matches[0] as $subView) {
                 //Replace special characters
-                $_subView = str_replace('@endif', '', $subView);
-                $_subView = str_replace('@elseif', 'else if', $_subView);
-                $_subView = str_replace('@if', 'if', $_subView);
-                $_subView = str_replace('@else', 'else', $_subView);
-                $result_to_display = '';
-                $diplayFunction = '$names = get_defined_vars(); global $result_to_display; extract($names, EXTR_PREFIX_SAME, "wddx"); if (!function_exists("display")){function display($string, $add=true){global $result_to_display; if($add){$result_to_display .= $string;} return $result_to_display;}}' . "\n";
-                //Get the function results
-                $_subView = self::checkForDisplay($_subView, $vars);
-                $program = $vars . $diplayFunction . $_subView;
-                $result = eval($program);
-                if(!empty($result_to_display))
-                    $result .= $result_to_display;
-                $page = str_replace($subView, $result, $page);
+                //end if
+                $_subView = str_replace('@endif', '<?php }?>', $subView);
+
+                //if
+                $search = "#@if.*?\n#";
+                preg_match($search, $_subView, $match);
+                if (!empty($match)) {
+                    $_if = str_replace('@if', '<?php if', $match[0]);
+                    $_if = str_replace("\n", " { ?>\n", $_if);
+                    $_subView = str_replace($match[0], $_if, $_subView);
+                }
+                //else if
+                $_search = "#@elseif.*?\n#";
+                preg_match($_search, $_subView, $_match);
+                if (!empty($_match)) {
+                    $__if = str_replace('@elseif', '<?php }else if', $_match[0]);
+                    $__if = str_replace("\n", " { ?>\n", $__if);
+                    $_subView = str_replace($_match[0], $__if, $_subView);
+                }
+                //else
+                $_subView = str_replace('@else', '<?php }else{ ?>', $_subView);
+                $page = str_replace($subView, $_subView, $page);
             }
             return $page;
         }
@@ -299,30 +280,15 @@ namespace Showcase\Framework\Views {
          * 
          * @return string view code
          */
-        static function checkForDisplay($page, $vars,array $loop_vars=array()){
+        static function checkForDisplay($page){
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@display(.*?)\@enddisplay#s', $page, $matches);
             foreach ($matches[0] as $subView) {
                 //Replace special characters
-                $_subView = str_replace('@enddisplay', '', $subView);
-                $_subView = str_replace('@display', '', $_subView);
-                $contains_var = false;
-                foreach($loop_vars as $var){
-                    $contains_var = strpos($_subView, $var);
-                }
-                $result = '';
-                if (!$contains_var) {
-                    $program = $vars . " return " . $_subView . ";";
-                    //Get the function results
-                    $result = eval($program);
-                    $result = str_replace('"', "", $result);
-                    $result = 'display("' . $result . '");';
-                }else{
-                    $_subView = str_replace('"', "", $_subView);
-                    $result = 'display("' . $_subView . '");';
-                }
-                $page = str_replace($subView, $result, $page);
+                $_subView = str_replace('@enddisplay', ' ?>', $subView);
+                $_subView = str_replace('@display', '<?php echo ', $_subView);
+                $page = str_replace($subView, $_subView, $page);
             }
             return $page;
         }

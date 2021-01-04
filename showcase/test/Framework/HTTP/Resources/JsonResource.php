@@ -2,21 +2,19 @@
 namespace Showcase\Framework\HTTP\Resources {
     use \Showcase\Framework\IO\Debug\Log;
     
-    class JsonResource
-    {
+    class JsonResource{
 
         /**
          * Object to return to json
          */
-        protected $object = null;
+        protected $object = null;        
 
         /**
          * Init the resource with model and create all properties
          * With removing the hidden properties
          * @return json
          */
-        public function __construct($obj)
-        {
+        public function __construct($obj){
             $this->object = $obj;
             return $this->initObject();
         }
@@ -27,7 +25,7 @@ namespace Showcase\Framework\HTTP\Resources {
          */
         private function initObject(){
             $newKeys = $this->handle();
-            if (!is_null($this->object)) {
+            if(!is_null($this->object)){
                 $class_vars = get_object_vars($this->object);
                 unset($class_vars['migration']);
                 unset($class_vars['idDetails']);
@@ -36,20 +34,20 @@ namespace Showcase\Framework\HTTP\Resources {
                     foreach ($class_vars as $key => $value) {
                         $this->createProperty($key, $value);
                     }
-                } else {
+                }else{
                     foreach ($newKeys as $key => $value) {
                         $this->createProperty($key, $value);
                     }
                 }
             }
+            
             return $this;
         }
 
         /**
          * create properties to this object
          */
-        private function createProperty($name, $value)
-        {
+        private function createProperty($name, $value){
             $this->{$name} = $value;
         }
 
@@ -59,7 +57,7 @@ namespace Showcase\Framework\HTTP\Resources {
          * @param string property name
          * @return Mixte
          */
-        public function __get($name)
+        function __get($name)
         {
             if (!is_null($this->object)) {
                 if (isset($this->object->{$name})) {
@@ -75,14 +73,12 @@ namespace Showcase\Framework\HTTP\Resources {
          * Create a json from array of objects
          * @return array
          */
-        public static function array($collection)
-        {
-            if (empty($collection)) {
+        public static function array($collection){
+            if(empty($collection))
                 return array();
-            }
 
             $newCollection = array();
-            foreach ($collection as $obj) {
+            foreach($collection as $obj){
                 $json = new static($obj);
                 $newCollection[] = $json;
             }

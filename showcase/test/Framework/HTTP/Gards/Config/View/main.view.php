@@ -58,13 +58,13 @@
 				<li class="nav-item">
 					<a class="nav-link" href="/documentation">Documentation</a>
 				</li>
-				@if(\Showcase\Framework\HTTP\Gards\Auth::guest()){
-					@display "<li class='nav-item'><a class='nav-link' href='/login'>Login</a></li>" @enddisplay
-					@display "<li class='nav-item'><a class='nav-link' href='/register'>Register</a></li>" @enddisplay
-				}@else{
-					@display "<li class='nav-item'><a class='nav-link disabled' href='#'>" @enddisplay @display \Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->username @enddisplay @display '</a></li>' @enddisplay
-					@display "<li class='nav-item'><a class='nav-link' href='#' id='logout'>Logout</a></li><form id='logout_form' style='display:none' method='post' action='/logout'></form>" @enddisplay
-				}@endif
+				@if(Auth::guest())
+					<li class='nav-item'><a class='nav-link' href='/login'>Login</a></li>
+					<li class='nav-item'><a class='nav-link' href='/register'>Register</a></li>
+				@else
+					<li class='nav-item'><a class='nav-link disabled' href='#'> @display \Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->username @enddisplay </a></li>
+					<li class='nav-item'><a class='nav-link' href='#' id='logout'>Logout</a></li><form id='logout_form' style='display:none' method='post' action='/logout'></form>
+				@endif
 				</ul>
 			</div>
 		</nav>

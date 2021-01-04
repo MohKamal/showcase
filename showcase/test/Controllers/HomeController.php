@@ -28,9 +28,9 @@ namespace Showcase\Controllers{
             //$r = DB::model('Unit')->delete()->where('id', 4)->run();
             //$r = DB::model('Unit')->update(['value' => '27', 'name' => '<li class="nav-item">'])->where('id', 4)->run();
             //Log::print($r);
-            //return self::response()->view('App/welcome');
+            return self::response()->view('App/welcome');
             //return self::response()->internal();
-            return self::response()->json(UserResource::array($users));
+            //return self::response()->json(UserResource::array($users));
         }
     }
 }

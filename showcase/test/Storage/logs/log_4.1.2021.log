@@ -1,0 +1,24 @@
+08:01 - 
+
+08:01 -  {?>
+
+
+------------------------------------
+08:01
+@if(\Showcase\Framework\HTTP\Gards\Auth::guest())
+------------------------------------
+
+08:01 -  {?>
+
+
+------------------------------------
+08:02
+@if(\Showcase\Framework\HTTP\Gards\Auth::guest())
+------------------------------------
+
+08:02 - <?php if(\Showcase\Framework\HTTP\Gards\Auth::guest())
+ { ?>
+
+
+08:06 - Auth: user connected kamal.a@gmail.com
+

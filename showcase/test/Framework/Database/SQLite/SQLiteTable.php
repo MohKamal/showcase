@@ -67,14 +67,17 @@ namespace Showcase\Framework\Database\SQLite {
         public function query($query) {
             if(empty($query))
                 return false;
-
             $stmt = $this->pdo->query($query);
             $data = [];
             if (strpos($query, "SELECT") !== false) {
-                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    $data[] = $row;
+                if (strpos($query, "COUNT") === false) {
+                    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                        $data[] = $row;
+                    }
+                    return $data;
+                }else{
+                    return $stmt->fetchColumn();
                 }
-                return $data;
             }
 
             $stmt->execute();

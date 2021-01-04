@@ -13,9 +13,9 @@ namespace Showcase\Framework\IO\Debug {
             //$log = Log::UserVerification();
             $log = '';
             if(is_array($message)){
-                $log .=  date('h:i', time()).PHP_EOL;
                 $log .= '------------------------------------'.PHP_EOL;
-                $log = serialize($message);
+                $log .= date('h:i', time()).PHP_EOL;
+                $log .= implode("\n", $message);
                 $log .= '------------------------------------'.PHP_EOL;
             }else{
                 $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
@@ -32,9 +32,9 @@ namespace Showcase\Framework\IO\Debug {
             //$log = Log::UserVerification();
             $log = '';
             if(is_array($message)){
-                $log .=  date('h:i', time()).PHP_EOL;
                 $log .= '------------------------------------'.PHP_EOL;
-                $log = serialize($message);
+                $log .=  date('h:i', time()).PHP_EOL;
+                $log .= implode("\n", $message);
                 $log .= '------------------------------------'.PHP_EOL;
             }else{
                 $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
