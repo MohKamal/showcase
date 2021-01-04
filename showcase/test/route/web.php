@@ -17,6 +17,8 @@ namespace Showcase {
 
     $router  = new Router(new Request);
 
+    URL::routes($router);
+
     $router->get('/', function () {
         return HomeController::Index();
     });

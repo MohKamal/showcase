@@ -15,7 +15,7 @@ namespace Showcase\Framework\Session{
             self::clear();
             if($message){
                 $html = "<style>
-                .info, .success, .warning, .error, .validation {
+                .info, .success, .warning, .error {
                     border: 1px solid;
                     margin: 10px 0px;
                     padding: 15px 10px 15px 50px;

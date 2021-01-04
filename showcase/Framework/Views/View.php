@@ -80,7 +80,7 @@ namespace Showcase\Framework\Views {
                     return URL::assets();
                 break;
                 case 'base':
-                    return URL::BASE();
+                    return URL::base();
                 break;
                 case 'bootsrap-style':
                     return URL::bootstrapStyle();

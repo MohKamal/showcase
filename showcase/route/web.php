@@ -15,6 +15,8 @@ namespace Showcase {
     use \Showcase\Framework\IO\Debug\Log;
 
     $router  = new Router(new Request);
+    
+    URL::routes($router);
 
     $router->get('/', function () {
         HomeController::Index();

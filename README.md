@@ -84,7 +84,20 @@ To redirect a user, use a redirect response
         return self::response()->redirect('/contact-us');
     });
 ```
+You can redirect with a message using the same function
 
+```php  
+    $router->get('/path', function () {
+        return self::response()->redirect('/contact-us', 'please fill all inputs', 'error'); // there is 4 types : info, error, warning and success
+    });
+```
+
+if you want to redirect the user to the last url, use back function, it take a message and message type only
+```php  
+    $router->get('/path', function () {
+        return self::response()->back('please fill all inputs', 'error'); // there is 4 types : info, error, warning and success
+    });
+```
 ### Response Json
 To return any object as json response, use response json
 ```php  
@@ -366,6 +379,8 @@ Assets : Main folder for all the resources, even images.
 Styles : CSS folder.
 
 Scripts : Javascript folder.
+
+Base : The main url of you web app.
 
 ```html
 <!-- Adding resources url to style -->

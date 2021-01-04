@@ -32,8 +32,19 @@ namespace Showcase\Framework\HTTP\Routing {
          * 
          * @param string url to be redirected to
          */
-        function redirect($url){
-            return URL::Redirect($url);
+        function redirect($url, $message='', $type='info'){
+            if(empty($message))
+                return URL::redirect($url);
+            return URL::redirectWithMessage($url, $message, $type);
+        }
+
+        /**
+         * Redirection to preview url with a message
+         * 
+         * @param string url to be redirected to
+         */
+        function back($message='', $type='info'){
+            return URL::redirectWithMessage('', $message, $type);
         }
 
         /**
