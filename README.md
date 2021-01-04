@@ -382,9 +382,17 @@ Scripts : Javascript folder.
 
 Base : The main url of you web app.
 
+Bootsrap-Style : Bootstrap css file
+
+Bootsrap-Script : Bootstrap js file
+
+Jquery : Jquery file
+
 ```html
 <!-- Adding resources url to style -->
 <link href="@{{Styles}}main.min.css">
+
+<link href="@{{Bootsrap-Style}}">
 ```
 
 ```html

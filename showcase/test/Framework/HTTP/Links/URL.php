@@ -81,6 +81,13 @@ namespace Showcase\Framework\HTTP\Links{
         }
 
         /**
+         * Url to get any file from resources
+         */
+        static function images(){
+            return '/images?file=';
+        }
+
+        /**
          * Url to the bootstrap.min.css
          */
         static function bootstrapStyle(){
@@ -97,8 +104,8 @@ namespace Showcase\Framework\HTTP\Links{
         /**
          * Url to the jquery-3.3.1.min.js
          */
-        static function Jquery(){
-            return self::assets() . '/js/jquery-3.3.1.min.js';
+        static function jquery(){
+            return self::assets() . 'js/jquery-3.3.1.min.js';
         }
 
         /**

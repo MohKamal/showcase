@@ -89,7 +89,10 @@ namespace Showcase\Framework\Views {
                     return URL::bootstrapScript();
                 break;
                 case 'jquery':
-                    return URL::Jquery();
+                    return URL::jquery();
+                break;
+                case 'images':
+                    return URL::images();
                 break;
             }
 

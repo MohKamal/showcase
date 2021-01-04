@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- STYLE CSS -->
-		<link rel="stylesheet" href="@{{Assets}}/css/style.css">
+		<link rel="stylesheet" href="@{{Styles}}/style.css">
 
 	</head>
 
@@ -16,7 +16,7 @@
 		<div class="wrapper">
 			<div class="inner">
 				<div class="image-holder">
-					<img src="@{{Assets}}/images/images.jpg" alt="">
+					<img src="@{{Images}}/images.jpg" alt="">
 				</div>
 				<form method="post" action='/auth'>
 					<h3>Sign Up</h3>
