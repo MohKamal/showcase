@@ -528,20 +528,50 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
 
 * functions
     * table($name) : table name to select from
+        ```php
+        DB::table('users')->select()->get();
+        ```
     * model($name) : model to convert data to after fetching it
+        ```php
+        DB::model('User')->select()->get();
+        ```
     * select($columns) : you can specify the columns to select in case you are using the table function
         ```php
         $users = DB::table('users')->select('username', 'email')->where('email', '%@gmail%', 'LIKE')->get();
         ```
         if you are using model function instead of table, the select columns with not be applied
     * where($column, $value, $condition) : add where condition to you query, the condition value is '=' by default
+        ```php
+        DB::table('users')->select()->where('score', 100)->get();
+        ```
     * orWhere($column, $value, $condition) : add or condition to you query, the condition value is '=' by default
+        ```php
+        DB::table('users')->select()->where('score', 100)->orWhere('name', 'joe')->get();
+        ```
     * limit($number) : to limit the query result
+        ```php
+        DB::table('users')->select()->where('email', '%@gmail%', 'LIKE')->limit(12)->get();
+        ```
     * distinct($column) : get distinct result for all columns by default, or to specific column
+        ```php
+        DB::table('users')->select()->where('email', '%@gmail%', 'LIKE')->distinct('id')->get();
+        ```
     * count($expression) : get all columns count by default, or an expression/column
+        ```php
+        DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->count('id')->run();
+        ```
     * first() : get the first result
+        ```php
+        DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->first();
+        ```
     * get() : get an array of results
+        ```php
+        DB::table('users')->select('username', 'email')->where('email', '%@gmail%', 'LIKE')->get();
+        ```
     * withTrash() : in case you are using soft delete, with this function, also the deleted records will be selected
+        ```php
+        DB::table('users')->select('username', 'email')->where('email', '%@gmail%', 'LIKE')->withTrash()->get();
+        ```
     * insert($columns) : insert to model/table at database
         ```php
         DB::table('users')->insert(['name' => 'test', 'email' => 'test@email.com'])->run();
@@ -554,7 +584,10 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
         ```php
         DB::table('users')->delete()->where('id', 12)->run();
         ```
-    * run() : call this function when using the insert, update and delete functions, it return the numbers of lines affected
+    * run() : call this function when using the insert, update, delete and count functions, it return the numbers of lines affected
+        ```php
+        DB::table('users')->delete()->where('id', 12)->run();
+        ```
 
 ## Migration
 
