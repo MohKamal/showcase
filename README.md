@@ -380,6 +380,8 @@ Styles : CSS folder.
 
 Scripts : Javascript folder.
 
+Images : Images folder.
+
 Base : The main url of you web app.
 
 Bootsrap-Style : Bootstrap css file
@@ -390,14 +392,14 @@ Jquery : Jquery file
 
 ```html
 <!-- Adding resources url to style -->
-<link href="@{{Styles}}main.min.css">
+<link href="@{{Styles}}/main.min.css">
 
 <link href="@{{Bootsrap-Style}}">
 ```
 
 ```html
 <!-- Adding resources url to image -->
-<img src="@{{Assets}}images/logo.png" class="img-fluid" alt="logo"/>
+<img src="@{{Images}}/logo.png" class="img-fluid" alt="logo"/>
 <!-- Adding Base url to a link tag -->
 <a href="@{{Base}}/Contact">Contact-Us</a>
 ```
