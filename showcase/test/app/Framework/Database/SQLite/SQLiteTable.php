@@ -40,7 +40,7 @@ namespace  Showcase\Framework\Database\SQLite {
             foreach ($commands as $command) {
                 $this->pdo->exec($command);
             }
-            Log::console($name . ' migration added to database succefully');
+            Log::console($name . " migration added to database succefully\n", 'success');
         }
     
         /**

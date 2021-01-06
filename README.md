@@ -110,10 +110,10 @@ To return any object as json response, use response json
 
 ### Json resource
 When return a model as json, the hidden properties aslo are send out there, to prevent that from happening, you can use JsonResource object.
-To create one, call the createJsonResource command : 
+To create one, call the make:jsonresource command : 
 
 ```bash
-php creator createJsonResource resource_Name
+php showcase make:jsonresource resource_Name
 ```
 And then, in the handle function, specify the data returned, or leave it blank, only the database columns will be returned.
 ```php
@@ -203,7 +203,7 @@ will return :
 To return codes and error pages use :
 * 404 : response()->notFound()
 * 405 : response()->notAllowed()
-* 200 : response()->OK() //not page is returned
+* 200 : response()->OK() //no page is returned
 * 403 : response()->unauthorized()
 * 500 : response()->internal()
 
@@ -413,22 +413,22 @@ Please use Good Frameworks for huge projects, for more security and easy project
 To create a new controller use php command line
 
 ```bash
-php creator createController Controller_Name
+php showcase make:controller Controller_Name
 ```
 Example
 
 ```bash
-php creator createController ContactController
+php showcase make:controller ContactController
 ```
 
 To create a new model use php command line
 
 ```bash
-php creator createModel Model_Name
+php showcase make:model Model_Name
 ```
 Example
 ```bash
-php creator createModel ContactModel
+php showcase make:model ContactModel
 ```
 #### Notice
 If you get the class not found, use the composer dump autoloder, so it add your new file/class.
@@ -646,7 +646,7 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
 To create a migration you need to use the commande line on the root folder.
 
 ```bash
-php creator createMigration migration_name
+php showcase make:migration migration_name
 ```
 
 A file will be created at Database\Migrations.
@@ -703,7 +703,7 @@ To add soft delete columns, add the function softDelete().
 To create those migration, you need to execute another command line.
 
 ```bash
-php creator migrate
+php showcase migrate
 ```
 
 ## Session
@@ -745,12 +745,12 @@ To use Authentication, there is one simple mecanisme in showcase to use a simple
 To create the model and controller with the views run the command : 
 
 ```bash
-php creator auth
+php showcase auth
 ```
 After, you have to run the migrate command to create the user table in the database.
 
 ```bash
-php creator migrate
+php showcase migrate
 ```
 And finaly, add the Auth routes to the web file.
 
@@ -805,6 +805,13 @@ use \Showcase\Framework\IO\Debug\Log;
 
 Log::print("Message to print in log file");
 Log::console("Message to print in the console");
+```
+
+To color the console logs, you can use the four status : info, error, warning, sucess
+```bash
+use \Showcase\Framework\IO\Debug\Log;
+
+Log::console("No File was Found!", 'error');
 ```
 
 ## Run it

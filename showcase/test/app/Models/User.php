@@ -1,5 +1,5 @@
 <?php
-namespace Showcase\Models{
+namespace  Showcase\Models{
     use \Showcase\Framework\Database\Models\BaseModel;
     use \Exception;
     

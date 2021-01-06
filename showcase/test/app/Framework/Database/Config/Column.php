@@ -1,6 +1,6 @@
 <?php
 namespace  Showcase\Framework\Database\Config {
-    use \Showcase\AutoLoad;
+    use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framewok\IO\Debug\Log;
     
     class Column{

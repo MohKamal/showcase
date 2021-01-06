@@ -13,6 +13,82 @@ namespace  Showcase\Framework\Command{
     use \Showcase\Framework\IO\Debug\Log;
 
     class Cmd{
+
+        /**
+         * Parse the command to get best results
+         * @param array $command commands from bash
+         * 
+         * @return boolean
+         */
+        public function parse($command){
+            if(count($command) <= 1)
+            {
+                Log::console("No command find! please specify your command", 'error');
+                return false;
+            }
+            if (strpos($command[1], ":") !== false) {
+                $commands = explode(":", $command[1]);
+                if(count($command) <= 2)
+                    return $this->errorCommand($commands[0]);
+                if(strtolower($commands[0]) === "make"){
+
+                    switch(strtolower($commands[1])){
+                        case 'controller':
+                            $this->createController($command[2]);
+                            break;
+                        case 'model':
+                            $this->createModel($command[2]);
+                            break;
+                        case 'jsonresource':
+                            $this->createJsonResource($command[2]);
+                            break;
+                        case 'migration':
+                            $this->createMigration($command[2]);
+                            break;
+                    }
+                }
+            }
+
+            if(count($command) >= 2){
+                switch(strtolower($command[1])){
+                    case '-v':
+                        $text = '';
+                        if(isset($command[2]))
+                            $text = $command[2];
+                        $this->v($text);
+                        break;
+                }
+            }
+
+            if(count($command) == 2){
+                switch(strtolower($command[1])){
+                    case 'migrate':
+                        $this->migrate();
+                        break;
+                    case 'auth':
+                        $this->auth();
+                        break;
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * Error message for each command, to help user executing the commands
+         * @param string $command name
+         * 
+         * @return boolean
+         */
+        private function errorCommand($command){
+            switch(strtolower($command)){
+                case 'make':
+                    Log::console("make need more option\nmake:controller\nmake:model\nmake:jsonresource\nmake:migration", 'error');
+                    break;
+            }
+
+            return false;
+        }
         
         /**
          * Create new controller
@@ -27,7 +103,7 @@ namespace  Showcase\Framework\Command{
                     mkdir($base_dir, 0777, true);
                 }
                 file_put_contents($base_dir . $name . '.php', $content);
-                Log::console($name . ' Json Resource added!');
+                Log::console($name . ' Json Resource added!', 'success');
             }
         }
 
@@ -44,7 +120,7 @@ namespace  Showcase\Framework\Command{
                     mkdir($base_dir, 0777, true);
                 }
                 file_put_contents($base_dir . $name . '.php', $content);
-                Log::console($name . ' Controller added!');
+                Log::console($name . ' Controller added!', 'success');
             }
         }
         
@@ -61,7 +137,7 @@ namespace  Showcase\Framework\Command{
                     mkdir($base_dir, 0777, true);
                 }
                 file_put_contents($base_dir . $name . '.php', $content);
-                Log::console($name . ' Model added!');
+                Log::console($name . ' Model added!', 'success');
             }
         }
         
@@ -81,7 +157,7 @@ namespace  Showcase\Framework\Command{
                 }
                 $dir = $base_dir . $file_name;
                 file_put_contents($dir, $content);
-                Log::console($name . ' migration file added succefully');
+                Log::console($name . ' migration file added succefully', 'success');
             }
         }
 
@@ -89,9 +165,9 @@ namespace  Showcase\Framework\Command{
          * Create new Model file
          * @param string new model name
          */
-        public function test($text){
+        public function v($text=''){
             if(!empty($text)){
-                Log::console($text);
+                Log::console($text . "\n");
             }
             Log::console("Showcase --version 1.0 working fine for now at " . date("Y-m-d h:i:sa"));
         }
@@ -114,10 +190,10 @@ namespace  Showcase\Framework\Command{
                 {
                     $obj = new $class;
                     $db->createTable($obj);
-                    Log::console("Migration $obj->name created!");
+                    Log::console("Migration $obj->name created!\n", 'success');
                 }
             }
-            Log::console('Migration ended!');
+            Log::console('Migration ended!', 'success');
         }
 
         /**
@@ -135,7 +211,7 @@ namespace  Showcase\Framework\Command{
             }
 
             if(!copy($migration_user, $migration_user_newFolder)){
-                Log::console("Can't create User migration");
+                Log::console("Can't create User migration", 'error');
                 return false;
             }
 
@@ -154,17 +230,17 @@ namespace  Showcase\Framework\Command{
             $registerController_newFolder = $base_dir . 'RegisterController.php';
 
             if(!copy($loginController, $loginController_newFolder)){
-                Log::console("Can't create contollers");
+                Log::console("Can't create contollers", 'error');
                 return false;
             }
 
             if(!copy($userContoller, $userContoller_newFolder)){
-                Log::console("Can't create contollers");
+                Log::console("Can't create contollers", 'error');
                 return false;
             }    
 
             if(!copy($registerController, $registerController_newFolder)){
-                Log::console("Can't create contollers");
+                Log::console("Can't create contollers", 'error');
                 return false;
             }
 
@@ -179,7 +255,7 @@ namespace  Showcase\Framework\Command{
             $userModel_newFolder = $base_dir . 'User.php';
 
             if(!copy($userModel, $userModel_newFolder)){
-                Log::console("Can't create User model");
+                Log::console("Can't create User model", 'error');
                 return false;
             }
 
@@ -188,33 +264,33 @@ namespace  Showcase\Framework\Command{
             $registerView = $config_folder . 'View/register.view.php';
             $mainView = $config_folder . 'View/main.view.php';
 
-            $base_dir = dirname(__FILE__) . '/../../Views/Auth/';
+            $base_dir = dirname(__FILE__) . '/../../../Views/Auth/';
             if (!file_exists($base_dir)) {
                 mkdir($base_dir, 0777, true);
             }
 
             $loginView_newFolder = $base_dir . 'login.view.php';
             $registerView_newFolder = $base_dir . 'register.view.php';
-            $mainView_newFolder = dirname(__FILE__) . '/../../Views/App/' . 'main.view.php';
+            $mainView_newFolder = dirname(__FILE__) . '/../../../Views/App/' . 'main.view.php';
 
             if(!copy($loginView, $loginView_newFolder)){
-                Log::console("Can't create views");
+                Log::console("Can't create views", 'error');
                 return false;
             }
 
             if(!copy($registerView, $registerView_newFolder)){
-                Log::console("Can't create views");
+                Log::console("Can't create views", 'error');
                 return false;
             }
 
             if(!copy($mainView, $mainView_newFolder)){
-                Log::console("Can't create views");
+                Log::console("Can't create views", 'error');
                 return false;
             }
 
-            Log::console('Migration, Contollers, Views and Model created! Please run migrate command');
-            Log::console('Add use \Showcase\Framework\HTTP\Gards\Auth; to the route web file (route/web.php)');
-            Log::console('Add Auth::routes($router); to the route web file (route/web.php)');
+            Log::console("Migration, Contollers, Views and Model created! Please run migrate command\n", 'success');
+            Log::console("Add use \Showcase\Framework\HTTP\Gards\Auth; to the route web file (route/web.php)\n", 'success');
+            Log::console('Add Auth::routes($router); to the route web file (route/web.php)', 'success');
         }
     }
 }

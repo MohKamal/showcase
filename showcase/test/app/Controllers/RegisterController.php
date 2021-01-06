@@ -10,7 +10,6 @@ namespace  Showcase\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Models\User;
     use \Showcase\Framework\HTTP\Gards\Auth;
-    use \Showcase\Framework\Session\SessionAlert;
 
     class RegisterController extends BaseController{
 
@@ -34,7 +33,7 @@ namespace  Showcase\Controllers{
                 Auth::loginWithEmail($user->email);
                 return self::response()->redirect('/');
             }
-            return self::response()->view('Auth/register', array('errors' => $errors, 'hasError' => empty($errors) ? false : true));
+            return self::response()->view('Auth/register', array('errors' => $errors));
         }
     }
 }
