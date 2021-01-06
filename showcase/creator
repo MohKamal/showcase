@@ -4,12 +4,7 @@
  * example: php Creator.php function_name arg
  */
 namespace Showcase{
-    require_once dirname(__FILE__) . '/autoload.php';
-    require_once dirname(__FILE__) . '/Framework/Command/Cmd.php';
-    
-    use \Showcase\AutoLoad;
-
-    AutoLoad::register();
+    require __DIR__ . '/vendor/autoload.php';
     
     use \Showcase\Framework\Command\Cmd;
     

@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Showcase\\": "app/"
+        },
+        "classmap": [
+            "public/index.php"
+        ]
+    }
+}

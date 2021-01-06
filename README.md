@@ -430,7 +430,11 @@ Example
 ```bash
 php creator createModel ContactModel
 ```
-
+#### Notice
+If you get the class not found, use the composer dump autoloder, so it add your new file/class.
+```bash
+    composer dumpautoload -o
+```
 ### Save model to database
 
 Showcase use SQLite/MySql database, you can set-up at appsettings.json.

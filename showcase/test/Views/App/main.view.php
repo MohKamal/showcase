@@ -83,6 +83,16 @@
 				e.preventDefault();
 				$("#logout_form").submit();
 			})
+
+			$.ajax({
+				type: "POST",
+				url: "/user/store",
+				data: {'id':1},
+				success: function(){
+					alert('hola');
+				},
+				dataType: 'json'
+			});
 		</script>
 	</body>
 </html>
