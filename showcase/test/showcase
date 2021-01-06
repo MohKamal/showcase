@@ -1,7 +1,7 @@
 <?php
 /**
  * Command line executer
- * example: php Creator.php function_name arg
+ * example: php showcase function_name arg
  */
 namespace Showcase{
     require __DIR__ . '/vendor/autoload.php';
