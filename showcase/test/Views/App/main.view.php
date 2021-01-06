@@ -68,6 +68,12 @@
 				</ul>
 			</div>
 		</nav>
+		<form action="/user/store" method="post">
+			@csrf
+			<input type="text" name="name" placeholder="your name" />
+			<button class="btn btn-success">Submit</button>
+		</form>
+
 		@render()
 		<script src="@{{Jquery}}"></script>
 		<link rel="stylesheet" href="@{{Bootsrap-script}}">

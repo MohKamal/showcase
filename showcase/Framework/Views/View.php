@@ -29,6 +29,8 @@ namespace Showcase\Framework\Views {
             $page = self::checkForDisplay($page);
             //check for sessionAlert
             $page = self::checkForSessionAlert($page);
+            //check for csrf
+            $page = self::checkForCSRF($page);
             //If no file found => 404 :(
             if(empty($page))
                 return http_response_code(404);
@@ -325,6 +327,28 @@ namespace Showcase\Framework\Views {
             preg_match_all('#\@sessionAlert#', $page, $matches);
             foreach ($matches[0] as $subView) {
                 $page = str_replace($subView, '<?php echo SessionAlert::show(); ?>', $page);
+            }
+            return $page;
+        }
+
+        /**
+         * check for csrf function
+         * @param string $page view code
+         * 
+         * @return string view code
+         */
+        static function checkForCSRF($page){
+            //Chech for csrf
+            $matches = array();
+            preg_match_all('#\@csrfInject#', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                $page = str_replace($subView, '<?php $csrf->start(); ?>', $page);
+            }
+
+            $matches = array();
+            preg_match_all('#\@csrf#', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                $page = str_replace($subView, '<?php echo $csrf->csrfguard_get_inputs(); ?>', $page);
             }
             return $page;
         }

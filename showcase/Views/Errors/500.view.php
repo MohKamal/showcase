@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-	    <title>500</title>
+        <title>{{$appName}} - 500</title>
         <link href="@{{Assets}}css/fonts.googleapis.css" rel="stylesheet">
         <style>
         /**/

@@ -200,9 +200,10 @@ will return :
 ```
 
 ### Response codes
-To return codes use :
+To return codes and error pages use :
 * 404 : response()->notFound()
-* 200 : response()->OK()
+* 405 : response()->notAllowed()
+* 200 : response()->OK() //not page is returned
 * 403 : response()->unauthorized()
 * 500 : response()->internal()
 
@@ -306,14 +307,14 @@ If you want to check a condition without the php function, use the @if function.
 <body>
     <!-- Simple if -->
     @if($show)
-        @display "<p>Show it!</p>" @enddisplay
+        <p>Show it!</p>
     @endif
 
     <!-- If with Else -->
     @if($show)
-        @display "<p>Show it!</p>" @enddisplay
+        <p>Show it!</p>
     @else
-        @display "<p>Not Showing it!</p>" @enddisplay
+        <p>Not Showing it!</p>
     @endif
     <!-- You page Code -->
 </body>
@@ -521,6 +522,31 @@ To get array of models, with one, or more conditions, you gonna use the static f
 $models = DB::model('Model')->select()->where('column', $value)->withTrash()->get();
 Log::print($models[0]->paramName);
 ```
+
+## CSRF Guard
+
+For more security, csrf guard are required for every POST request.
+To inject the csrf to a form, use @csrf function.
+```html
+    <form action="/user/store" method="post">
+        @csrf
+        <input type="text" name="name" placeholder="your name" />
+        <button class="btn btn-success">Submit</button>
+    </form>
+```
+
+If you would inject all the forms in a page, without typing @csrf in every forms, use @csrfInject function.
+```html
+	<head>
+	    <!-- header -->
+	</head>
+	<body>
+        @csrfInject
+	    <!-- page -->
+	</body>
+```
+
+If no CSRF was found in the post request, a 403 error is returned.
 
 ## Database object
 For an easy search and query build, use the DB object

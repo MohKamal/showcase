@@ -62,7 +62,7 @@ namespace Showcase\Framework\HTTP\Routing {
          */
         function notFound(){
             http_response_code(404);
-            return View::show("Errors/404");
+            return View::show("Errors/404", ['appName' => AutoLoad::env('APP_NAME')]);
         }
 
         /**
@@ -78,7 +78,7 @@ namespace Showcase\Framework\HTTP\Routing {
          */
         function unauthorized(){
             http_response_code(403);
-            return View::show("Errors/403");
+            return View::show("Errors/403", ['appName' => AutoLoad::env('APP_NAME')]);
         }
 
         /**
@@ -86,7 +86,15 @@ namespace Showcase\Framework\HTTP\Routing {
          */
         function internal(){
             http_response_code(500);
-            return View::show("Errors/500");
+            return View::show("Errors/500", ['appName' => AutoLoad::env('APP_NAME')]);
+        }
+
+        /**
+         * Return a 405 code
+         */
+        function notAllowed(){
+            http_response_code(405);
+            return View::show("Errors/405", ['appName' => AutoLoad::env('APP_NAME')]);
         }
     }
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <title>{{$appName}} - 404</title>
         <style>
             @import url('');
 

@@ -17,6 +17,10 @@ namespace Showcase {
 
     $router  = new Router(new Request);
 
+    /**
+     * resources routes 
+     * Don't delete it
+     */
     URL::routes($router);
 
     $router->get('/', function () {
@@ -24,20 +28,11 @@ namespace Showcase {
     });
 
     $router->get('/documentation', function () {
-        return View::show('App/doc');
+        return View::show('App/doc', ['doc' => 'You fucker']);
     });
 
-    //Error Pages
-    $router->get('/errors/404', function () {
-        return View::show('Errors/404');
-    });
-
-    $router->get('/errors/405', function () {
-        return View::show('Errors/405');
-    });
-
-    $router->get('/errors/500', function () {
-        return View::show('Errors/500');
+    $router->post('/user/store', function () {
+        return URL::redirect('/');
     });
 
     Auth::routes($router);
