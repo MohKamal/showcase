@@ -34,7 +34,6 @@ namespace  Showcase\Framework\HTTP\Routing {
             if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
                 $this->invalidMethodHandler();
             }
-            Log::print($name);
             $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
         }
 

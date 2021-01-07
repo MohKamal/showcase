@@ -10,7 +10,7 @@
     
     <meta name="description" content="Bootstrap 4 Template For Software Startups">
     <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
-    <link rel="shortcut icon" href="favicon.ico"> 
+    <link rel="shortcut icon" href="@{{images}}favicon.ico"> 
     
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
 	                    <span></span>
 	                    <span></span>
 	                </button>
-	                <div class="site-logo"><a class="navbar-brand" href="index.html"><img class="logo-icon mr-2" src="@{{Assets}}assets/images/coderdocs-logo.svg" alt="logo"><span class="logo-text">Coder<span class="text-alt">Docs</span></span></a></div>    
+	                <div class="site-logo"><a class="navbar-brand" href="/"><img class="logo-icon mr-2" src="@{{Assets}}assets/images/coderdocs-logo.svg" alt="logo"><span class="logo-text">Showcase<span class="text-alt">Docs</span></span></a></div>    
                 </div><!--//docs-logo-wrapper-->
 	            <div class="docs-top-utilities d-flex justify-content-end align-items-center">
 	                <div class="top-search-box d-none d-lg-flex">
@@ -48,7 +48,7 @@
 	
 					<ul class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex">
 						<li class="list-inline-item"><a href="https://github.com/MohKamal/php-Showcase-template"><i class="fab fa-github fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
+			            <li class="list-inline-item"><a href="https://twitter.com/MOURCHIDKamal"><i class="fab fa-twitter fa-fw"></i></a></li>
 		                <li class="list-inline-item"><a href="#"><i class="fab fa-slack fa-fw"></i></a></li>
 		                <li class="list-inline-item"><a href="#"><i class="fab fa-product-hunt fa-fw"></i></a></li>
 		            </ul><!--//social-list-->
@@ -217,6 +217,15 @@ static function Index(){
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <h4>Response codes and error pages</h4>
+						<p>To return codes and error pages use :</p>
+						<ul>
+						    <li><strong class="mr-1">404 :</strong> <code>response()->notFound()</code></li>
+						    <li><strong class="mr-1">405 :</strong> <code>response()->notAllowed()</code></li>
+						    <li><strong class="mr-1">200 :</strong> <code>response()->OK() //no page is returned</code></li>
+						    <li><strong class="mr-1">403 :</strong> <code>response()->unauthorized()</code></li>
+						    <li><strong class="mr-1">500 :</strong> <code>response()->internal()</code></li>
+						</ul>
                         <h4>Response Json</h4>
 						<p>To return any object as json response, use response json</p>
                         <div class="docs-code-block">
@@ -232,15 +241,6 @@ static function Index(){
                         </code></pre>
                         </div><!--//docs-code-block-->
 						<p>To custumize the models return json, use the Json Resource object.</p>
-                        <h4>Response codes and error pages</h4>
-						<p>To return codes and error pages use :</p>
-						<ul>
-						    <li><strong class="mr-1">404 :</strong> <code>response()->notFound()</code></li>
-						    <li><strong class="mr-1">405 :</strong> <code>response()->notAllowed()</code></li>
-						    <li><strong class="mr-1">200 :</strong> <code>esponse()->OK() //no page is returned</code></li>
-						    <li><strong class="mr-1">403 :</strong> <code>esponse()->unauthorized()</code></li>
-						    <li><strong class="mr-1">500 :</strong> <code>esponse()->internal()</code></li>
-						</ul>
 					</section><!--//section-->
 					
 					<section class="docs-section" id="item-3-3">
@@ -397,7 +397,7 @@ class HomeController extends BaseController{
 php showcase make:migration migration_name
                         </code></pre>
                         </div><!--//docs-code-block-->  
-                        <p>A file will be created at Database\Migrations.</p>
+                        <p>A file will be created at app/Database/Migrations.</p>
                         <p>To edit the columns, you open the migration file and edit it.</p>
                         <p>Column Type :</p>
                         <ul>
@@ -828,7 +828,7 @@ static function store($request){
 		                            </span><!--//icon-holder-->
 	                                Note
 	                            </h4>
-                                <p>You have to put the @render() tag inside the main view in the position where you with the child view would display.</p>
+                                <p>You have to put the @render() tag inside the main view, in the position where you want the child view to be displayed.</p>
                             </div><!--//content-->
                         </div><!--//callout-block-->
                         <div class="docs-code-block">
@@ -901,7 +901,7 @@ static function store($request){
                         </code></pre>
                         </div><!--//docs-code-block-->
                         <h4>Display to view</h4>
-                        <p>To display a variable or a function result, use @display function, inside @php, @foreach, @for and @if statement or in plain html.</p>
+                        <p>To display a variable or a function result, use @&#8203;display function, inside @&#8203;php, @&#8203;foreach, @&#8203;for and @&#8203;if statement or in plain html.</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="html hljs">
 &lt;!-- contact.view.php --&gt;
@@ -920,7 +920,7 @@ static function store($request){
                         </code></pre>
                         </div><!--//docs-code-block-->
                         <h4>Display a variable</h4>
-                        <p>To display a simple variable sent from controller, use the variable function {{$var}}</p>
+                        <p>To display a simple variable sent from controller, use the variable function {&#8203;{$var}}</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
 return self::response()->view('App/welcome', array(
@@ -933,7 +933,7 @@ return self::response()->view('App/welcome', array(
 &lt;!-- post.view.php --&gt;
 @&#8203;extend("App/main")
 &lt;body&gt;
-    &lt;p&gt;{{$title}}&lt;/p&gt;
+    &lt;p&gt;{&#8203;{$title}}&lt;/p&gt;
 &lt;/body&gt;
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -1060,7 +1060,7 @@ php -S localhost:8000
 				        <small class="copyright">Designed with <i class="fas fa-heart" style="color: #fb866a;"></i> by <a class="theme-link" href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
 				        <ul class="social-list list-unstyled pt-4 mb-0">
 						    <li class="list-inline-item"><a href="https://github.com/MohKamal/php-Showcase-template"><i class="fab fa-github fa-fw"></i></a></li> 
-				            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
+				            <li class="list-inline-item"><a href="https://twitter.com/MOURCHIDKamal"><i class="fab fa-twitter fa-fw"></i></a></li>
 				            <li class="list-inline-item"><a href="#"><i class="fab fa-slack fa-fw"></i></a></li>
 				            <li class="list-inline-item"><a href="#"><i class="fab fa-product-hunt fa-fw"></i></a></li>
 				            <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f fa-fw"></i></a></li>
