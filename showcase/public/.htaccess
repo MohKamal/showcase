@@ -6,4 +6,4 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php?url=$1 [NC,L]
 </IfModule>
-ErrorDocument 500 /errors/500
+ErrorDocument 500 /errors/500 
