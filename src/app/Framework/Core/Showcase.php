@@ -20,7 +20,7 @@ namespace  Showcase\Framework\Core{
             AppSetting::Init();
             //Database init
             $use_db = VarLoader::env('USE_DB');
-            if (strtolower($use_db) === 'true') {
+            if (filter_var(strtolower($use_db), FILTER_VALIDATE_BOOLEAN)) {
                 $db = new Wrapper();
                 $db->Initialize();
             }
