@@ -19,7 +19,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
             $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
 
             if (empty($errors)) {
-                $Dir = dirname(__FILE__) . '/../../../../ressources/';
+                $Dir = dirname(__FILE__) . '/../../../../resources/';
                 return self::getData($Dir, $request->getBody()['file']);
             }
             else
@@ -33,7 +33,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
             $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
 
             if (empty($errors)) {
-                $Dir = dirname(__FILE__) . '/../../../../ressources/css/';
+                $Dir = dirname(__FILE__) . '/../../../../resources/css/';
                 return self::getData($Dir, $request->getBody()['file']);
             }
             else
@@ -47,7 +47,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
             $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
 
             if (empty($errors)) {
-                $Dir = dirname(__FILE__) . '/../../../../ressources/js/';
+                $Dir = dirname(__FILE__) . '/../../../../resources/js/';
                 return self::getData($Dir, $request->getBody()['file']);
             }
             else
@@ -61,7 +61,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
             $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
 
             if (empty($errors)) {
-                $Dir = dirname(__FILE__) . '/../../../../ressources/images/';
+                $Dir = dirname(__FILE__) . '/../../../../resources/images/';
                 return self::getPicture($Dir, $request->getBody()['file']);
             }
             else

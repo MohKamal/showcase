@@ -16,8 +16,8 @@ namespace  Showcase\Framework\Initializer{
        * @var array
        */
         $variables = [
-        'RES_FOLDER' => dirname(__FILE__) . '/../../../ressources',
-        'RESOURCES' => 'ressources',
+        'RES_FOLDER' => dirname(__FILE__) . '/../../../resources',
+        'RESOURCES' => 'resources',
       ];
     
         foreach ($variables as $key => $value) {
