@@ -219,6 +219,15 @@ namespace  Showcase\Framework\Database\Config {
         }
 
         /**
+         * This column is unique
+         * @return \Framework\Database\Config\Column
+         */
+        public function unique(){
+            array_push($this->options, 'UNIQUE');
+            return $this;
+        }
+
+        /**
          * Set this column default value
          * @return \Framework\Database\Config\Column
          */
