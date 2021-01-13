@@ -8,8 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="description" content="Bootstrap 4 Template For Software Startups">
-    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <meta name="description" content="Showcase documentation for an easy use">
+    <meta name="author" content="MOURCHID Mohamed Kamal">    
     <link rel="shortcut icon" href="@{{images}}favicon.ico"> 
     
     <!-- Google Font -->
