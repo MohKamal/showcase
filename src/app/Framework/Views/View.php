@@ -63,6 +63,58 @@ namespace Showcase\Framework\Views {
             SessionAlert::clear();
         }
 
+        
+        /**
+         * Get the view HTML as String to be used in other things like view to pdf
+         * @param $view view name example : Auth/Login Or Auth/Login.view.php
+         */
+        static function get($view, array $vars=array()){
+            $page = self::printView($view);
+            //check for php code
+            $page = self::executeCode($page);
+            $page = self::checkVariables($page);
+            //check for foreach and for
+            $page = self::checkForLoops($page);
+            //check for if
+            $page = self::checkForConditions($page);
+            //Check for native display in html
+            $page = self::checkForDisplay($page);
+            //check for sessionAlert
+            $page = self::checkForSessionAlert($page);
+            //check for csrf
+            $page = self::checkForCSRF($page);
+            //If no file found => 404 :(
+            if(empty($page))
+                return http_response_code(404);
+
+            //add base files
+            $file_include = dirname(__FILE__) . '/BaseView.php';
+            $includes = file_get_contents($file_include);
+
+            //add models
+            $include_models = "\n";
+            $dir_models = dirname(__FILE__) . '/../../Models';
+            if (file_exists($dir_models)) {
+                $models = scandir($dir_models, 1);
+                foreach($models as $model){
+                    $file_parts = pathinfo($model);
+                    if($file_parts['extension'] == "php"){
+                        $include_models .= "use \Showcase\Models\\" . basename($model,".php") . ";\n";
+                    }
+                }
+            }
+            //create file content
+            $page = $includes . "\n" . $include_models . "\n" . self::varsToString($vars) . "\n?>\n" . $page;
+            file_put_contents("_temp.php", $page);
+            ob_start();
+            require_once '_temp.php';
+            $contents = ob_get_contents();
+            ob_end_clean();
+            unlink("_temp.php");
+            SessionAlert::clear();
+            return $contents;
+        }
+
         /**
          * Returning a value based on the name of the function such as Assets Url or the app Base Url
          * 
@@ -368,7 +420,7 @@ namespace Showcase\Framework\Views {
                 elseif (is_object($value)) 
                     $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
                 else
-                    $string .= "$$key=" . "'$value';\n";
+                    $string .= "$$key=" . "'" . str_replace("'", "\'", $value) . "';\n";
             }
             return $string;
         }
@@ -399,10 +451,8 @@ namespace Showcase\Framework\Views {
                                 $string .= "'$key'" . '=> "' . str_replace('"', '', $value) . '",';
                         }
                         else{
-                            if(!strpos($value, "'"))
-                                $string .= "'". str_replace('"', '', $value) ."',";
-                            else
-                                $string .= '"' . str_replace('"', '', $value) . '",';
+                            $value = str_replace("'", "\'", $value);
+                            $string .= "'". str_replace('"', '', $value) ."',";
                         }
                     } elseif (is_array($value)) {
                         $string .= "[" . self::arrayToStringVar($value, true) . "],";
