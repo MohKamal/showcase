@@ -723,6 +723,26 @@ else
 &lt;/body&gt;
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <p>To use CSRF with Ajax, you use @&#8203;csrf and get the values of the inputs using Jquery.</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="javascript hljs">
+$.ajax({
+    url: "/url",
+    type: 'POST',
+    data: {
+        CSRFName: $('input[name$="CSRFName"]').val(),
+        CSRFToken: $('input[name$="CSRFToken"]').val(),
+        data: data
+    },
+    success: function(result) {
+        // do something here
+    },
+    error: function(result) {
+        // do something here
+    }
+});
+                        </code></pre>
+                        </div><!--//docs-code-block-->
 						<p>If no CSRF was found in the post request, a 403 error is returned.</p>
                     </section><!--//section-->
                     <section class="docs-section" id="item-5-3">
