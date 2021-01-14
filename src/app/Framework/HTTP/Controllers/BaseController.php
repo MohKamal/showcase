@@ -4,7 +4,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\HTTP\Routing\Response;
-    use \Showcase\Framework\Storage\Storage;
+    use \Showcase\Framework\IO\Storage\Storage;
     
     /**
      * 

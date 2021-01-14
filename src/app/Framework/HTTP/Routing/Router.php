@@ -2,8 +2,6 @@
 
 namespace  Showcase\Framework\HTTP\Routing {
 
-    use \Showcase\Framework\Initializer\VarLoader;
-    use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\HTTP\Routing\Response;
     use \Showcase\Framework\HTTP\Gards\CSRF;
@@ -30,7 +28,7 @@ namespace  Showcase\Framework\HTTP\Routing {
         public function __call($name, $args)
         {
             list($route, $method) = $args;
-            $route = preg_replace('~' . VarLoader::env('APP_SUBFOLDER') . '/public~', '', $route);
+            $route = preg_replace('~/public~', '', $route);
             if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
                 $this->invalidMethodHandler();
             }
@@ -43,8 +41,8 @@ namespace  Showcase\Framework\HTTP\Routing {
          */
         private function formatRoute($route)
         {
-            $result = rtrim($route, VarLoader::env('APP_SUBFOLDER') . '/public');
-            $result = preg_replace('~' . VarLoader::env('APP_SUBFOLDER') . '/public~', '', $result);
+            $result = rtrim($route, '/public');
+            $result = preg_replace('~/public~', '', $result);
             if ($result === '') {
                 return '/';
             }
@@ -87,7 +85,7 @@ namespace  Showcase\Framework\HTTP\Routing {
             }
 
             $methodDictionary = $this->{strtolower($this->request->requestMethod)};
-            $formatedRoute = preg_replace('~' . VarLoader::env('APP_SUBFOLDER') . '/public~', '', $this->formatRoute(strtok($this->request->requestUri,'?')));
+            $formatedRoute = preg_replace('~/public~', '', $this->formatRoute(strtok($this->request->requestUri,'?')));
             if (!array_key_exists($formatedRoute, $methodDictionary)) {
                 $this->defaultRequestHandler();
                 return;

@@ -10,7 +10,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Utils\Utilities;
-    use \Showcase\Framework\Storage\Storage;
+    use \Showcase\Framework\IO\Storage\Storage;
 
     class ResourceController extends BaseController{
 

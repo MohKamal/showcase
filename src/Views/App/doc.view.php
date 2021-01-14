@@ -1068,7 +1068,7 @@ static function Play($request){
                         </ul>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-use \Showcase\Framework\Storage\Storage;
+use \Showcase\Framework\IO\Storage\Storage;
 //Save to file
 $page = "Hola";
 Storage::folder("docs")->put('docs-page.html', $page);
