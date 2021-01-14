@@ -8,6 +8,7 @@ namespace  Showcase\Framework\Core{
     use \Showcase\Framework\Database\Wrapper;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Initializer\VarLoader;
+    use \Showcase\Framework\Utils\Utilities;
 
     class Showcase{
         /**
@@ -42,10 +43,43 @@ namespace  Showcase\Framework\Core{
 
             $route_base = str_replace("//URLUSER", $route_user, $route_base);
 
+            $includes = self::includes(dirname(__FILE__) . '/../../Controllers', "Showcase\Controllers");
+            $includes .= self::includes(dirname(__FILE__) . '/../../Models', "Showcase\Models");
+            $route_base = str_replace("//Includes", $includes, $route_base);
+
             $temp_file = dirname(__FILE__) . '/../HTTP/Routing/Config/temp_web.php';
             file_put_contents($temp_file, $route_base);
             include_once $temp_file;
             unlink($temp_file);
+        }
+
+        private static function includes($dir, $namespace){
+            if(!file_exists($dir))
+                return "";
+
+            $includes = "";
+            $files = scandir($dir);
+
+            //Add use
+            if (!Utilities::startsWith($namespace, "user")) {
+                if (!Utilities::startsWith($namespace, "\\"))
+                    $namespace = "\\$namespace";
+
+                $namespace = "use $namespace";
+            }
+
+            if(!Utilities::endsWith($namespace, "\\"))
+                $namespace = "$namespace\\";
+
+            foreach ($files as $file) {
+                $file_parts = pathinfo($file);
+                if($file_parts['extension'] == "php"){
+                    $name = basename($file, ".". $file_parts['extension']);
+                    $includes .= "$namespace$name;\n";
+                }
+            }
+
+            return $includes;
         }
 
     }

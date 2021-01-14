@@ -34,7 +34,6 @@ namespace  Showcase\Framework\HTTP\Routing {
             if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
                 $this->invalidMethodHandler();
             }
-            Log::print($name);
             $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
         }
 
@@ -71,13 +70,13 @@ namespace  Showcase\Framework\HTTP\Routing {
         {
             //Check for CSRF
             if (strtoupper($this->request->requestMethod) === "POST") {
-                if (!isset($_POST['CSRFName']) or !isset($_POST['CSRFToken'])) {
+                if (!isset($this->request->getBody()['CSRFName']) or !isset($this->request->getBody()['CSRFToken'])) {
                     //trigger_error("No CSRFName found, probable invalid request.", E_USER_ERROR);
                     Log::print("No CSRFName found, probable invalid request.");
                     return $this->response->unauthorized();
                 }
-                $name =$_POST['CSRFName'];
-                $token=$_POST['CSRFToken'];
+                $name = $this->request->getBody()['CSRFName'];
+                $token= $this->request->getBody()['CSRFToken'];
                 $csrf = new CSRF();
                 if (!$csrf->csrfguard_validate_token($name, $token)) {
                     //throw new \Exception("Invalid CSRF token.");

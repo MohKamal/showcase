@@ -9,6 +9,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\HTTP\Controllers\BaseController;
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\Utils\Utilities;
 
     class ResourceController extends BaseController{
 
@@ -74,7 +75,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * @return echo file
          */
         private static function getPicture($Dir, $name){
-            if(substr($name,0,1) === '/')
+            if(Utilities::startsWith($name,'/'))
                 $name = ltrim($name, '/'); 
             $filename = $Dir . $name;
             // Check if file exists, if it is not here return false:
@@ -106,7 +107,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * @return string content
          */
         private static function getData($Dir, $name){
-            if(substr($name,0,1) === '/')
+            if(Utilities::startsWith($name,'/'))
                 $name = ltrim($name, '/'); 
             $file = $Dir . $name;
             if(!file_exists($file))

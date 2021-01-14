@@ -1,5 +1,7 @@
 <?php
 namespace  Showcase\Framework\Validation{
+
+    use \Showcase\Framework\Utils\Utilities;
     /**
      * Request Validator
      * Valid a request if it got some fields
@@ -37,7 +39,7 @@ namespace  Showcase\Framework\Validation{
                     foreach($_specifications as $s)
                         $specifications[] = str_replace(' ', '', $s);
                     foreach($specifications as $spec){
-                        if(substr($spec, 0, 3) === 'max' || substr($spec, 0, 3) === 'min'){
+                        if(Utilities::startsWith($spec, 'max') || Utilities::startsWith($spec,'min')){
                             $data = explode(":", $spec);
                             $valid = self::fieldSpecification($data[0], $object[$key], $data[1]);
                             if(!$valid) $errors[] = "$data[0] lenght of $key is $data[1]";

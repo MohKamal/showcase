@@ -58,6 +58,13 @@ namespace  Showcase\Framework\HTTP\Routing {
         }
 
         /**
+         * Download a file
+         */
+        function download($file){
+            return URL::download($file);
+        }
+
+        /**
          * Return a 404 code
          */
         function notFound(){

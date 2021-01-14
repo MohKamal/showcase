@@ -109,10 +109,26 @@ namespace  Showcase\Framework\HTTP\Links{
         }
 
         /**
-         * Include the routes
+         * Download a file
          */
-        public static function routes($router){
-            include dirname(__FILE__) . '/../Controllers/Config/Route/Web.php';
+        public static function download($file){
+            if (file_exists($file)) {
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                ob_start();
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="'.basename($file).'"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($file));
+                ob_flush();
+                ob_clean();
+                readfile($file);
+                exit;
+            }
         }
 
     }

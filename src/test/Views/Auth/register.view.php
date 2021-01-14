@@ -18,9 +18,9 @@
 					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
 				<form method="post" action='/newregister'>
-					@foreach($errors as $error){
-						@display "<div class='alert alert-danger' role='alert'>" @enddisplay @display $error @enddisplay @display "</div>" @enddisplay
-					}@endforeach
+					@foreach($errors as $error)
+						<div class='alert alert-danger' role='alert'> @display $error @enddisplay </div>
+					@endforeach
 					<h3>Sign Up</h3>
 					<div class="form-holder active">
 						<input type="text" name="username" placeholder="name" class="form-control" >
