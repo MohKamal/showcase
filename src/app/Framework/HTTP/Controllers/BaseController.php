@@ -4,6 +4,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\HTTP\Routing\Response;
+    use \Showcase\Framework\Storage\Storage;
     
     /**
      * 
@@ -24,10 +25,39 @@ namespace  Showcase\Framework\HTTP\Controllers{
 
         /**
          * Get a reponse object for an easy reponse
+         * 
+         * @return \Showcase\Framework\HTTP\Routing\Response
          */
         function response(){
             $reponse = new Response();
             return $reponse;
+        }
+
+        /**
+         * Get a storage object for an easy reponse
+         * 
+         * @return \Showcase\Framework\Storage\Storage
+         */
+        function storage($foldername){
+            return Storage::folder($foldername);
+        }
+
+        /**
+         * Get a storage object for an easy reponse
+         * 
+         * @return \Showcase\Framework\Storage\Storage
+         */
+        function storageResources($foldername){
+            return Storage::resources($foldername);
+        }
+
+        /**
+         * Get a storage object for an easy reponse
+         * 
+         * @return \Showcase\Framework\Storage\Storage
+         */
+        function storageGlobal(){
+            return Storage::global();
         }
     }
 }

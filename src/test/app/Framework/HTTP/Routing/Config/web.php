@@ -38,6 +38,10 @@ namespace Showcase {
         return ResourceController::images($request);
     });
 
+    $router->get('/download', function ($request) {
+        return ResourceController::download($request);
+    });
+
     //URLUSER
 }
 

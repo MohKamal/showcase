@@ -74,6 +74,7 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-1">Routes</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-2">Response</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-3">Json resource</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-4">URL</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-4"><span class="theme-icon-holder mr-2"><i class="fas fa-cogs"></i></span>Database</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-0">Migration</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-1">Models</a></li>
@@ -87,10 +88,12 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-1">Functions inside views</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-2">Variables from Controllers to View</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-3">Styles & Javascript & other Files</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-7"><span class="theme-icon-holder mr-2"><i class="fas fa-tablet-alt"></i></span>Debug</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-1">File</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-2">Console</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-8"><span class="theme-icon-holder mr-2"><i class="fas fa-book-reader"></i></span>Run It!</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-7"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Storage</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-1">Files, folders and download</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-8"><span class="theme-icon-holder mr-2"><i class="fas fa-tablet-alt"></i></span>Debug</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-1">File</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-2">Console</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-9"><span class="theme-icon-holder mr-2"><i class="fas fa-book-reader"></i></span>Run It!</a></li>
 			    </ul>
 
 		    </nav><!--//docs-nav-->
@@ -226,6 +229,20 @@ static function Index(){
 						    <li><strong class="mr-1">403 :</strong> <code>response()->unauthorized()</code></li>
 						    <li><strong class="mr-1">500 :</strong> <code>response()->internal()</code></li>
 						</ul>
+                        <h4>Response Download</h4>
+						<p>To download a file, use the function download</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Download file
+*/
+static function Index(){
+    $file = "/path/to/file";
+
+    return self::response()->download($file);
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                         <h4>Response Json</h4>
 						<p>To return any object as json response, use response json</p>
                         <div class="docs-code-block">
@@ -356,6 +373,18 @@ class HomeController extends BaseController{
 ]
                         </code></pre>
                         </div><!--//docs-code-block-->
+                    </section><!--//section-->
+                    					
+					<section class="docs-section" id="item-3-4">
+						<h2 class="section-heading">URL</h2>
+                        <p>URL object regroup most of the http functions, used in views, responses and more.</p>
+                        <p>In here we will see the function of the URL object</p>
+                        <ul>
+						    <li><strong class="mr-1">redirectWithMessage($url, $message, $message_type) :</strong> <code>Redirect to a page with a message, there is four message types : info, success, warning and error </code></li>
+						    <li><strong class="mr-1">redirect($url, $permanent) :</strong> <code>Redirect to an url, by default its not permanent, its set to false, but you can't changes </code></li>
+						    <li><strong class="mr-1">base() :</strong> <code>Get the base app url (www.example.com)</code></li>
+						    <li><strong class="mr-1">download($filepath) :</strong> <code>Send a file to user browser for downlaod </code></li>
+                        </ul>
                     </section><!--//section-->
 			    </article><!--//docs-article-->
 			    
@@ -1009,16 +1038,83 @@ static function Play($request){
                         </div><!--//docs-code-block-->
 					</section><!--//section-->
 			    </article><!--//docs-article-->
+
+                <article class="docs-article" id="section-7">
+				    <header class="docs-header">
+					    <h1 class="docs-heading">Storage</h1>
+					    <section class="docs-intro">
+						    <p>Some users find it hard and repetitive in the files managing level, to make a bite easy to use showcase with file management, you can use the Storage Object.</p>
+						</section><!--//docs-intro-->
+				    </header>
+				     <section class="docs-section" id="item-7-1">
+						<h2 class="section-heading">Files, folders and download</h2>
+						<p>To create, copy, move and save data to file, you can use the Storage following functions :</p>
+						<p>First, you need to select the folder, there is 3 functions to that : </p>
+                        <ul>
+						    <li><strong class="mr-1">folder($name) :</strong> <code>The root of this is /Storage folder, and you specify the sub folder name</code></li>
+						    <li><strong class="mr-1">resources($folder) :</strong> <code>The root of this is /resources folder, and you specify the sub folder name.</code></li>
+						    <li><strong class="mr-1">global() :</strong> <code>The root of this is the project root.</code></li>
+                        </ul>
+						<p>After that, you do your desired action : </p>
+                        <ul>
+						    <li><strong class="mr-1">put($filename, $content) :</strong> <code>Save the content in the file, if the file exist, it will be crushed.</code></li>
+						    <li><strong class="mr-1">get($filename) :</strong> <code>Get a file content</code></li>
+						    <li><strong class="mr-1">exists($filename) :</strong> <code>Check if a file exists</code></li>
+						    <li><strong class="mr-1">copy($filename, $newfile) :</strong> <code>Copy file from the folder to another path</code></li>
+						    <li><strong class="mr-1">move($filename, $newfile) :</strong> <code>Move file from the folder to another path</code></li>
+						    <li><strong class="mr-1">path($filename) :</strong> <code>Get the path to a file in the current folder</code></li>
+						    <li><strong class="mr-1">url($filename) :</strong> <code>Get a url to download a file</code></li>
+						    <li><strong class="mr-1">download($filename) :</strong> <code>Send the file to the user browser for download</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Storage\Storage;
+//Save to file
+$page = "Hola";
+Storage::folder("docs")->put('docs-page.html', $page);
+//Get a file url
+$file = "invoice.pdf";
+$url = Storage::folder('app')->url($file); // give the url to downloads like this http://localhost:8000/download?file=1610656545_docs.zip
+
+//Get a file path
+$file = Storage::folder("app")->path($file); // return something like this D:\path\to\project\src\app\Framework\Storage/../../../Storage/app/invoice.pdf
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+						<p>You can use the Storage object in the controllers without including it, use only storage() function : </p>
+                        <ul>
+						    <li><strong class="mr-1">storage($foldername) :</strong> <code>To use the /Storage sub folders</code></li>
+						    <li><strong class="mr-1">storageResources($foldername) :</strong> <code>To use the /resources sub folder</code></li>
+						    <li><strong class="mr-1">storageGlobal() :</strong> <code>To use the root project</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\HTTP\Controllers\BaseController;
+
+class HomeController extends BaseController{
+
+    /**
+     * Return the welcome view
+     */
+    static function Index(){
+        $file = "invoice.pdf";
+        return self::storage("app")->download($file);
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section><!--//section-->
+                    
+			    </article><!--//docs-article-->
 			    
 			    
-			    <article class="docs-article" id="section-7">
+			    <article class="docs-article" id="section-8">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Debug</h1>
 					    <section class="docs-intro">
 						    <p>To print out data to a log file, or terminal, use the Log Class. The data can be string or array only!</p>
 						</section><!--//docs-intro-->
 				    </header>
-				     <section class="docs-section" id="item-7-1">
+				     <section class="docs-section" id="item-8-1">
 						<h2 class="section-heading">File</h2>
 						<p>To log data to file log use the print function. The file log is created at Storage/logs, with the current day as name.</p>
                         <div class="docs-code-block">
@@ -1030,7 +1126,7 @@ Log::print("Message to print in log file");
                         </div><!--//docs-code-block-->
                     </section><!--//section-->
 					
-					<section class="docs-section" id="item-7-2">
+					<section class="docs-section" id="item-8-2">
 						<h2 class="section-heading">Console</h2>
                         <p>To log data to console use the console function.</p>
                         <div class="docs-code-block">
@@ -1053,7 +1149,7 @@ Log::console("No File was Found!", 'error');
 			    </article><!--//docs-article-->
 			    
 			    
-			    <article class="docs-article" id="section-8">
+			    <article class="docs-article" id="section-9">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Run It!</h1>
 					    <section class="docs-intro">

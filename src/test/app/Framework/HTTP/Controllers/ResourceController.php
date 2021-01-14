@@ -10,6 +10,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Utils\Utilities;
+    use \Showcase\Framework\Storage\Storage;
 
     class ResourceController extends BaseController{
 
@@ -64,6 +65,21 @@ namespace  Showcase\Framework\HTTP\Controllers{
             if (empty($errors)) {
                 $Dir = dirname(__FILE__) . '/../../../../resources/images/';
                 return self::getPicture($Dir, $request->getBody()['file']);
+            }
+            else
+                return self::response()->notFound();
+        }
+
+        /**
+         * Return a file
+         */
+        static function download($request){
+            $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
+            if (empty($errors)) {
+                $file = Storage::folder("downloads")->path($request->getBody()['file']);
+                if (filter_var(strtolower($file), FILTER_VALIDATE_BOOLEAN)) 
+                    return self::response()->notFound();
+                return self::response()->download($file);
             }
             else
                 return self::response()->notFound();

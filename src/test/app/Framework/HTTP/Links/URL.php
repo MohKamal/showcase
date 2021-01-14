@@ -113,6 +113,10 @@ namespace  Showcase\Framework\HTTP\Links{
          */
         public static function download($file){
             if (file_exists($file)) {
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                ob_start();
                 header('Content-Description: File Transfer');
                 header('Content-Type: application/octet-stream');
                 header('Content-Disposition: attachment; filename="'.basename($file).'"');
@@ -120,6 +124,8 @@ namespace  Showcase\Framework\HTTP\Links{
                 header('Cache-Control: must-revalidate');
                 header('Pragma: public');
                 header('Content-Length: ' . filesize($file));
+                ob_flush();
+                ob_clean();
                 readfile($file);
                 exit;
             }
