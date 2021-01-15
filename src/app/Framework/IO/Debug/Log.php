@@ -74,7 +74,7 @@ namespace  Showcase\Framework\IO\Debug {
                 $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
             }
             //Save string to log, use FILE_APPEND to append.
-            file_put_contents(dirname(__FILE__) . '/../../../../Storage/logs/log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
+            file_put_contents(dirname(__FILE__) . '/../../../../storage/logs/log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
         }
 
         /**

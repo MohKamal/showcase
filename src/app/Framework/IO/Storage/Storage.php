@@ -28,7 +28,7 @@ namespace  Showcase\Framework\IO\Storage{
             if (self::$_instance === null) {
                 self::$_instance = new self;
             }
-            self::$_rootFolder = dirname(__FILE__) . '/../../../../Storage/';
+            self::$_rootFolder = dirname(__FILE__) . '/../../../../storage/';
 
             //create folder if no exist
             $folder = self::$_rootFolder . $name . '/';
@@ -79,7 +79,7 @@ namespace  Showcase\Framework\IO\Storage{
             if (self::$_instance === null) {
                 self::$_instance = new self;
             }
-            self::$_rootFolder = dirname(__FILE__) . '/../../../../Storage/';
+            self::$_rootFolder = dirname(__FILE__) . '/../../../../storage/';
             self::$_currentFolder = "";
             self::$_folder_type = 2;
 

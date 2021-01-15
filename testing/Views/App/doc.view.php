@@ -1051,7 +1051,7 @@ static function Play($request){
 						<p>To create, copy, move and save data to file, you can use the Storage following functions :</p>
 						<p>First, you need to select the folder, there is 3 functions to that : </p>
                         <ul>
-						    <li><strong class="mr-1">folder($name) :</strong> <code>The root of this is /Storage folder, and you specify the sub folder name</code></li>
+						    <li><strong class="mr-1">folder($name) :</strong> <code>The root of this is /storage folder, and you specify the sub folder name</code></li>
 						    <li><strong class="mr-1">resources($folder) :</strong> <code>The root of this is /resources folder, and you specify the sub folder name.</code></li>
 						    <li><strong class="mr-1">global() :</strong> <code>The root of this is the project root.</code></li>
                         </ul>
@@ -1068,7 +1068,7 @@ static function Play($request){
                         </ul>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-use \Showcase\Framework\Storage\Storage;
+use \Showcase\Framework\IO\Storage\Storage;
 //Save to file
 $page = "Hola";
 Storage::folder("docs")->put('docs-page.html', $page);
@@ -1077,12 +1077,12 @@ $file = "invoice.pdf";
 $url = Storage::folder('app')->url($file); // give the url to downloads like this http://localhost:8000/download?file=1610656545_docs.zip
 
 //Get a file path
-$file = Storage::folder("app")->path($file); // return something like this D:\path\to\project\src\app\Framework\Storage/../../../Storage/app/invoice.pdf
+$file = Storage::folder("app")->path($file); // return something like this D:\path\to\project\src\app\Framework\Storage/../../../storage/app/invoice.pdf
                         </code></pre>
                         </div><!--//docs-code-block-->
 						<p>You can use the Storage object in the controllers without including it, use only storage() function : </p>
                         <ul>
-						    <li><strong class="mr-1">storage($foldername) :</strong> <code>To use the /Storage sub folders</code></li>
+						    <li><strong class="mr-1">storage($foldername) :</strong> <code>To use the /storage sub folders</code></li>
 						    <li><strong class="mr-1">storageResources($foldername) :</strong> <code>To use the /resources sub folder</code></li>
 						    <li><strong class="mr-1">storageGlobal() :</strong> <code>To use the root project</code></li>
                         </ul>
