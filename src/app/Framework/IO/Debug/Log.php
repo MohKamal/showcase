@@ -147,5 +147,18 @@ namespace  Showcase\Framework\IO\Debug {
             }
             Log::print($str);
         }
+
+        /**
+         * Display a var_dump to a log file
+         * @param mixed $data
+         */
+        public static function getVarDump($data){
+            //Capture the var_dump
+            ob_start();
+            var_dump($data);
+            $result = ob_get_clean();
+            //printed to the file
+            self::print($result);
+        }
     }
 }
