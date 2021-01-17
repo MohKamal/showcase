@@ -1144,6 +1144,17 @@ use \Showcase\Framework\IO\Debug\Log;
 Log::console("No File was Found!", 'error');
                         </code></pre>
                         </div><!--//docs-code-block-->
+					
+					<section class="docs-section" id="item-8-3">
+						<h2 class="section-heading">var_dump</h2>
+                        <p>To catch var_dump result and display it in the file or console use the var_dump function</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\IO\Debug\Log;
+$data = ['var1', 'var2', 'var3'];
+Log::var_dump($data);
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                     </section><!--//section-->
                     
 			    </article><!--//docs-article-->
