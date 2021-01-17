@@ -27,5 +27,22 @@ namespace  Showcase\Framework\Utils{
             return (substr($haystack, -$length) === $needle);
         }
 
+        /**
+         * Get a string between two strings
+         * @param string $string original string
+         * @param string $start first string
+         * @param string $end last string
+         * 
+         * @return string
+         */
+        static function get_string_between($string, $start, $end){
+            $string = ' ' . $string;
+            $ini = strpos($string, $start);
+            if ($ini == 0) return '';
+            $ini += strlen($start);
+            $len = strpos($string, $end, $ini) - $ini;
+            return substr($string, $ini, $len);
+        }
+
     }
 }
