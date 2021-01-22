@@ -5,11 +5,11 @@
         if(\Showcase\Framework\HTTP\Gards\Auth::check())
             return \Showcase\Framework\HTTP\Links\URL::Redirect('/');
 
-        return \Showcase\Framework\Views\View::show('Auth/login');
+        return \Showcase\Framework\Views\View::show('Auth/login', ['appName' => \Showcase\Framework\Initializer\VarLoader::env('APP_NAME')]);
     });
 
     $router->get('/register', function () {
-        return \Showcase\Framework\Views\View::show('Auth/register', ['errors' => array(), 'hasError' => false]);
+        return \Showcase\Framework\Views\View::show('Auth/register', ['errors' => array(), 'hasError' => false, 'appName' => \Showcase\Framework\Initializer\VarLoader::env('APP_NAME')]);
     });
 
     $router->post('/logout', function ($request) {
