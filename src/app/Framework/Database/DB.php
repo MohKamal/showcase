@@ -187,7 +187,9 @@ namespace  Showcase\Framework\Database {
             self::$_query = substr(self::$_query, 0, -1);
             self::$_query .= ') VALUES (';
             foreach($columns as $key => $value){
-                if(is_numeric($value))
+                if(is_null($value))
+                    self::$_query .= "NULL,";
+                else if(is_numeric($value))
                     self::$_query .= $this->filterInput($value) . ",";
                 else if(is_string($value))
                     self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";

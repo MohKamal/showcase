@@ -80,7 +80,6 @@ namespace  Showcase\Framework\Database\SQLite {
                 }
             }
 
-            $stmt->execute();
             return $this->pdo->lastInsertId();
         }
     }

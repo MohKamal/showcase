@@ -81,7 +81,6 @@ namespace  Showcase\Framework\Database\MySql {
                 }
             }
 
-            $stmt->execute();
             return $this->pdo->lastInsertId();
         }
     }

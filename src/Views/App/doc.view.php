@@ -244,7 +244,7 @@ static function Index(){
                         </code></pre>
                         </div><!--//docs-code-block-->
                         <h4>Response Json</h4>
-						<p>To return any object as json response, use response json</p>
+						<p>To return any object as json response, use response json, it take the data as first parametre, and a status code as optionnal parametre, by default it's set to 200.</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
 /**
@@ -253,7 +253,7 @@ static function Index(){
 static function Index(){
     $data = DB::model('User')->select()->where('active', 1)->get();
 
-    return self::response()->json($data);
+    return self::response()->json($data, 200);
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -783,8 +783,8 @@ $.ajax({
 * Return the video single page
 */
 static function Play($request){
-if(Validator::validate($request->getBody(), ['id'])){
-    $url = Search::searchVideoById($request->getBody()['id']);
+if(Validator::validate($request->get(), ['id'])){
+    $url = Search::searchVideoById($request->get()['id']);
     return self::response()->view('App/video', array([
         'url' => $url
         ]));
@@ -810,16 +810,16 @@ return self::response()->redirect('/errors/404');
 * Store new user
 */
 static function store($request){
-    $errors = Validator::validation($request->getBody(), [
+    $errors = Validator::validation($request->get(), [
             'email' => 'required | email', 
             'password' => 'required | min:8', 
             'username' => 'required | min:3 | max:10 | string'
             ]);
     if (empty($errors)) {
         $user = new User();
-        $user->bcrypt($request->getBody()['password']);
-        $user->username = $request->getBody()['username'];
-        $user->email = $request->getBody()['email'];
+        $user->bcrypt($request->get()['password']);
+        $user->username = $request->get()['username'];
+        $user->email = $request->get()['email'];
         $user->save();
 
         //Log the user
@@ -997,8 +997,8 @@ return self::response()->view('App/welcome', array(
 * Return the video single page
 */
 static function Play($request){
-    if(Validator::validate($request->getBody(), ['id'])){
-        $url = Search::searchVideoById($request->getBody()['id']);
+    if(Validator::validate($request->get(), ['id'])){
+        $url = Search::searchVideoById($request->get()['id']);
         return self::response()->view('App/video', array([
             'url' => $url
             ]));

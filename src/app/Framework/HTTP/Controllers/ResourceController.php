@@ -18,11 +18,11 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * Return any file
          */
         static function ressource($request){
-            $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
+            $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
                 $Dir = dirname(__FILE__) . '/../../../../resources/';
-                return self::getData($Dir, $request->getBody()['file']);
+                return self::getData($Dir, $request->get()['file']);
             }
             else
                 return self::response()->notFound();
@@ -32,11 +32,11 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * Return style files
          */
         static function css($request){
-            $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
+            $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
                 $Dir = dirname(__FILE__) . '/../../../../resources/css/';
-                return self::getData($Dir, $request->getBody()['file']);
+                return self::getData($Dir, $request->get()['file']);
             }
             else
                 return self::response()->notFound();
@@ -46,11 +46,11 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * Return script files
          */
         static function js($request){
-            $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
+            $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
                 $Dir = dirname(__FILE__) . '/../../../../resources/js/';
-                return self::getData($Dir, $request->getBody()['file']);
+                return self::getData($Dir, $request->get()['file']);
             }
             else
                 return self::response()->notFound();
@@ -60,11 +60,11 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * Return script files
          */
         static function images($request){
-            $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
+            $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
                 $Dir = dirname(__FILE__) . '/../../../../resources/images/';
-                return self::getPicture($Dir, $request->getBody()['file']);
+                return self::getPicture($Dir, $request->get()['file']);
             }
             else
                 return self::response()->notFound();
@@ -74,9 +74,9 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * Return a file
          */
         static function download($request){
-            $errors = Validator::validation($request->getBody(), ['file' => 'required | string']);
+            $errors = Validator::validation($request->get(), ['file' => 'required | string']);
             if (empty($errors)) {
-                $file = Storage::folder("downloads")->path($request->getBody()['file']);
+                $file = Storage::folder("downloads")->path($request->get()['file']);
                 if (filter_var(strtolower($file), FILTER_VALIDATE_BOOLEAN)) 
                     return self::response()->notFound();
                 return self::response()->download($file);

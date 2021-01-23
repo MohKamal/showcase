@@ -27,7 +27,7 @@ namespace  Showcase\Controllers{
          * @return Redirection
          */
         static function store($request){
-            if(Validator::validate($request->getBody(), ['email', 'password'])){
+            if(Validator::validate($request->get(), ['email', 'password'])){
                     return self::response()->redirect('/'); 
             }
             return self::response()->redirect('/contact'); 

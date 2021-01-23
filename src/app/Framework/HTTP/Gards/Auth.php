@@ -37,9 +37,10 @@ namespace  Showcase\Framework\HTTP\Gards{
             }
             
             if($user->validHash($password, $user->password)){
-                Session::store('ses_user_id', $user->id);
-                Session::store('ses_user_email', $user->email);
-                Session::store('ses_user_name', $user->username);
+                Session::store('ses_user_id', $user->id, 3600);
+                Session::store('ses_user_email', $user->email, 3600);
+                Session::store('ses_user_name', $user->username, 3600);
+                Session::store('ses_auth', true);
                 Log::print("Auth: user connected " . $email);
                 return true;
             }
@@ -65,9 +66,10 @@ namespace  Showcase\Framework\HTTP\Gards{
                 return false;
             }
             
-            Session::store('ses_user_id', $user->id);
-            Session::store('ses_user_email', $user->email);
-            Session::store('ses_user_name', $user->username);
+            Session::store('ses_user_id', $user->id, 3600);
+            Session::store('ses_user_email', $user->email, 3600);
+            Session::store('ses_user_name', $user->username, 3600);
+            Session::store('ses_auth', true);
             Log::print("Auth: user connected " . $email);
             return true;
         }
@@ -81,6 +83,7 @@ namespace  Showcase\Framework\HTTP\Gards{
                 Session::clear('ses_user_id');
                 Session::clear('ses_user_email');
                 Session::clear('ses_user_name');
+                Session::clear('ses_auth');
                 if(!self::check())
                     return true;
             }
@@ -89,10 +92,22 @@ namespace  Showcase\Framework\HTTP\Gards{
         }
 
         /**
+         * Check if auth is used or not
+         * @return boolean
+         */
+        public static function checkAuth(){
+            if(is_null(Session::retrieve('ses_auth')))
+                return false;
+            return true;
+        }
+
+        /**
          * Check if the user is connect
          * @return Boolean
          */
         public static function check(){
+            if(is_null(self::user()))
+                return false;
             if(!empty(Session::retrieve('ses_user_id')) && !is_null(Session::retrieve('ses_user_id')))
                 return true;
             return false;
@@ -103,6 +118,8 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return Boolean
          */
         public static function guest(){
+            if(is_null(self::user()))
+                return true;
             if(empty(Session::retrieve('ses_user_id')) && is_null(Session::retrieve('ses_user_id')))
                 return true;
             return false;
@@ -113,10 +130,12 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return \Showcase\Models\User
          */
         public static function user(){
-            if(self::check()){
+            if (!empty(Session::retrieve('ses_user_id')) && !is_null(Session::retrieve('ses_user_id'))) {
                 $user = DB::model('User')->select()->where('id', Session::retrieve('ses_user_id'))->first();
-                if($user != null)
-                    return $user;
+                if (is_null($user)) {
+                    return null;
+                }
+                return $user;
             }
             return null;
         }

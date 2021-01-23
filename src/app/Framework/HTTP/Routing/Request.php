@@ -31,7 +31,7 @@ namespace  Showcase\Framework\HTTP\Routing{
             return $result;
         }
 
-        public function getBody()
+        public function get()
         {
             if ($this->requestMethod === "GET") {
                 $body = array();
