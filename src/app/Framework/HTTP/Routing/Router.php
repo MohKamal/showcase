@@ -73,8 +73,6 @@ namespace  Showcase\Framework\HTTP\Routing {
              * Need to check if the user is logged
              */
             if(Auth::checkAuth()){
-                Log::var_dump(Auth::checkAuth());
-                Log::print("IN");
                 if (Auth::guest()) {
                     $auths = ['/login', '/reset-password', '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=', '/js?file=', '/css?file=', '/images?file='];
                     $no_auth = true;
