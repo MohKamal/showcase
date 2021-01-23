@@ -98,6 +98,11 @@ namespace  Showcase\Framework\HTTP\Gards{
         public static function checkAuth(){
             if(is_null(Session::retrieve('ses_auth')))
                 return false;
+            if(empty(Session::retrieve('ses_auth')))
+                return false;
+            if(Session::retrieve('ses_auth') === false)
+                return false;
+                
             return true;
         }
 
