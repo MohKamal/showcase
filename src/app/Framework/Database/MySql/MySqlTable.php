@@ -82,7 +82,7 @@ namespace  Showcase\Framework\Database\MySql {
             }
 
             $stmt->execute();
-            return $stmt->rowCount();
+            return $this->pdo->lastInsertId();
         }
     }
 }

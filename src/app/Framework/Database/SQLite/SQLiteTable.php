@@ -81,7 +81,7 @@ namespace  Showcase\Framework\Database\SQLite {
             }
 
             $stmt->execute();
-            return $stmt->rowCount();
+            return $this->pdo->lastInsertId();
         }
     }
 }
