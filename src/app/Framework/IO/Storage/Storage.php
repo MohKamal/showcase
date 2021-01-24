@@ -232,7 +232,7 @@ namespace  Showcase\Framework\IO\Storage{
          * 
          * @return mixed
          */
-        public function path($filename){
+        public function path($filename, $verify=true){
             if(empty($filename) || is_null(self::$_instance))
                 return null;
             $subfoler = "Storage";
@@ -241,9 +241,11 @@ namespace  Showcase\Framework\IO\Storage{
             if(self::$_folder_type == 2)
                 $subfoler = "";
             $file = __DIR__ . "/../../../../$subfoler/" . self::$_onlyFolder . "/" . $filename;
-            if(!file_exists($file))
-                return false;
-
+            if ($verify) {
+                if (!file_exists($file)) {
+                    return false;
+                }
+            }
             return $file;
         }
     }
