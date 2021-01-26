@@ -253,16 +253,19 @@ namespace Showcase\Framework\Views {
                 $page = str_replace($subView, "", $page);
             }
 
-            $matches = array();
-            preg_match_all('#\@renderSection(.*?)\)#', $page, $matches);
-            foreach ($matches[0] as $subView) {
-                //Replace special characters
-                $section_name = str_replace('@renderSection("', '', $subView);
-                $section_name = str_replace('")', '', $section_name);
-                $section_name = strtolower($section_name);
-
-                $page = str_replace($subView, $sections_code[$section_name], $page);
-            }
+                $matches = array();
+                preg_match_all('#\@renderSection(.*?)\)#', $page, $matches);
+                foreach ($matches[0] as $subView) {
+                    //Replace special characters
+                    $section_name = str_replace('@renderSection("', '', $subView);
+                    $section_name = str_replace('")', '', $section_name);
+                    $section_name = strtolower($section_name);
+                    if (!empty($sections_code)) {
+                        $page = str_replace($subView, $sections_code[$section_name], $page);
+                    }else{ //if no code was there remove renderSection
+                        $page = str_replace($subView, "", $page);
+                    }
+                }
             return $page;
         }
 
