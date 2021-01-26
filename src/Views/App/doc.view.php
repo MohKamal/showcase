@@ -332,6 +332,30 @@ class HomeController extends BaseController{
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <p>To get only the values without the keys, you can use the withoutKeys() function : </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\JsonResources\UserResource;
+
+class HomeController extends BaseController{
+    static function Index(){
+        $user = DB::model('User')->select()->where('id', 5)->first();
+        $json = new UserResource($user);
+        return self::response()->json($json->withoutKeys());
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>This will return json like: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="json hljs">
+{
+    "5",
+    "email@gmail.com",
+    "er15cc52"
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                         <h4>Json Resource for array</h4>
                         <p>To return an array of object as json, mapped datan you use the static function array of JsonResource.</p>
                         <div class="docs-code-block">
@@ -369,6 +393,46 @@ class HomeController extends BaseController{
         "Identification":"7",
         "user_email":"jao@gmail.com",
         "parent_id":"er15cc52"
+    }
+]
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>To get only the values without the keys, you can use the boolean parametre in array() function : </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+                            use \Showcase\JsonResources\UserResource;
+
+class HomeController extends BaseController{
+    static function Index(){
+        $users = DB::model('User')->select()->limit(15)->get();
+        return self::response()->json(UserResource::array($users, false));
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>This will return json like: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="json hljs">
+[
+    {
+        "1",
+        "email@gmail.com",
+        "er15cc52"
+    },
+    {
+        "2",
+        "another@gmail.com",
+        "er15cc52"
+    },
+    {
+        "3",
+        "rtrtrtrt@email.com",
+        "er15cc52"
+    },
+    {
+        "7",
+        "jao@gmail.com",
+        "er15cc52"
     }
 ]
                         </code></pre>
