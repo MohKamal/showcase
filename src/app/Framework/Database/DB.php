@@ -244,6 +244,20 @@ namespace  Showcase\Framework\Database {
         }
 
         /**
+         * Add a raw sql query
+         * @param string $query sql
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function raw($query){
+            if(empty(self::$_table) || is_null(self::$_instance) || empty($query))
+                return null;
+
+            self::$_query .= $query;
+            return $this;
+        }
+
+        /**
          * Add where condition to the query
          * @param string $column names
          * @param string $value to test

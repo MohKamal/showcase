@@ -6,6 +6,8 @@ namespace  Showcase\Framework\HTTP\Routing {
     use \Showcase\Framework\HTTP\Routing\Response;
     use \Showcase\Framework\HTTP\Gards\CSRF;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\HTTP\Gards\Auth;
+    use \Showcase\Framework\Utils\Utilities;
 
     /**
      * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
@@ -66,15 +68,32 @@ namespace  Showcase\Framework\HTTP\Routing {
          */
         public function resolve()
         {
+            /**
+             * If Auth is activated
+             * Need to check if the user is logged
+             */
+            if(Auth::checkAuth()){
+                if (Auth::guest()) {
+                    $auths = ['/login', '/reset-password', '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=', '/js?file=', '/css?file=', '/images?file='];
+                    $no_auth = true;
+                    foreach($auths as $url){
+                        if($this->request->requestUri === $url || Utilities::startsWith($this->request->requestUri, $url))
+                            $no_auth = false;
+                    }
+                    if($no_auth)
+                        $this->response->redirect("/login");
+                }
+            }
+
             //Check for CSRF
             if (strtoupper($this->request->requestMethod) === "POST") {
-                if (!isset($this->request->getBody()['CSRFName']) or !isset($this->request->getBody()['CSRFToken'])) {
+                if (!isset($this->request->get()['CSRFName']) or !isset($this->request->get()['CSRFToken'])) {
                     //trigger_error("No CSRFName found, probable invalid request.", E_USER_ERROR);
                     Log::print("No CSRFName found, probable invalid request.");
                     return $this->response->unauthorized();
                 }
-                $name = $this->request->getBody()['CSRFName'];
-                $token= $this->request->getBody()['CSRFToken'];
+                $name = $this->request->get()['CSRFName'];
+                $token= $this->request->get()['CSRFToken'];
                 $csrf = new CSRF();
                 if (!$csrf->csrfguard_validate_token($name, $token)) {
                     //throw new \Exception("Invalid CSRF token.");

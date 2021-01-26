@@ -641,6 +641,7 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
 						    <li><strong class="mr-1">select($columns) :</strong> <code>you can specify the columns to select in case you are using the table function </code></li>
 						    <li><strong class="mr-1">where($column, $value, $condition) :</strong> <code>add where condition to you query, the condition value is '=' by default </code></li>
 						    <li><strong class="mr-1">orWhere($column, $value, $condition) :</strong> <code>add or condition to you query, the condition value is '=' by default </code></li>
+						    <li><strong class="mr-1">raw($query) :</strong> <code>add raw sql query to the build, please be carful where you put the raw function in the build of your query </code></li>
 						    <li><strong class="mr-1">limit($number) :</strong> <code>to limit the query result </code></li>
 						    <li><strong class="mr-1">distinct($column) :</strong> <code>get distinct result for all columns by default, or to specific column </code></li>
 						    <li><strong class="mr-1">count($expression) :</strong> <code>get all columns count by default, or an expression/column </code></li>
@@ -890,6 +891,37 @@ static function store($request){
 &lt;/body&gt;
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <h4>Section</h4>
+                        <p>To display a piece of code only in same views, use section function, render the section in the view (like the main layout), and use the section function to define the code to be included.</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="html hljs">
+&lt;!-- render section in main view --&gt;
+&lt;body&gt;
+    @&#8203;renderSection("Javascript")
+&lt;/body&gt;
+
+&lt;!-- section code in the home view --&gt;
+&lt;body&gt;
+    @&#8203;section("Javascript")
+        &lt;script&gt;
+            //Some script here will be only added to the main view if this view is added
+        &lt;/script&gt;
+    @&#8203;endsection
+&lt;/body&gt;
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <div class="callout-block callout-block-info">
+                            
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-info-circle"></i>
+		                            </span><!--//icon-holder-->
+	                                Note
+	                            </h4>
+                                <p>You have to put the @renderSection("sectionName") tag inside the main view, in the position where you want the code to be displayed.</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
                         <h4>Execute php inside a view</h4>
                         <p>To execute a custom php insdie a view, you can use the php function.</p>
                         <div class="docs-code-block">

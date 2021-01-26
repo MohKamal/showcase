@@ -29,7 +29,7 @@ namespace Showcase\Controllers{
             //$r = DB::model('Unit')->delete()->where('id', 4)->run();
             //$r = DB::model('Unit')->update(['value' => '27', 'name' => '<li class="nav-item">'])->where('id', 4)->run();
             //Log::print($r);
-            self::storage('app')->put('filetest.text', 'hi, fucker');
+            //self::storage('app')->put('filetest.text', 'hi, fucker');
             return self::response()->view('App/welcome', ['doc' => 'mohamed kamal']);
             //return self::response()->internal();
             //return self::response()->json(UserResource::array($users));

@@ -74,7 +74,7 @@ namespace  Showcase\Framework\IO\Debug {
                 $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
             }
             //Save string to log, use FILE_APPEND to append.
-            file_put_contents(dirname(__FILE__) . '/../../../../Storage/logs/log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
+            file_put_contents(dirname(__FILE__) . '/../../../../storage/logs/log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
         }
 
         /**
@@ -146,6 +146,22 @@ namespace  Showcase\Framework\IO\Debug {
                 $str .= $lines[$l];
             }
             Log::print($str);
+        }
+
+        /**
+         * Display a var_dump to a log file
+         * @param mixed $data
+         */
+        public static function var_dump($data, $tofile=true){
+            //Capture the var_dump
+            ob_start();
+            var_dump($data);
+            $result = ob_get_clean();
+            //printed to the file
+            if($tofile)
+                self::print($result);
+            else
+                self::console($result);
         }
     }
 }

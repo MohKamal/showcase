@@ -35,7 +35,6 @@ namespace  Showcase\Framework\Database\Models {
          * Init the model and create all properties
          */
         public function __construct(){
-            $this->db = new DB();
             $file = dirname(__FILE__) . '/../../../Database/Migrations/' . $this->migration . '.php';
             if(file_exists($file))
             {
@@ -92,29 +91,14 @@ namespace  Showcase\Framework\Database\Models {
             return '';
         }
 
+        /**
+         * Get the class name
+         * 
+         * @return string
+         */
         public function className(){
             $reflect = new \ReflectionClass($this);
             return $reflect->getShortName();
-        }
-
-        /**
-         * Get an object by id
-         * @param mixte id value
-         * @return \Showcase\Framework\Database\Models\BaseModel
-         */
-        public function where(array $params){
-            $record = $this->db->getByColumns($this->migration, $params);
-            if($record != null){
-                $class_vars = get_object_vars($this);
-                foreach($class_vars as $key => $value){
-                    if(array_key_exists($key, $record)){
-                        $this->{$key} = $record[$key];
-                        if($key == $this->idDetails["name"])
-                           $this->idDetails["value"] =  $record[$key];
-                    }
-                }
-            }
-            return $this;
         }
 
         /**
@@ -160,7 +144,7 @@ namespace  Showcase\Framework\Database\Models {
                 unset($class_vars['migration']);
                 unset($class_vars['idDetails']);
                 unset($class_vars['db']);
-                DB::model($this->className())->insert($class_vars)->run();
+                $this->{$this->idDetails["name"]} = DB::model($this->className())->insert($class_vars)->run();
             }else{
                 $this->updated_at = date("Y-m-d H:i:s");
                 unset($class_vars['migration']);

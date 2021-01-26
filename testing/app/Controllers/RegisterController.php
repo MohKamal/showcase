@@ -17,16 +17,16 @@ namespace  Showcase\Controllers{
          * Store new user
          */
         static function store($request){
-            $errors = Validator::validation($request->getBody(), [
+            $errors = Validator::validation($request->get(), [
                 'email' => 'required | email', 
                 'password' => 'required | min:8', 
                 'username' => 'required | min:3 | max:10 | string'
                 ]);
             if (empty($errors)) {
                 $user = new User();
-                $user->bcrypt($request->getBody()['password']);
-                $user->username = $request->getBody()['username'];
-                $user->email = $request->getBody()['email'];
+                $user->bcrypt($request->get()['password']);
+                $user->username = $request->get()['username'];
+                $user->email = $request->get()['email'];
                 $user->save();
 
                 //Log the user

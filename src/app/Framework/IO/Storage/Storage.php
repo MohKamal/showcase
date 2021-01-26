@@ -155,11 +155,7 @@ namespace  Showcase\Framework\IO\Storage{
                 ob_flush();
                 ob_clean();
                 readfile($file);
-
-                return true;
             }
-
-            return false;
         }
 
         /**

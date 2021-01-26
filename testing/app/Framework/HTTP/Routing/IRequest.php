@@ -5,6 +5,6 @@ namespace  Showcase\Framework\HTTP\Routing{
      */
     interface IRequest
     {
-        public function getBody();
+        public function get();
     }
 }

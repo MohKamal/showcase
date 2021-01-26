@@ -28,7 +28,7 @@ namespace  Showcase\Framework\IO\Storage{
             if (self::$_instance === null) {
                 self::$_instance = new self;
             }
-            self::$_rootFolder = dirname(__FILE__) . '/../../../../Storage/';
+            self::$_rootFolder = dirname(__FILE__) . '/../../../../storage/';
 
             //create folder if no exist
             $folder = self::$_rootFolder . $name . '/';
@@ -79,7 +79,7 @@ namespace  Showcase\Framework\IO\Storage{
             if (self::$_instance === null) {
                 self::$_instance = new self;
             }
-            self::$_rootFolder = dirname(__FILE__) . '/../../../../Storage/';
+            self::$_rootFolder = dirname(__FILE__) . '/../../../../storage/';
             self::$_currentFolder = "";
             self::$_folder_type = 2;
 
@@ -155,11 +155,7 @@ namespace  Showcase\Framework\IO\Storage{
                 ob_flush();
                 ob_clean();
                 readfile($file);
-
-                return true;
             }
-
-            return false;
         }
 
         /**
@@ -232,7 +228,7 @@ namespace  Showcase\Framework\IO\Storage{
          * 
          * @return mixed
          */
-        public function path($filename){
+        public function path($filename, $verify=true){
             if(empty($filename) || is_null(self::$_instance))
                 return null;
             $subfoler = "Storage";
@@ -241,9 +237,11 @@ namespace  Showcase\Framework\IO\Storage{
             if(self::$_folder_type == 2)
                 $subfoler = "";
             $file = __DIR__ . "/../../../../$subfoler/" . self::$_onlyFolder . "/" . $filename;
-            if(!file_exists($file))
-                return false;
-
+            if ($verify) {
+                if (!file_exists($file)) {
+                    return false;
+                }
+            }
             return $file;
         }
     }

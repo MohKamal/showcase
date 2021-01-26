@@ -126,8 +126,14 @@ namespace  Showcase\Framework\Validation{
          * @return boolean
          */
         protected static function max($value, $lenght){
-            if(strlen($value) > $lenght)
-                return false;
+            if(is_numeric($value)){
+                if($value > $lenght)
+                    return false;
+            }else{
+                if (strlen($value) > $lenght) {
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -138,8 +144,14 @@ namespace  Showcase\Framework\Validation{
          * @return boolean
          */
         protected static function min($value, $lenght){
-            if(strlen($value) < $lenght)
-                return false;
+            if(is_numeric($value)){
+                if($value < $lenght)
+                    return false;
+            }else{
+                if (strlen($value) < $lenght) {
+                    return false;
+                }
+            }
             return true;
         }
 

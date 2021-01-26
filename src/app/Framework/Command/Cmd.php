@@ -288,8 +288,15 @@ namespace  Showcase\Framework\Command{
                 return false;
             }
 
+            //ConfigFile
+            $config_file = $config_folder . "/config.json";
+            $jsonString = file_get_contents($config_file);
+            $data = json_decode($jsonString, true);
+            $data["auth"] = "true";
+            $newJsonString = json_encode($data);
+            file_put_contents($config_file, $newJsonString);
+
             Log::console("Migration, Contollers, Views and Model created! Please run migrate command\n", 'success');
-            Log::console("Add use \Showcase\Framework\HTTP\Gards\Auth; to the route web file (route/web.php)\n", 'success');
             Log::console('Add Auth::routes($router); to the route web file (route/web.php)', 'success');
         }
     }

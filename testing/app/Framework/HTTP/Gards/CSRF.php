@@ -91,7 +91,7 @@ namespace  Showcase\Framework\HTTP\Gards{
             $result = false;
             if(strcmp($token, $token_value) === 0)
                 $result = true;
-            $this->unset_session($unique_form_name);
+            //$this->unset_session($unique_form_name);
             return $result;
         }
 

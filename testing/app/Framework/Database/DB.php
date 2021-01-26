@@ -187,7 +187,9 @@ namespace  Showcase\Framework\Database {
             self::$_query = substr(self::$_query, 0, -1);
             self::$_query .= ') VALUES (';
             foreach($columns as $key => $value){
-                if(is_numeric($value))
+                if(is_null($value))
+                    self::$_query .= "NULL,";
+                else if(is_numeric($value))
                     self::$_query .= $this->filterInput($value) . ",";
                 else if(is_string($value))
                     self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
@@ -239,6 +241,20 @@ namespace  Showcase\Framework\Database {
             $content = nl2br($content, false);
 
             return $content;
+        }
+
+        /**
+         * Add a raw sql query
+         * @param string $query sql
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function raw($query){
+            if(empty(self::$_table) || is_null(self::$_instance) || empty($query))
+                return null;
+
+            self::$_query .= $query;
+            return $this;
         }
 
         /**

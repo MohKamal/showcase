@@ -31,7 +31,7 @@ namespace  Showcase\Framework\HTTP\Routing{
             return $result;
         }
 
-        public function getBody()
+        public function get()
         {
             if ($this->requestMethod === "GET") {
                 $body = array();
@@ -50,8 +50,16 @@ namespace  Showcase\Framework\HTTP\Routing{
             if ($this->requestMethod == "POST") {
                 $body = array();
                 foreach ($_POST as $key => $value) {
-                    if(is_array($value))
+                    if (is_array($value)) {
+                        $data = array();
+                        foreach ($value as $k => $v) {
+                            if(is_array($v)){
+                                $value[$k] = $v;
+                            }else
+                                $value[$k] = filter_input(INPUT_POST, $k, FILTER_SANITIZE_SPECIAL_CHARS);
+                        }
                         $body[$key] = $value;
+                    }
                     else
                         $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
                 }

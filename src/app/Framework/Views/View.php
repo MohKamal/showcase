@@ -18,6 +18,8 @@ namespace Showcase\Framework\Views {
          */
         static function show($view, array $vars=array()){
             $page = self::printView($view);
+            //sections
+            $page = self::sections($page);
             //check for php code
             $page = self::executeCode($page);
             $page = self::checkVariables($page);
@@ -227,6 +229,44 @@ namespace Showcase\Framework\Views {
         }
 
         /**
+         * This function search for @section to display in the correct part of the html
+         * @param String $page view code
+         * 
+         * @return String view code with no @section inside it
+         */
+        static function sections($page){
+            //Chech for section function
+            $matches = array();
+            preg_match_all('#\@section(.*?)\@endsection#s', $page, $matches);
+            $sections_code = array();
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $section_name = Utilities::getStringBetween($subView, "@section(", ")");
+                $section_name = str_replace('"', '', $section_name);
+
+                $_subView = str_replace('@section("' . $section_name . '")', '', $subView);
+                $_subView = str_replace('@endsection', '', $_subView);
+                if(!key_exists($section_name, $sections_code))
+                    $sections_code[strtolower($section_name)] = "";
+                    
+                $sections_code[strtolower($section_name)] .= $_subView;
+                $page = str_replace($subView, "", $page);
+            }
+
+            $matches = array();
+            preg_match_all('#\@renderSection(.*?)\)#', $page, $matches);
+            foreach ($matches[0] as $subView) {
+                //Replace special characters
+                $section_name = str_replace('@renderSection("', '', $subView);
+                $section_name = str_replace('")', '', $section_name);
+                $section_name = strtolower($section_name);
+
+                $page = str_replace($subView, $sections_code[$section_name], $page);
+            }
+            return $page;
+        }
+
+        /**
          * This function search for @php code to execute
          * inside a view
          * @param String $page view code
@@ -237,7 +277,6 @@ namespace Showcase\Framework\Views {
             //Chech for php function
             $matches = array();
             preg_match_all('#\@php(.*?)\@endphp#s', $page, $matches);
-            $result_to_display = '';
             foreach ($matches[0] as $subView) {
                 //Replace special characters
                 $_subView = str_replace('@php', '<?php ', $subView);
@@ -437,27 +476,27 @@ namespace Showcase\Framework\Views {
                 return '';
             $string = '';
             foreach ($vars as $key => $value) {
-                if (is_numeric($value)) {
-                    if($use_key)
-                        $string .= "'$key' => $value,";
-                    else
-                        $string .= "$value,";
-                } elseif (is_string($value)) {
-                    if ($use_key) {
-                        if(!strpos($value, "'"))
-                            $string .= "'$key' => '" . str_replace('"', '', $value) . "',";
+                    if (is_numeric($value)) {
+                        if($use_key)
+                            $string .= "'$key' => $value,";
                         else
-                            $string .= "'$key'" . '=> "' . str_replace('"', '', $value) . '",';
+                            $string .= "$value,";
+                    } elseif (is_string($value)) {
+                        if ($use_key) {
+                            if(!strpos($value, "'"))
+                                $string .= "'$key' => '" . str_replace('"', '', $value) . "',";
+                            else
+                                $string .= "'$key'" . '=> "' . str_replace('"', '', $value) . '",';
+                        }
+                        else{
+                            $value = str_replace("'", "\'", $value);
+                            $string .= "'". str_replace('"', '', $value) ."',";
+                        }
+                    } elseif (is_array($value)) {
+                        $string .= "[" . self::arrayToStringVar($value, true) . "],";
+                    } elseif (is_object($value)) {
+                        $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
                     }
-                    else{
-                        $value = str_replace("'", "\'", $value);
-                        $string .= "'". str_replace('"', '', $value) ."',";
-                    }
-                } elseif (is_array($value)) {
-                    $string .= "[" . self::arrayToStringVar($value, true) . "],";
-                } elseif (is_object($value)) {
-                    $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
-                }
             }
             
             return substr($string, 0, -1);

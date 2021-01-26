@@ -13,13 +13,19 @@ namespace  Showcase\Framework\Session{
          * 
          * @return boolean status
          */
-        public static function store($name, $variable){
+        public static function store($name, $variable, $lifetime=0){
             if(empty($name))
                 return false;
             if(is_null($variable))
                 return false;
-            if (session_status() == PHP_SESSION_NONE)
-                session_start();
+            if (session_status() == PHP_SESSION_NONE) {
+                if($lifetime > 0)
+                    session_start([
+                        'gc_maxlifetime' => $lifetime,
+                    ]);
+                else
+                    session_start();
+            }
             $_SESSION[$name] = $variable;
             return true;
         }
@@ -46,5 +52,6 @@ namespace  Showcase\Framework\Session{
         public static function clear($name){
             $_SESSION[$name] = null;
         }
+
     }
 }

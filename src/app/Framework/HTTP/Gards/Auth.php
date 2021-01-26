@@ -96,14 +96,10 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return boolean
          */
         public static function checkAuth(){
-            if(is_null(Session::retrieve('ses_auth')))
-                return false;
-            if(empty(Session::retrieve('ses_auth')))
-                return false;
-            if(Session::retrieve('ses_auth') === false)
-                return false;
-                
-            return true;
+            $config_file = dirname(__FILE__) . "/Config/config.json";
+            $jsonString = file_get_contents($config_file);
+            $data = json_decode($jsonString, true);
+            return filter_var(strtolower($data["auth"]), FILTER_VALIDATE_BOOLEAN);
         }
 
         /**
