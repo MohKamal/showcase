@@ -62,8 +62,8 @@
 					<li class='nav-item'><a class='nav-link' href='/login'>Login</a></li>
 					<li class='nav-item'><a class='nav-link' href='/register'>Register</a></li>
 				@else
-					<li class='nav-item'><a class='nav-link disabled' href='#'> @display \Showcase\Framework\HTTP\Gards\Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->username @enddisplay </a></li>
-					<li class='nav-item'><a class='nav-link' href='#' id='logout'>Logout</a></li><form id='logout_form' style='display:none' method='post' action='/logout'></form>
+					<li class='nav-item'><a class='nav-link disabled' href='#'> {{Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->username}} </a></li>
+					<li class='nav-item'><a class='nav-link' href='#' id='logout'>Logout</a></li><form id='logout_form' style='display:none' method='post' action='/logout'>@csrf</form>
 				@endif
 				</ul>
 			</div>

@@ -204,14 +204,21 @@ namespace  Showcase\Framework\Command{
 
             //Migration
             $migration_user = $config_folder . 'Migration/User.php';
+            $migration_remember = $config_folder . 'Migration/rememberMe.php';
             $base_dir = dirname(__FILE__) . '/../../Database/Migrations/';
             $migration_user_newFolder = $base_dir . 'User.php';
+            $migration_user_newFolder = $base_dir . 'rememberMe.php';
             if (!file_exists($base_dir)) {
                 mkdir($base_dir, 0777, true);
             }
 
             if(!copy($migration_user, $migration_user_newFolder)){
                 Log::console("Can't create User migration", 'error');
+                return false;
+            }            
+            
+            if(!copy($migration_remember, $migration_user_newFolder)){
+                Log::console("Can't create rememberMe migration", 'error');
                 return false;
             }
 

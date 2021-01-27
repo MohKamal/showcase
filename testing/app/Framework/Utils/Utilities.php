@@ -35,7 +35,7 @@ namespace  Showcase\Framework\Utils{
          * 
          * @return string
          */
-        static function get_string_between($string, $start, $end){
+        static function getStringBetween($string, $start, $end){
             $string = ' ' . $string;
             $ini = strpos($string, $start);
             if ($ini == 0) return '';

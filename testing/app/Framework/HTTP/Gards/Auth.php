@@ -5,6 +5,7 @@ namespace  Showcase\Framework\HTTP\Gards{
     use \Showcase\Models\User;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Session\Session;
+    use \Showcase\Framework\Session\Cookie;
     use \Showcase\Framework\Database\DB;
     
     /**
@@ -23,7 +24,7 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @param String
          * @return Boolean
          */
-        public static function login($email, $password){
+        public static function login($email, $password, $remember=false){
             if (empty($email) || empty($password)) {
                 Log::print("Auth: Trying to log with empty coordinates");
                 return false;
@@ -37,10 +38,16 @@ namespace  Showcase\Framework\HTTP\Gards{
             }
             
             if($user->validHash($password, $user->password)){
-                Session::store('ses_user_id', $user->id, 3600);
-                Session::store('ses_user_email', $user->email, 3600);
-                Session::store('ses_user_name', $user->username, 3600);
-                Session::store('ses_auth', true);
+                Cookie::store('ses_user_id', $user->id, ['expires' => time() + 3600]);
+                Cookie::store('ses_user_email', $user->email, ['expires' => time() + 3600]);
+                Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
+                if($remember){
+                    $token = self::generateRandomString(36);
+                    DB::table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
+                    Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
+                    Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
+                }
+
                 Log::print("Auth: user connected " . $email);
                 return true;
             }
@@ -53,7 +60,7 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @param String
          * @return Boolean
          */
-        public static function loginWithEmail($email){
+        public static function loginWithEmail($email, $remember=false){
             if (empty($email)) {
                 Log::print("Auth: Trying to log with empty coordinates");
                 return false;
@@ -66,11 +73,51 @@ namespace  Showcase\Framework\HTTP\Gards{
                 return false;
             }
             
-            Session::store('ses_user_id', $user->id, 3600);
-            Session::store('ses_user_email', $user->email, 3600);
-            Session::store('ses_user_name', $user->username, 3600);
-            Session::store('ses_auth', true);
+            Cookie::store('ses_user_id', $user->id, ['expires' => time() + 3600]);
+            Cookie::store('ses_user_email', $user->email, ['expires' => time() + 3600]);
+            Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
+
+            if($remember){
+                $token = self::generateRandomString(36);
+                DB::table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
+                Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
+                Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
+            }
+
             Log::print("Auth: user connected " . $email);
+            return true;
+        }
+
+        /**
+         * Login function with only email
+         * @param String
+         * @return Boolean
+         */
+        public static function loginWithId($id, $remember=false){
+            if (empty($id)) {
+                Log::print("Auth: Trying to log with empty coordinates");
+                return false;
+            }
+
+            $user = DB::model('User')->select()->where('id', $id)->first();
+
+            if ($user == null) {
+                Log::print("Auth: No user was found with id " . $id);
+                return false;
+            }
+            
+            Cookie::store('ses_user_id', $user->id, ['expires' => time() + 3600]);
+            Cookie::store('ses_user_email', $user->email, ['expires' => time() + 3600]);
+            Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
+
+            if($remember){
+                $token = self::generateRandomString(36);
+                DB::table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
+                Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
+                Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
+            }
+
+            Log::print("Auth: user connected " . $user->email);
             return true;
         }
 
@@ -80,10 +127,11 @@ namespace  Showcase\Framework\HTTP\Gards{
          */
         public static function logout(){
             if(self::check()){
-                Session::clear('ses_user_id');
-                Session::clear('ses_user_email');
-                Session::clear('ses_user_name');
-                Session::clear('ses_auth');
+                DB::table('remembers')->delete()->where('user_id', Cookie::retrieve('ses_user_id'))->run();
+                Cookie::clear('ses_user_id');
+                Cookie::clear('ses_user_email');
+                Cookie::clear('ses_user_name');
+                Cookie::clear('ses_user_token');
                 if(!self::check())
                     return true;
             }
@@ -101,6 +149,7 @@ namespace  Showcase\Framework\HTTP\Gards{
             $data = json_decode($jsonString, true);
             return filter_var(strtolower($data["auth"]), FILTER_VALIDATE_BOOLEAN);
         }
+        
 
         /**
          * Check if the user is connect
@@ -109,7 +158,7 @@ namespace  Showcase\Framework\HTTP\Gards{
         public static function check(){
             if(is_null(self::user()))
                 return false;
-            if(!empty(Session::retrieve('ses_user_id')) && !is_null(Session::retrieve('ses_user_id')))
+            if(!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id')))
                 return true;
             return false;
         }
@@ -121,7 +170,7 @@ namespace  Showcase\Framework\HTTP\Gards{
         public static function guest(){
             if(is_null(self::user()))
                 return true;
-            if(empty(Session::retrieve('ses_user_id')) && is_null(Session::retrieve('ses_user_id')))
+            if(empty(Cookie::retrieve('ses_user_id')) && is_null(Cookie::retrieve('ses_user_id')))
                 return true;
             return false;
         }
@@ -131,8 +180,8 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return \Showcase\Models\User
          */
         public static function user(){
-            if (!empty(Session::retrieve('ses_user_id')) && !is_null(Session::retrieve('ses_user_id'))) {
-                $user = DB::model('User')->select()->where('id', Session::retrieve('ses_user_id'))->first();
+            if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
+                $user = DB::model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
                 if (is_null($user)) {
                     return null;
                 }
@@ -147,12 +196,48 @@ namespace  Showcase\Framework\HTTP\Gards{
          */
         public static function username($col='email'){
             if(self::check()){
-                $user = DB::model('User')->select()->where('id', Session::retrieve('ses_user_id'))->first();
+                $user = DB::model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
                 if($user != null)
                     return $user->$col;
             }
             return null;
         }
+
+        /**
+         * Check if the user want to be rememberd
+         */
+        public static function checkRemember(){
+            Log::print(Cookie::retrieve('ses_user_id'));
+            Log::print(Cookie::retrieve('ses_user_token'));
+            if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
+                if (!empty(Cookie::retrieve('ses_user_token')) && !is_null(Cookie::retrieve('ses_user_token'))) {
+                    $token = DB::table('remembers')->select()->where('user_id', Cookie::retrieve('ses_user_id'))->where('token', Cookie::retrieve('ses_user_token'))->first();
+                    if(!empty($token) && !is_null($token)){
+                        Cookie::clear('ses_user_id');
+                        Cookie::clear('ses_user_token');
+                        self::loginWithId(Cookie::retrieve('ses_user_id'), true);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /**
+         * Generate a string as token
+         * @param int $length token lenght
+         * 
+         * @return string
+         */
+       private static function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
 
         /**
          * Include the routes

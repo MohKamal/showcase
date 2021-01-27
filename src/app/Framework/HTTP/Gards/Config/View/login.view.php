@@ -19,6 +19,7 @@
 					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
 				<form method="post" action='/auth'>
+					@csrf
 					<h3>Sign Up</h3>
 					<div class="form-holder">
 						<input type="email" name="email" placeholder="e-mail" class="form-control" required>
@@ -28,7 +29,7 @@
 					</div>
 					<div class="form-login">
 						<button type="submit"> Login </button>
-						<a href="/register" > Créer </a>
+						<a href="/register"> Créer </a>
 					</div>
 				</form>
 			</div>

@@ -76,10 +76,10 @@ namespace  Showcase\Framework\HTTP\Controllers{
         static function download($request){
             $errors = Validator::validation($request->get(), ['file' => 'required | string']);
             if (empty($errors)) {
-                $file = $request->get()['file'];
+                $file = Storage::folder("downloads")->path($request->get()['file']);
                 if (filter_var(strtolower($file), FILTER_VALIDATE_BOOLEAN)) 
                     return self::response()->notFound();
-                return Storage::folder("downloads")->download($file);
+                return self::response()->download($file);
             }
             else
                 return self::response()->notFound();

@@ -73,16 +73,38 @@ namespace  Showcase\Framework\HTTP\Resources {
          * Create a json from array of objects
          * @return array
          */
-        public static function array($collection){
+        public static function array($collection, $withkeys=true){
             if(empty($collection))
                 return array();
 
             $newCollection = array();
             foreach($collection as $obj){
-                $json = new static($obj);
-                $newCollection[] = $json;
+                $data = new static($obj);
+                if($withkeys)
+                    $newCollection[] = $data;
+                else
+                    $newCollection[] = $data->withoutKeys();
+                    
             }
             return $newCollection;
+        }
+
+        /**
+         * Get an array of values only, no keys
+         * this function can be useful with ajax request with only values
+         * example ["value", "value",...]
+         * 
+         * @return array only values
+         */
+        public function withoutKeys(){
+            $_class_vars = get_object_vars($this->initObject());
+            unset($_class_vars['object']);
+            $_data = array();
+            foreach($_class_vars as $key => $value){
+                $_data[] = $value;
+            }
+
+            return $_data;
         }
     }
 }
