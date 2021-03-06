@@ -16,8 +16,14 @@ namespace  Showcase\Framework\HTTP\Gards{
     class Auth{
         
         // current user email if connected
-        static $ses_user_email = null;
-        static $ses_user_name = null;
+        static $login_column = 'email';
+
+        /**
+         * Set the column to login with
+         */
+        public static function loginColumn($column='email'){
+            self::$login_column = $column;
+        }
 
         /**
          * Login function  with email and password, classic function
@@ -30,7 +36,7 @@ namespace  Showcase\Framework\HTTP\Gards{
                 return false;
             }
 
-            $user = DB::model('User')->select()->where('email', $email)->first();
+            $user = DB::model('User')->select()->where(self::$login_column, $email)->first();
 
             if ($user == null) {
                 Log::print("Auth: No user was found with email " . $email);
@@ -156,8 +162,6 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return Boolean
          */
         public static function check(){
-            if(is_null(self::user()))
-                return false;
             if(!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id')))
                 return true;
             return false;
@@ -168,8 +172,6 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return Boolean
          */
         public static function guest(){
-            if(is_null(self::user()))
-                return true;
             if(empty(Cookie::retrieve('ses_user_id')) && is_null(Cookie::retrieve('ses_user_id')))
                 return true;
             return false;
@@ -182,10 +184,9 @@ namespace  Showcase\Framework\HTTP\Gards{
         public static function user(){
             if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
                 $user = DB::model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
-                if (is_null($user)) {
-                    return null;
+                if (!is_null($user)) {
+                    return $user;
                 }
-                return $user;
             }
             return null;
         }
@@ -207,8 +208,6 @@ namespace  Showcase\Framework\HTTP\Gards{
          * Check if the user want to be rememberd
          */
         public static function checkRemember(){
-            Log::print(Cookie::retrieve('ses_user_id'));
-            Log::print(Cookie::retrieve('ses_user_token'));
             if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
                 if (!empty(Cookie::retrieve('ses_user_token')) && !is_null(Cookie::retrieve('ses_user_token'))) {
                     $token = DB::table('remembers')->select()->where('user_id', Cookie::retrieve('ses_user_id'))->where('token', Cookie::retrieve('ses_user_token'))->first();

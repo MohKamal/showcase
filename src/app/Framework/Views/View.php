@@ -260,7 +260,7 @@ namespace Showcase\Framework\Views {
                     $section_name = str_replace('@renderSection("', '', $subView);
                     $section_name = str_replace('")', '', $section_name);
                     $section_name = strtolower($section_name);
-                    if (!empty($sections_code)) {
+                    if (!empty($sections_code) && key_exists($section_name, $sections_code)) {
                         $page = str_replace($subView, $sections_code[$section_name], $page);
                     }else{ //if no code was there remove renderSection
                         $page = str_replace($subView, "", $page);
@@ -322,32 +322,55 @@ namespace Showcase\Framework\Views {
             //Chech for foreach or for loop
             $matches = array();
             preg_match_all('#\@foreach(.*?)\@endforeach#s', $page, $matches);
-            foreach ($matches[0] as $subView) {
-                //Replace special characters
-                $search = "#@foreach.*?\n#";
-                preg_match($search, $subView, $match);
-                if (!empty($match)) {
-                    $foreach = str_replace('@foreach', '<?php foreach', $match[0]);
-                    $foreach = str_replace("\n", " { ?>\n", $foreach);
-                    $_subView = str_replace($match[0], $foreach, $subView);
+            $found = false;
+            if(!empty($matches) && !empty($matches[0]))
+                $found = true;
+            while ($found) {
+                foreach ($matches[0] as $subView) {
+                    //Replace special characters
+                    $search = "#@foreach.*?\n#";
+                    preg_match($search, $subView, $match);
+                    if (!empty($match)) {
+                        $foreach = str_replace('@foreach', '<?php foreach', $match[0]);
+                        $foreach = str_replace("\n", " { ?>\n", $foreach);
+                        $_subView = str_replace($match[0], $foreach, $subView);
+                    }
+                    $_subView = str_replace('@endforeach', '<?php } ?>', $_subView);
+                    $page = str_replace($subView, $_subView, $page);
                 }
-                $_subView = str_replace('@endforeach', '<?php } ?>', $_subView);
-                $page = str_replace($subView, $_subView, $page);
+                
+                $matches = array();
+                preg_match_all('#\@foreach(.*?)\@endforeach#s', $page, $matches);
+                $found = false;
+                if(!empty($matches) && !empty($matches[0]))
+                    $found = true;
             }
+
 
             $matches = array();
             preg_match_all('#\@for(.*?)\@endfor#s', $page, $matches);
-            foreach ($matches[0] as $subView) {
-                //Replace special characters
-                $search = "#@for.*?\n#";
-                preg_match($search, $subView, $_match);
-                if (!empty($_match)) {
-                    $for = str_replace('@for', '<?php for', $_match[0]);
-                    $for = str_replace("\n", " { ?>\n", $for);
-                    $_subView = str_replace($_match[0], $for, $subView);
+            $found = false;
+            if(!empty($matches) && !empty($matches[0]))
+                $found = true;
+            while ($found) {
+                foreach ($matches[0] as $subView) {
+                    //Replace special characters
+                    $search = "#@for.*?\n#";
+                    preg_match($search, $subView, $_match);
+                    if (!empty($_match)) {
+                        $for = str_replace('@for', '<?php for', $_match[0]);
+                        $for = str_replace("\n", " { ?>\n", $for);
+                        $_subView = str_replace($_match[0], $for, $subView);
+                    }
+                    $_subView = str_replace('@endfor', '<?php } ?>', $_subView);
+                    $page = str_replace($subView, $_subView, $page);
                 }
-                $_subView = str_replace('@endfor', '<?php } ?>', $_subView);
-                $page = str_replace($subView, $_subView, $page);
+
+                $matches = array();
+                preg_match_all('#\@for(.*?)\@endfor#s', $page, $matches);
+                $found = false;
+                if(!empty($matches) && !empty($matches[0]))
+                    $found = true;
             }
             return $page;
         }

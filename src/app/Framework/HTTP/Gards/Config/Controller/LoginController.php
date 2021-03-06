@@ -32,10 +32,8 @@ namespace  Showcase\Controllers{
          * Logout user
          */
         static function logout(){
-            if(Auth::logout())
-                return self::response()->redirect('/');
-            
-            return self::response()->unauthorized();
+            Auth::logout();
+            return self::response()->redirect('/');
         }
     }
 }

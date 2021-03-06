@@ -53,6 +53,9 @@ namespace  Showcase\Framework\Database {
          * Init the PDO object for the database
          */
         private static function initPDO(){
+            self::$_table = '';
+            self::$_query = '';
+            self::$_model = null;
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
                 case 'slqlite':
