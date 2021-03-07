@@ -103,6 +103,22 @@ namespace  Showcase\Framework\IO\Storage{
         }
 
         /**
+         * Append content into a file
+         * @param string $filename
+         * @param mixed $content
+         * 
+         * @return boolean
+         */
+        public function append($filename, $content) {
+            if(empty($filename) || empty($content) || is_null(self::$_instance))
+                return null;
+            $file = self::$_currentFolder . $filename;
+            if(!file_put_contents($file, $content, FILE_APPEND))
+                return false;
+            return true;
+        }
+
+        /**
          * Get a file content
          * @param string $filename
          * 

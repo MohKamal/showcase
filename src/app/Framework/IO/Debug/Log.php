@@ -1,5 +1,6 @@
 <?php
 namespace  Showcase\Framework\IO\Debug {
+    use \Showcase\Framework\IO\Storage\Storage;
     /**
      * Create log files to Storage/Logs
      */
@@ -65,20 +66,17 @@ namespace  Showcase\Framework\IO\Debug {
         public static function print($message){
             //$log = Log::UserVerification();
             $log = '';
-            if(is_array($message)){
-                $log .= '------------------------------------'.PHP_EOL;
-                $log .= date('h:i', time()).PHP_EOL;
-                $log .= implode("\n", $message);
-                $log .= '------------------------------------'.PHP_EOL;
-            }else{
+            if(is_array($message)) {
+                $log .= date('h:i', time()) . ' - Array => [ '.PHP_EOL;
+                foreach($message as $k => $v){
+                    $log .= "$k => $v".PHP_EOL;
+                }
+                $log .= ' ]'.PHP_EOL;
+            } else {
                 $log .= date('h:i', time()) . ' - ' . $message.PHP_EOL;
             }
             //Save string to log, use FILE_APPEND to append.
-            $base_dir = dirname(__FILE__) . '/../../../../storage/logs/';
-            if (!file_exists($base_dir)) {
-                mkdir($base_dir, 0777, true);
-            }
-            file_put_contents($base_dir . 'log_'.date("j.n.Y").'.log', $log.PHP_EOL, FILE_APPEND);
+            Storage::folder('logs')->append('log_'.date("j.n.Y").'.log', $log);
         }
 
         /**
@@ -125,7 +123,7 @@ namespace  Showcase\Framework\IO\Debug {
          */
         public static function closure_dump(Closure $c) {
             $str = 'function (';
-            $r = new ReflectionFunction($c);
+            $r = new \ReflectionFunction($c);
             $params = array();
             foreach($r->getParameters() as $p) {
                 $s = '';
@@ -149,7 +147,7 @@ namespace  Showcase\Framework\IO\Debug {
             for($l = $r->getStartLine(); $l < $r->getEndLine(); $l++) {
                 $str .= $lines[$l];
             }
-            Log::print($str);
+            self::print($str);
         }
 
         /**

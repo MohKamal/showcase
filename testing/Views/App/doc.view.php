@@ -1058,6 +1058,7 @@ static function Play($request){
 						<p>After that, you do your desired action : </p>
                         <ul>
 						    <li><strong class="mr-1">put($filename, $content) :</strong> <code>Save the content in the file, if the file exist, it will be crushed.</code></li>
+						    <li><strong class="mr-1">append($filename, $content) :</strong> <code>Append ne content into exsiting file.</code></li>
 						    <li><strong class="mr-1">get($filename) :</strong> <code>Get a file content</code></li>
 						    <li><strong class="mr-1">exists($filename) :</strong> <code>Check if a file exists</code></li>
 						    <li><strong class="mr-1">copy($filename, $newfile) :</strong> <code>Copy file from the folder to another path</code></li>
