@@ -4,6 +4,7 @@
  */
 namespace  Showcase\Framework\Initializer{
   use \Showcase\Framework\IO\Debug\Log;
+  use \Showcase\Framework\IO\Storage\Storage;
   
   class AppSetting{
 
@@ -15,17 +16,14 @@ namespace  Showcase\Framework\Initializer{
        * Global variables
        * @var array
        */
-        $variables = [
-        'RES_FOLDER' => dirname(__FILE__) . '/../../../resources',
-        'RESOURCES' => 'resources',
-      ];
+        $variables = [];
     
         foreach ($variables as $key => $value) {
             putenv("$key=$value");
         }
 
         //Check if the files exists or not
-        $_variables = file_get_contents(dirname(__FILE__) . "/../../../appsettings.json");
+        $_variables = Storage::global()->get('appsettings.json');
         if ($_variables === false) {
           Log::print("appsetting.json file was not found, create one from the example file.");
         }else{

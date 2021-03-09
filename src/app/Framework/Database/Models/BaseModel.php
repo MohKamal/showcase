@@ -3,6 +3,7 @@ namespace  Showcase\Framework\Database\Models {
     use \Showcase\Framework\Database\DB;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\IO\Storage\Storage;
     
     class BaseModel{
 
@@ -35,8 +36,8 @@ namespace  Showcase\Framework\Database\Models {
          * Init the model and create all properties
          */
         public function __construct(){
-            $file = dirname(__FILE__) . '/../../../Database/Migrations/' . $this->migration . '.php';
-            if(file_exists($file))
+            $file = Storage::migration()->path($this->migration . '.php');
+            if($file !== false)
             {
                 require_once $file;
 
@@ -72,8 +73,8 @@ namespace  Showcase\Framework\Database\Models {
          * @return string table name
          */
         public function tableName(){
-            $file = dirname(__FILE__) . '/../../../Database/Migrations/' . $this->migration . '.php';
-            if(file_exists($file))
+            $file = Storage::migration()->path($this->migration . '.php');
+            if($file !== false)
             {
                 require_once $file;
 

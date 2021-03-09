@@ -1,17 +1,12 @@
 <?php
 namespace  Showcase\Framework\HTTP\Controllers{
     
-    use \Showcase\Framework\HTTP\Controllers\BaseControllerInterface;
-    use \Showcase\Framework\Views\View;
-    use \Showcase\Framework\HTTP\Routing\Response;
-    use \Showcase\Framework\IO\Storage\Storage;
-    
     /**
      * 
      * The Base controller with the basic includes
      * 
      */
-    class BaseController implements IBaseController{
+    interface IBaseController{
         
         /**
          * 
@@ -19,45 +14,34 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @param string view name
          */
-        function view($view, array $vars=array()){
-            return View::show($view, $vars);
-        }
+        function view($view, array $vars=array());
 
         /**
          * Get a reponse object for an easy reponse
          * 
          * @return \Showcase\Framework\HTTP\Routing\Response
          */
-        function response(){
-            $reponse = new Response();
-            return $reponse;
-        }
+        function response();
 
         /**
          * Get a storage object for an easy reponse
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storage($foldername){
-            return Storage::folder($foldername);
-        }
+        function storage($foldername);
 
         /**
          * Get a storage object for an easy reponse
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storageResources($foldername){
-            return Storage::resources($foldername);
-        }
+        function storageResources($foldername);
 
         /**
          * Get a storage object for an easy reponse
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storageGlobal(){
-            return Storage::global();
-        }
+        function storageGlobal();
     }
 }

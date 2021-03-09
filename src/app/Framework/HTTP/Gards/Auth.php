@@ -1,7 +1,7 @@
 <?php
 namespace  Showcase\Framework\HTTP\Gards{
     
-    use \Showcase\Framework\Initializer\VarLoader;
+    use \Showcase\Framework\HTTP\Gards\IAuth;
     use \Showcase\Models\User;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Session\Session;
@@ -13,7 +13,7 @@ namespace  Showcase\Framework\HTTP\Gards{
      * The Base controller with the basic includes
      * 
      */
-    class Auth{
+    class Auth implements IAuth{
         
         // current user email if connected
         static $login_column = 'email';

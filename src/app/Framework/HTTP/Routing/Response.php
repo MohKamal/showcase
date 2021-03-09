@@ -2,15 +2,17 @@
 
 namespace  Showcase\Framework\HTTP\Routing {
 
+    use \Showcase\Framework\HTTP\Routing\IResponse;
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Views\View;
+    use \Showcase\Framework\IO\Debug\Log;
 
     /**
      * Response object
      * To make return response easy
      */
-    class Response
+    class Response implements IResponse
     {
         public function __construct()
         {

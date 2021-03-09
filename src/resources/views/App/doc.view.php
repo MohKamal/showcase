@@ -1158,6 +1158,7 @@ static function Play($request){
 						    <li><strong class="mr-1">exists($filename) :</strong> <code>Check if a file exists</code></li>
 						    <li><strong class="mr-1">copy($filename, $newfile) :</strong> <code>Copy file from the folder to another path</code></li>
 						    <li><strong class="mr-1">move($filename, $newfile) :</strong> <code>Move file from the folder to another path</code></li>
+						    <li><strong class="mr-1">remove($filename) :</strong> <code>Remove file from the folder.</code></li>
 						    <li><strong class="mr-1">path($filename) :</strong> <code>Get the path to a file in the current folder</code></li>
 						    <li><strong class="mr-1">url($filename) :</strong> <code>Get a url to download a file</code></li>
 						    <li><strong class="mr-1">download($filename) :</strong> <code>Send the file to the user browser for download</code></li>

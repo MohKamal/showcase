@@ -5,6 +5,7 @@ namespace Showcase\Framework\Views {
     use \Showcase\Framework\Utils\Utilities;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Session\SessionAlert;
+    use \Showcase\Framework\IO\Storage\Storage;
     
     /**
      * Loading and showing views files
@@ -46,22 +47,22 @@ namespace Showcase\Framework\Views {
             $dir_models = dirname(__FILE__) . '/../../Models';
             if (file_exists($dir_models)) {
                 $models = scandir($dir_models, 1);
-                foreach($models as $model){
+                foreach($models as $model) {
                     $file_parts = pathinfo($model);
-                    if($file_parts['extension'] == "php"){
+                    if($file_parts['extension'] == "php") {
                         $include_models .= "use \Showcase\Models\\" . basename($model,".php") . ";\n";
                     }
                 }
             }
             //create file content
             $page = $includes . "\n" . $include_models . "\n" . self::varsToString($vars) . "\n?>\n" . $page;
-            file_put_contents("_temp.php", $page);
+            Storage::folder('temp')->put("_temp_view.php", $page);
             ob_start();
-            require_once '_temp.php';
+            require_once Storage::folder('temp')->path('_temp_view.php');
             $contents = ob_get_contents();
             ob_end_clean();
             echo $contents;
-            unlink("_temp.php");
+            Storage::folder('temp')->remove('_temp_view.php');
             SessionAlert::clear();
         }
 
@@ -166,12 +167,12 @@ namespace Showcase\Framework\Views {
             $file_parts = pathinfo($view);
             $file = "";
             if(empty($file_parts['extension']))
-                $file = dirname(__FILE__) . '/../../../Views/' . $view . '.view.php';
+                $file = Storage::views()->path($view . '.view.php');
             else{
                 if(Utilities::endsWith($view, '.view.php'))
-                    $file = dirname(__FILE__) . '/../../../Views/' . $view;
+                     $file = Storage::views()->path($view);
                 else
-                    $file = dirname(__FILE__) . '/../../../Views/' . substr_replace($view , 'view.php', strrpos($view , '.') +1);
+                     $file = Storage::views()->path(substr_replace($view , 'view.php', strrpos($view , '.') +1));
             }
 
             //Checking if the file exist
