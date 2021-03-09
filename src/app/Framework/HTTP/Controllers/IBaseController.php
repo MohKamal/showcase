@@ -14,34 +14,34 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @param string view name
          */
-        function view($view, array $vars=array());
+        static function view($view, array $vars=array());
 
         /**
          * Get a reponse object for an easy reponse
          * 
          * @return \Showcase\Framework\HTTP\Routing\Response
          */
-        function response();
+        static function response();
 
         /**
          * Get a storage object for an easy reponse
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storage($foldername);
+        static function storage($foldername);
 
         /**
          * Get a storage object for an easy reponse
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storageResources($foldername);
+        static function storageResources($foldername);
 
         /**
          * Get a storage object for an easy reponse
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storageGlobal();
+        static function storageGlobal();
     }
 }
