@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita0494de78d6333cc3db6de1c3d600e6b
+class ComposerStaticInit3c03306121a03c3486b07efd4eb4d015
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -23,11 +23,6 @@ class ComposerStaticInita0494de78d6333cc3db6de1c3d600e6b
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Showcase\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Controllers/HomeController.php',
-        'Showcase\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Controllers/LoginController.php',
-        'Showcase\\Controllers\\RegisterController' => __DIR__ . '/../..' . '/app/Controllers/RegisterController.php',
-        'Showcase\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Controllers/UserController.php',
-        'Showcase\\Database\\Migrations\\Unit' => __DIR__ . '/../..' . '/app/Database/Migrations/Unit.php',
-        'Showcase\\Database\\Migrations\\User' => __DIR__ . '/../..' . '/app/Database/Migrations/User.php',
         'Showcase\\Framework\\Command\\Cmd' => __DIR__ . '/../..' . '/app/Framework/Command/Cmd.php',
         'Showcase\\Framework\\Core\\Showcase' => __DIR__ . '/../..' . '/app/Framework/Core/Showcase.php',
         'Showcase\\Framework\\Database\\Config\\Column' => __DIR__ . '/../..' . '/app/Framework/Database/Config/Column.php',
@@ -57,17 +52,14 @@ class ComposerStaticInita0494de78d6333cc3db6de1c3d600e6b
         'Showcase\\Framework\\Utils\\Utilities' => __DIR__ . '/../..' . '/app/Framework/Utils/Utilities.php',
         'Showcase\\Framework\\Validation\\Validator' => __DIR__ . '/../..' . '/app/Framework/Validation/Validator.php',
         'Showcase\\Framework\\Views\\View' => __DIR__ . '/../..' . '/app/Framework/Views/View.php',
-        'Showcase\\JsonResources\\UserResource' => __DIR__ . '/../..' . '/app/JsonResources/UserResource.php',
-        'Showcase\\Models\\Unit' => __DIR__ . '/../..' . '/app/Models/Unit.php',
-        'Showcase\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita0494de78d6333cc3db6de1c3d600e6b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita0494de78d6333cc3db6de1c3d600e6b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita0494de78d6333cc3db6de1c3d600e6b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3c03306121a03c3486b07efd4eb4d015::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3c03306121a03c3486b07efd4eb4d015::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3c03306121a03c3486b07efd4eb4d015::$classMap;
 
         }, null, ClassLoader::class);
     }

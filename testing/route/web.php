@@ -6,15 +6,11 @@
  */
 
 $router->get('/', function () {
-    return HomeController::Index();
+    HomeController::Index();
 });
 
 $router->get('/documentation', function () {
-    return View::show('App/doc', ['doc' => 'You fucker']);
-});
-
-$router->post('/user/store', function () {
-    return URL::redirect('/');
+    return View::show('App/doc');
 });
 
 Auth::routes($router);

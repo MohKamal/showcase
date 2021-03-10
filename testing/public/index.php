@@ -18,6 +18,6 @@ namespace Showcase{
   use \Showcase\Framework\Core\Showcase;
 
   //Start the magic
-  Showcase::HakunaMatata();
+  Showcase::start();
   
 }

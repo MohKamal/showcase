@@ -98,7 +98,7 @@ namespace  Showcase\Framework\HTTP\Links{
          * Url to the bootstrap.min.js
          */
         static function bootstrapScript(){
-            return self::assets() . 'css/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js';
+            return self::assets() . 'js/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js';
         }
 
         /**

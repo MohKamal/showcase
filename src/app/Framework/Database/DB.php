@@ -11,16 +11,21 @@ namespace  Showcase\Framework\Database {
 
     class DB extends Wrapper{
 
-        private static $_pdo = null;
+        private $_pdo = null;
         private static $_instance = null;
-        private static $_table = '';
-        private static $_query = '';
-        private static $_model = null;
-        private static $_withTrash = false;
+        private $_table = '';
+        private $_query = '';
+        private $_model = null;
+        private $_withTrash = false;
 
         public function __construct(){
             parent::__construct();
             $this->Initialize();
+        }
+
+        public static function factory(){
+            self::$_instance = new self;
+            return self::$_instance;
         }
 
         /**
@@ -32,7 +37,7 @@ namespace  Showcase\Framework\Database {
                 return false;
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
-                case 'slqlite':
+                case 'sqlite':
                     $pdo = (new SQLiteConnection())->connect();
                     if ($pdo == null)
                         Log::print("SQLite Error : DB.php 291 line \n Whoops, could not connect to the SQLite database!");
@@ -52,20 +57,20 @@ namespace  Showcase\Framework\Database {
         /**
          * Init the PDO object for the database
          */
-        private static function initPDO(){
-            self::$_table = '';
-            self::$_query = '';
-            self::$_model = null;
+        private function initPDO(){
+            $this->_table = '';
+            $this->_query = '';
+            $this->_model = null;
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
-                case 'slqlite':
+                case 'sqlite':
                     $pdo = (new SQLiteConnection())->connect();
                     if ($pdo == null){
                         Log::print("SQLite Error : DB.php 320 line \n Whoops, could not connect to the SQLite database!");
                         return null;
                     }
-                    if (self::$_pdo === null) {
-                        self::$_pdo = $pdo;
+                    if ($this->_pdo === null) {
+                        $this->_pdo = $pdo;
                     }
                 break;
                 case 'mysql':
@@ -74,8 +79,8 @@ namespace  Showcase\Framework\Database {
                         Log::print("MySql Error : DB.php 328 line \n Whoops, could not connect to the MySql database!");
                         return null;
                     }
-                    if (self::$_pdo === null) {
-                        self::$_pdo = $pdo;
+                    if ($this->_pdo === null) {
+                        $this->_pdo = $pdo;
                     }
                 break;
             }
@@ -88,13 +93,11 @@ namespace  Showcase\Framework\Database {
          * 
          * @return \Showcase\Framework\Database\DB
          */
-        public static function model($name){
+        public function model($name){
             if(empty($name))
                 return null;
-            if (self::$_instance === null) {
-                self::$_instance = new self;
-            }
-            self::initPDO();
+            
+            $this->initPDO();
             //get model and migration
             $m_file = dirname(__FILE__) . '/../../Models/' . $name . '.php';
             if (file_exists($m_file)) {
@@ -103,12 +106,12 @@ namespace  Showcase\Framework\Database {
                 // which is essentially the class name
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
                 if (class_exists($class))
-                    self::$_model = new $class;
+                    $this->_model = new $class;
             }
 
-            self::$_table = self::$_model->tableName();
+            $this->_table = $this->_model->tableName();
 
-            return self::$_instance;
+            return $this;
         }
 
         /**
@@ -118,15 +121,12 @@ namespace  Showcase\Framework\Database {
          * 
          * @return \Showcase\Framework\Database\DB
          */
-        public static function table($name){
+        public function table($name){
             if(empty($name))
                 return null;
-            if (self::$_instance === null) {
-                self::$_instance = new self;
-            }
-            self::initPDO();
-            self::$_table = $name;
-            return self::$_instance;
+            $this->initPDO();
+            $this->_table = $name;
+            return $this;
         }
 
         /**
@@ -136,20 +136,20 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function select(array $columns=array()){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
 
-            self::$_query = "SELECT ";
+                $this->_query = "SELECT ";
 
-            if(!empty($columns) && is_null(self::$_model)){
+            if(!empty($columns) && is_null($this->_model)){
                 foreach($columns as $col)
-                    self::$_query .= " $col,";
+                $this->_query .= " $col,";
                 
-                self::$_query = substr(self::$_query, 0, -1);
+                $this->_query = substr($this->_query, 0, -1);
             }else
-                self::$_query .= " * ";
+            $this->_query .= " * ";
 
-            self::$_query .= " FROM " . "`" . self::$_table . "`";
+            $this->_query .= " FROM " . "`" . $this->_table . "`";
 
             return $this;
         }
@@ -164,8 +164,8 @@ namespace  Showcase\Framework\Database {
             if(empty(self::$_table) || is_null(self::$_instance))
                 return null;
 
-            self::$_query = "DELETE ";
-            self::$_query .= " FROM " . "`" . self::$_table . "`";
+            $this->_query = "DELETE ";
+            $this->_query .= " FROM " . "`" . $this->_table . "`";
 
             return $this;
         }
@@ -177,28 +177,28 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function insert(array $columns){
-            if(empty(self::$_table) || is_null(self::$_instance) || empty($columns))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($columns))
                 return null;
 
-            self::$_query = "INSERT INTO ";
+            $this->_query = "INSERT INTO ";
 
-            self::$_query .= "`" . self::$_table . "` (";
+            $this->_query .= "`" . $this->_table . "` (";
 
             foreach($columns as $key => $value){
-                self::$_query .= "$key,";
+                $this->_query .= "$key,";
             }
-            self::$_query = substr(self::$_query, 0, -1);
-            self::$_query .= ') VALUES (';
+            $this->_query = substr($this->_query, 0, -1);
+            $this->_query .= ') VALUES (';
             foreach($columns as $key => $value){
                 if(is_null($value))
-                    self::$_query .= "NULL,";
+                    $this->_query .= "NULL,";
                 else if(is_numeric($value))
-                    self::$_query .= $this->filterInput($value) . ",";
+                    $this->_query .= $this->filterInput($value) . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
+                    $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
             }
-            self::$_query = substr(self::$_query, 0, -1);
-            self::$_query .= ')';
+            $this->_query = substr($this->_query, 0, -1);
+            $this->_query .= ')';
 
             return $this;
         }
@@ -210,22 +210,22 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function update(array $columns){
-            if(empty(self::$_table) || is_null(self::$_instance) || empty($columns))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($columns))
                 return null;
 
-            self::$_query = "UPDATE ";
+            $this->_query = "UPDATE ";
 
-            self::$_query .= "`" . self::$_table . "` SET ";
+            $this->_query .= "`" . $this->_table . "` SET ";
 
             foreach($columns as $key => $value){
-                self::$_query .= " `$key`=";
+                $this->_query .= " `$key`=";
                 if(is_numeric($value))
-                    self::$_query .= $value . ",";
+                    $this->_query .= $value . ",";
                 else if(is_string($value))
-                    self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
+                    $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
             }
 
-            self::$_query = substr(self::$_query, 0, -1);
+            $this->_query = substr($this->_query, 0, -1);
 
             return $this;
         }
@@ -253,10 +253,10 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function raw($query){
-            if(empty(self::$_table) || is_null(self::$_instance) || empty($query))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($query))
                 return null;
 
-            self::$_query .= $query;
+            $this->_query .= $query;
             return $this;
         }
 
@@ -269,20 +269,20 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function where($column, $value, $condition="="){
-            if(empty(self::$_table) || is_null(self::$_instance) || empty($column) || empty($value))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($column) || empty($value))
                 return null;
 
-            if(!strpos(self::$_query, "WHERE"))
-                self::$_query .= " WHERE ";
+            if(!strpos($this->_query, "WHERE"))
+                $this->_query .= " WHERE ";
             else
-                self::$_query .= " AND ";
+                $this->_query .= " AND ";
             
-            self::$_query .= " `$column`$condition";
+            $this->_query .= " `$column`$condition";
 
             if(is_numeric($value))
-                self::$_query .= "$value ";
+                $this->_query .= "$value ";
             else if(is_string($value))
-                self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
+                $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
             
             return $this;
         }
@@ -296,20 +296,20 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function orWhere($column, $value, $condition="="){
-            if(empty(self::$_table) || is_null(self::$_instance) || empty($column) || empty($value))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($column) || empty($value))
                 return null;
 
-            if(!strpos(self::$_query, "WHERE"))
-                self::$_query .= " WHERE ";
+            if(!strpos($this->_query, "WHERE"))
+                $this->_query .= " WHERE ";
             else
-                self::$_query .= " OR ";
+                $this->_query .= " OR ";
             
-            self::$_query .= " `$column`$condition";
+            $this->_query .= " `$column`$condition";
 
             if(is_numeric($value))
-                self::$_query .= "$value ";
+                $this->_query .= "$value ";
             else if(is_string($value))
-                self::$_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
+                $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
             
             return $this;
         }
@@ -321,14 +321,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function limit($limit){
-            if(empty(self::$_table) || is_null(self::$_instance) || empty($limit))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($limit))
                 return null;
 
             if(!is_numeric($limit))
                 return $this;
                 
-            if(!strpos(self::$_query, "LIMIT"))
-                self::$_query .= " LIMIT $limit";
+            if(!strpos($this->_query, "LIMIT"))
+                $this->_query .= " LIMIT $limit";
             
             return $this;
         }
@@ -339,12 +339,12 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function count($column="*"){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
-            if (strpos(self::$_query, "SELECT") !== false) {
+            if (strpos($this->_query, "SELECT") !== false) {
                 $search = "#(SELECT).*?(FROM)#";
                 $replace = '$1' . " COUNT($column) " . '$2';
-                self::$_query = preg_replace($search, $replace, self::$_query);
+                $this->_query = preg_replace($search, $replace, $this->_query);
             }
             return $this;
         }
@@ -355,10 +355,10 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function distinct($column=""){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
-            if(strpos(self::$_query, "SELECT") !== false)
-                self::$_query = str_replace("SELECT", "SELECT DISTINCT $column", self::$_query);
+            if(strpos($this->_query, "SELECT") !== false)
+                $this->_query = str_replace("SELECT", "SELECT DISTINCT $column", $this->_query);
             return $this;
         }
 
@@ -366,15 +366,15 @@ namespace  Showcase\Framework\Database {
          * Check for soft delete columns to add/remove them from the result
          */
         private function soft(){
-            if(!is_null(self::$_model)){
-                if(!self::$_withTrash){
-                    if (property_exists(self::$_model, 'deleted_at')) {
-                        if(!strpos(self::$_query, "WHERE"))
-                            self::$_query .= " WHERE ";
+            if(!is_null($this->_model)){
+                if(!$this->_withTrash){
+                    if (property_exists($this->_model, 'deleted_at')) {
+                        if(!strpos($this->_query, "WHERE"))
+                            $this->_query .= " WHERE ";
                         else
-                            self::$_query .= " AND ";
+                            $this->_query .= " AND ";
 
-                        self::$_query .= "`deleted_at` IS null AND `active`=1";
+                        $this->_query .= "`deleted_at` IS null AND `active`=1";
                     }
                 }
             }
@@ -386,7 +386,7 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function withTrash(){
-            self::$_withTrash = true;
+            $this->_withTrash = true;
 
             return $this;
         }
@@ -397,31 +397,31 @@ namespace  Showcase\Framework\Database {
          * @return object
          */
         public function first(){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
 
             $this->soft();
                 
-            if(!strpos(self::$_query, "LIMIT"))
-                self::$_query .= " LIMIT 1";
+            if(!strpos($this->_query, "LIMIT"))
+                $this->_query .= " LIMIT 1";
             
             $data = array();
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
-                case 'slqlite':
-                    $get = new SQLiteTable(self::$_pdo);
-                    $data = $get->query(self::$_query);
+                case 'sqlite':
+                    $get = new SQLiteTable($this->_pdo);
+                    $data = $get->query($this->_query);
                 break;
                 case 'mysql':
-                    $get = new MySqlTable(self::$_pdo);
-                    $data = $get->query(self::$_query);
+                    $get = new MySqlTable($this->_pdo);
+                    $data = $get->query($this->_query);
                 break;
             }
 
             if(!empty($data)){
-                if(is_null(self::$_model))
+                if(is_null($this->_model))
                     return $data[0];
-                $class = get_class(self::$_model);
+                $class = get_class($this->_model);
                 $obj = new $class();
                 $class_vars = get_object_vars($obj);
                 foreach($class_vars as $key => $value){
@@ -440,17 +440,17 @@ namespace  Showcase\Framework\Database {
          * @return object
          */
         public function run(){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
-                case 'slqlite':
-                    $get = new SQLiteTable(self::$_pdo);
-                    return $get->query(self::$_query);
+                case 'sqlite':
+                    $get = new SQLiteTable($this->_pdo);
+                    return $get->query($this->_query);
                 break;
                 case 'mysql':
-                    $get = new MySqlTable(self::$_pdo);
-                    return $get->query(self::$_query);
+                    $get = new MySqlTable($this->_pdo);
+                    return $get->query($this->_query);
                 break;
             }
         }
@@ -463,29 +463,29 @@ namespace  Showcase\Framework\Database {
          * @return array
          */
         public function get(){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
             //check for soft delete
             $this->soft();
             $data = array();
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
-                case 'slqlite':
-                    $get = new SQLiteTable(self::$_pdo);
-                    $data = $get->query(self::$_query);
+                case 'sqlite':
+                    $get = new SQLiteTable($this->_pdo);
+                    $data = $get->query($this->_query);
                 break;
                 case 'mysql':
-                    $get = new MySqlTable(self::$_pdo);
-                    $data = $get->query(self::$_query);
+                    $get = new MySqlTable($this->_pdo);
+                    $data = $get->query($this->_query);
                 break;
             }
 
             if(!empty($data)){
-                if(is_null(self::$_model))
+                if(is_null($this->_model))
                     return $data;
                 
                 $objects = array();
-                $class = get_class(self::$_model);
+                $class = get_class($this->_model);
                 foreach($data as $record){
                     $obj = new $class();
                     $class_vars = get_object_vars($obj);

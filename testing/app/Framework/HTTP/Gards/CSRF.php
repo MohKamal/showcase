@@ -4,7 +4,7 @@ namespace  Showcase\Framework\HTTP\Gards{
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Session\Session;
     
-    class CSRF{ 
+    class CSRF { 
 
         /**
          * Var to check if the page was already check it for CSRF
@@ -104,7 +104,7 @@ namespace  Showcase\Framework\HTTP\Gards{
          */
         function csrfguard_replace_forms($form_data_html)
         {
-            $count=preg_match_all("/<form(.*?)>(.*?)<\\/form>/is",$form_data_html,$matches,PREG_SET_ORDER);
+            $count = preg_match_all("/<form(.*?)>(.*?)<\\/form>/is",$form_data_html,$matches,PREG_SET_ORDER);
             if (is_array($matches))
             {
                 foreach ($matches as $m)
@@ -130,7 +130,7 @@ namespace  Showcase\Framework\HTTP\Gards{
         function csrfguard_get_inputs()
         {
             $name="CSRFGuard_".mt_rand(0,mt_getrandmax());
-            $token=$this->csrfguard_generate_token($name);
+            $token = $this->csrfguard_generate_token($name);
             $inputs="<input type='hidden' name='CSRFName' value='{$name}' /><input type='hidden' name='CSRFToken' value='{$token}' />";
             return $inputs;
         }

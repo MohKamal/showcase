@@ -13,7 +13,7 @@ namespace Showcase {
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\HTTP\Gards\Auth;
-    use \ Showcase\Framework\HTTP\Controllers\ResourceController;
+    use \Showcase\Framework\HTTP\Controllers\ResourceController;
     //Includes
     
     $router  = new Router(new Request);

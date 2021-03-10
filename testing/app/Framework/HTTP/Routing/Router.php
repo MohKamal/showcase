@@ -74,15 +74,16 @@ namespace  Showcase\Framework\HTTP\Routing {
              */
             if(Auth::checkAuth()){
                 if (Auth::guest()) {
-                    if (!Auth::checkRemember()) {
-                        $auths = ['/login', '/reset-password', '/logout', '/download', '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=', '/js?file=', '/css?file=', '/images?file='];
-                        $no_auth = true;
-                        foreach ($auths as $url) {
-                            if ($this->request->requestUri === $url || Utilities::startsWith($this->request->requestUri, $url)) {
-                                $no_auth = false;
-                            }
+                    $auths = ['/login', '/reset-password', '/download?file=', '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=', '/js?file=', '/css?file=', '/images?file='];
+                    $no_auth = true;
+                    foreach ($auths as $url) {
+                        if ($this->request->requestUri === $url || Utilities::startsWith($this->request->requestUri, $url)) {
+                            $no_auth = false;
                         }
-                        if ($no_auth) {
+                    }
+
+                    if ($no_auth) {
+                        if (!Auth::checkRemember()) {
                             $this->response->redirect("/login");
                         }
                     }

@@ -1,7 +1,7 @@
 <?php
 namespace  Showcase\Framework\HTTP\Controllers{
     
-    use \Showcase\Framework\Initializer\VarLoader;
+    use \Showcase\Framework\HTTP\Controllers\BaseControllerInterface;
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\HTTP\Routing\Response;
     use \Showcase\Framework\IO\Storage\Storage;
@@ -11,7 +11,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
      * The Base controller with the basic includes
      * 
      */
-    class BaseController{
+    class BaseController implements IBaseController{
         
         /**
          * 
@@ -19,7 +19,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @param string view name
          */
-        function view($view, array $vars=array()){
+        static function view($view, array $vars=array()){
             return View::show($view, $vars);
         }
 
@@ -28,7 +28,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @return \Showcase\Framework\HTTP\Routing\Response
          */
-        function response(){
+        static function response(){
             $reponse = new Response();
             return $reponse;
         }
@@ -38,7 +38,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storage($foldername){
+        static function storage($foldername){
             return Storage::folder($foldername);
         }
 
@@ -47,7 +47,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storageResources($foldername){
+        static function storageResources($foldername){
             return Storage::resources($foldername);
         }
 
@@ -56,7 +56,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
          * 
          * @return \Showcase\Framework\Storage\Storage
          */
-        function storageGlobal(){
+        static function storageGlobal(){
             return Storage::global();
         }
     }

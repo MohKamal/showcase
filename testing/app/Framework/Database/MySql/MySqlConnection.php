@@ -2,11 +2,12 @@
 namespace  Showcase\Framework\Database\MySql {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\Database\Interfaces\DatabaseConnection;
 
     /**
      * MySql connnection
      */
-    class MySqlConnection {
+    class MySqlConnection implements DatabaseConnection {
         /**
          * PDO instance
          * @var type 

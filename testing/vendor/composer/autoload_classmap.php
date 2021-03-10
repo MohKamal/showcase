@@ -8,11 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Showcase\\Controllers\\HomeController' => $baseDir . '/app/Controllers/HomeController.php',
-    'Showcase\\Controllers\\LoginController' => $baseDir . '/app/Controllers/LoginController.php',
-    'Showcase\\Controllers\\RegisterController' => $baseDir . '/app/Controllers/RegisterController.php',
-    'Showcase\\Controllers\\UserController' => $baseDir . '/app/Controllers/UserController.php',
-    'Showcase\\Database\\Migrations\\Unit' => $baseDir . '/app/Database/Migrations/Unit.php',
-    'Showcase\\Database\\Migrations\\User' => $baseDir . '/app/Database/Migrations/User.php',
     'Showcase\\Framework\\Command\\Cmd' => $baseDir . '/app/Framework/Command/Cmd.php',
     'Showcase\\Framework\\Core\\Showcase' => $baseDir . '/app/Framework/Core/Showcase.php',
     'Showcase\\Framework\\Database\\Config\\Column' => $baseDir . '/app/Framework/Database/Config/Column.php',
@@ -42,7 +37,4 @@ return array(
     'Showcase\\Framework\\Utils\\Utilities' => $baseDir . '/app/Framework/Utils/Utilities.php',
     'Showcase\\Framework\\Validation\\Validator' => $baseDir . '/app/Framework/Validation/Validator.php',
     'Showcase\\Framework\\Views\\View' => $baseDir . '/app/Framework/Views/View.php',
-    'Showcase\\JsonResources\\UserResource' => $baseDir . '/app/JsonResources/UserResource.php',
-    'Showcase\\Models\\Unit' => $baseDir . '/app/Models/Unit.php',
-    'Showcase\\Models\\User' => $baseDir . '/app/Models/User.php',
 );

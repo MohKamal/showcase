@@ -26,6 +26,12 @@ namespace  Showcase\Framework\Database\Models {
         protected $db;
 
         /**
+         * Don't search for those vars in database
+         * @var array
+         */
+        public $variables = array();
+
+        /**
          * Create a property from the migration
          */
         private function createProperty($name, $value){
@@ -36,7 +42,7 @@ namespace  Showcase\Framework\Database\Models {
          * Init the model and create all properties
          */
         public function __construct(){
-            $file = Storage::migration()->path($this->migration . '.php');
+            $file = Storage::migrations()->path($this->migration . '.php');
             if($file !== false)
             {
                 require_once $file;
@@ -73,7 +79,7 @@ namespace  Showcase\Framework\Database\Models {
          * @return string table name
          */
         public function tableName(){
-            $file = Storage::migration()->path($this->migration . '.php');
+            $file = Storage::migrations()->path($this->migration . '.php');
             if($file !== false)
             {
                 require_once $file;
@@ -138,20 +144,30 @@ namespace  Showcase\Framework\Database\Models {
                     $this->created_at = date("Y-m-d H:i:s");
                     $this->updated_at = date("Y-m-d H:i:s");
                 }
-                if (array_key_exists("deleted_at", $class_vars))
-                    $this->active = true;
+                if (array_key_exists("deleted_at", $class_vars)) {
+                    $this->active = 1;
+                    $this->deleted_at = null;
+                }
 
                 $class_vars = get_object_vars($this);
                 unset($class_vars['migration']);
                 unset($class_vars['idDetails']);
                 unset($class_vars['db']);
-                $this->{$this->idDetails["name"]} = DB::model($this->className())->insert($class_vars)->run();
+                foreach($this->variables as $variable)
+                    unset($class_vars[$variable]);
+                unset($class_vars['variables']);
+
+                $this->{$this->idDetails["name"]} = DB::factory()->model($this->className())->insert($class_vars)->run();
             }else{
                 $this->updated_at = date("Y-m-d H:i:s");
                 unset($class_vars['migration']);
                 unset($class_vars['idDetails']);
                 unset($class_vars['db']);
-                DB::model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
+                foreach($this->variables as $variable)
+                    unset($class_vars[$variable]);
+                unset($class_vars['variables']);
+
+                DB::factory()->model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
             }
             return $this;
         }
@@ -169,10 +185,14 @@ namespace  Showcase\Framework\Database\Models {
                 unset($class_vars['migration']);
                 unset($class_vars['idDetails']);
                 unset($class_vars['db']);
-                return DB::model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
+                foreach($this->variables as $variable)
+                    unset($class_vars[$variable]);
+                unset($class_vars['variables']);
+                    
+                return DB::factory()->model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
             }
             else
-                return DB::model($this->className())->delete()->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
+                return DB::factory()->model($this->className())->delete()->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
         }
 
         /**

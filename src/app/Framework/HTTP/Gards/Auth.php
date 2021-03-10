@@ -36,7 +36,7 @@ namespace  Showcase\Framework\HTTP\Gards{
                 return false;
             }
 
-            $user = DB::model('User')->select()->where(self::$login_column, $email)->first();
+            $user = DB::factory()->model('User')->select()->where(self::$login_column, $email)->first();
 
             if ($user == null) {
                 Log::print("Auth: No user was found with email " . $email);
@@ -49,7 +49,7 @@ namespace  Showcase\Framework\HTTP\Gards{
                 Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
                 if($remember){
                     $token = self::generateRandomString(36);
-                    DB::table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
+                    DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
                     Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
                     Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
                 }
@@ -72,7 +72,7 @@ namespace  Showcase\Framework\HTTP\Gards{
                 return false;
             }
 
-            $user = DB::model('User')->select()->where('email', $email)->first();
+            $user = DB::factory()->model('User')->select()->where('email', $email)->first();
 
             if ($user == null) {
                 Log::print("Auth: No user was found with email " . $email);
@@ -85,7 +85,7 @@ namespace  Showcase\Framework\HTTP\Gards{
 
             if($remember){
                 $token = self::generateRandomString(36);
-                DB::table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
+                DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
                 Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
                 Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
             }
@@ -105,7 +105,7 @@ namespace  Showcase\Framework\HTTP\Gards{
                 return false;
             }
 
-            $user = DB::model('User')->select()->where('id', $id)->first();
+            $user = DB::factory()->model('User')->select()->where('id', $id)->first();
 
             if ($user == null) {
                 Log::print("Auth: No user was found with id " . $id);
@@ -118,7 +118,7 @@ namespace  Showcase\Framework\HTTP\Gards{
 
             if($remember){
                 $token = self::generateRandomString(36);
-                DB::table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
+                DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
                 Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
                 Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
             }
@@ -133,7 +133,7 @@ namespace  Showcase\Framework\HTTP\Gards{
          */
         public static function logout(){
             if(self::check()){
-                DB::table('remembers')->delete()->where('user_id', Cookie::retrieve('ses_user_id'))->run();
+                DB::factory()->table('remembers')->delete()->where('user_id', Cookie::retrieve('ses_user_id'))->run();
                 Cookie::clear('ses_user_id');
                 Cookie::clear('ses_user_email');
                 Cookie::clear('ses_user_name');
@@ -183,7 +183,7 @@ namespace  Showcase\Framework\HTTP\Gards{
          */
         public static function user(){
             if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
-                $user = DB::model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
+                $user = DB::factory()->model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
                 if (!is_null($user)) {
                     return $user;
                 }
@@ -197,7 +197,7 @@ namespace  Showcase\Framework\HTTP\Gards{
          */
         public static function username($col='email'){
             if(self::check()){
-                $user = DB::model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
+                $user = DB::factory()->model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
                 if($user != null)
                     return $user->$col;
             }
@@ -210,7 +210,7 @@ namespace  Showcase\Framework\HTTP\Gards{
         public static function checkRemember(){
             if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
                 if (!empty(Cookie::retrieve('ses_user_token')) && !is_null(Cookie::retrieve('ses_user_token'))) {
-                    $token = DB::table('remembers')->select()->where('user_id', Cookie::retrieve('ses_user_id'))->where('token', Cookie::retrieve('ses_user_token'))->first();
+                    $token = DB::factory()->table('remembers')->select()->where('user_id', Cookie::retrieve('ses_user_id'))->where('token', Cookie::retrieve('ses_user_token'))->first();
                     if(!empty($token) && !is_null($token)){
                         Cookie::clear('ses_user_id');
                         Cookie::clear('ses_user_token');

@@ -207,7 +207,7 @@ namespace  Showcase\Framework\Command{
             $migration_remember = $config_folder . 'Migration/rememberMe.php';
             $base_dir = dirname(__FILE__) . '/../../Database/Migrations/';
             $migration_user_newFolder = $base_dir . 'User.php';
-            $migration_user_newFolder = $base_dir . 'rememberMe.php';
+            $migration_remember_newFolder = $base_dir . 'rememberMe.php';
             if (!file_exists($base_dir)) {
                 mkdir($base_dir, 0777, true);
             }
@@ -217,7 +217,7 @@ namespace  Showcase\Framework\Command{
                 return false;
             }            
             
-            if(!copy($migration_remember, $migration_user_newFolder)){
+            if(!copy($migration_remember, $migration_remember_newFolder)){
                 Log::console("Can't create rememberMe migration", 'error');
                 return false;
             }
@@ -271,14 +271,14 @@ namespace  Showcase\Framework\Command{
             $registerView = $config_folder . 'View/register.view.php';
             $mainView = $config_folder . 'View/main.view.php';
 
-            $base_dir = dirname(__FILE__) . '/../../../Views/Auth/';
+            $base_dir = dirname(__FILE__) . '/../../../resources/views/Auth/';
             if (!file_exists($base_dir)) {
                 mkdir($base_dir, 0777, true);
             }
 
             $loginView_newFolder = $base_dir . 'login.view.php';
             $registerView_newFolder = $base_dir . 'register.view.php';
-            $mainView_newFolder = dirname(__FILE__) . '/../../../Views/App/' . 'main.view.php';
+            $mainView_newFolder = dirname(__FILE__) . '/../../../resources/views/App/' . 'main.view.php';
 
             if(!copy($loginView, $loginView_newFolder)){
                 Log::console("Can't create views", 'error');

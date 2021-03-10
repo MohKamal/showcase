@@ -251,7 +251,7 @@ static function Index(){
 * Redirect to contact
 */
 static function Index(){
-    $data = DB::model('User')->select()->where('active', 1)->get();
+    $data = DB::factory()->model('User')->select()->where('active', 1)->get();
 
     return self::response()->json($data, 200);
 }
@@ -316,7 +316,7 @@ use \Showcase\JsonResources\UserResource;
 
 class HomeController extends BaseController{
     static function Index(){
-        $user = DB::model('User')->select()->where('id', 5)->first();
+        $user = DB::factory()->model('User')->select()->where('id', 5)->first();
         return self::response()->json(new UserResource($user));
     }
 }
@@ -339,7 +339,7 @@ use \Showcase\JsonResources\UserResource;
 
 class HomeController extends BaseController{
     static function Index(){
-        $user = DB::model('User')->select()->where('id', 5)->first();
+        $user = DB::factory()->model('User')->select()->where('id', 5)->first();
         $json = new UserResource($user);
         return self::response()->json($json->withoutKeys());
     }
@@ -364,7 +364,7 @@ use \Showcase\JsonResources\UserResource;
 
 class HomeController extends BaseController{
     static function Index(){
-        $users = DB::model('User')->select()->limit(15)->get();
+        $users = DB::factory()->model('User')->select()->limit(15)->get();
         return self::response()->json(UserResource::array($users));
     }
 }
@@ -404,7 +404,7 @@ class HomeController extends BaseController{
 
 class HomeController extends BaseController{
     static function Index(){
-        $users = DB::model('User')->select()->limit(15)->get();
+        $users = DB::factory()->model('User')->select()->limit(15)->get();
         return self::response()->json(UserResource::array($users, false));
     }
 }
@@ -598,7 +598,7 @@ $model->save();
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
 use \Showcase\Framework\Database\DB;
-$model = DB::model('Model')->select()->where('id', 5)->first();
+$model = DB::factory()->model('Model')->select()->where('id', 5)->first();
 $model->param = "new value";
 $model->save();
                         </code></pre>
@@ -608,7 +608,7 @@ $model->save();
                         <p>To delete model, use the delete function :</p> 
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$model = DB::model('Model')->select()->where('id', 5)->first();
+$model = DB::factory()->model('Model')->select()->where('id', 5)->first();
 $model->delete();
                         </code></pre>
                         </div><!--//docs-code-block-->  
@@ -618,7 +618,7 @@ $model->delete();
                         <p>To get one model from database by any columns/properties you need, use where function:</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$model = DB::model('Model')->select()->where('column', $value)->first();
+$model = DB::factory()->model('Model')->select()->where('column', $value)->first();
 Log::print($model->paramName);
                         </code></pre>
                         </div><!--//docs-code-block--> 
@@ -626,7 +626,7 @@ Log::print($model->paramName);
                         <p>To get array of models, you gonna use the static function toList() :</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$models = DB::model('Model')->select()->where('column', $value)->get();
+$models = DB::factory()->model('Model')->select()->where('column', $value)->get();
 Log::print($models[0]->paramName);
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -634,7 +634,7 @@ Log::print($models[0]->paramName);
                         <p>To get array of models, with one, or more conditions, you gonna use the static function toList() :</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$models = DB::model('Model')->select()->where('column', $value)->withTrash()->get();
+$models = DB::factory()->model('Model')->select()->where('column', $value)->withTrash()->get();
 Log::print($models[0]->paramName);
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -668,7 +668,7 @@ class HomeController extends BaseController{
 use \Showcase\Framework\Database\DB;
 use \Showcase\Framework\IO\Debug\Log;
 
-$users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+$users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
 foreach($users as $user)
     Log::print($user->email . " | " . $user->username);
                         </code></pre>
@@ -676,14 +676,14 @@ foreach($users as $user)
                         <p>To select from a table, use table function, and give the table name</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$users = DB::table('users')->select()->where('email', '%@gmail%', 'LIKE')->get();
+$users = DB::factory()->model('users')->select()->where('email', '%@gmail%', 'LIKE')->get();
                         </code></pre>
                         </div><!--//docs-code-block-->
                         <p>This will return an array of data.</p>
                         <p>To get an array of object for a model, use the model function, and give the model Name</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+$users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
                         </code></pre>
                         </div><!--//docs-code-block-->
                     <div class="callout-block callout-block-info">
@@ -933,6 +933,19 @@ static function store($request){
                         <h4>Extend</h4>
                         <p>Extend is used to call a layout page. for example, you have same nav and footer, so you create a page with nav and footer and html structure and you call it main.view.php</p>
                         <p>Every page you call gonna extend from the main view</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="html hljs">
+&lt;!-- Extend from main index --&gt;
+@&#8203;extend("App/main")
+&lt;div class="container"&gt;
+&lt;/div&gt;
+
+&lt;!-- main --&gt;
+&lt;body&gt;
+    @&#8203;render()
+&lt;/body&gt;
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                         <div class="callout-block callout-block-info">
                             
                             <div class="content">

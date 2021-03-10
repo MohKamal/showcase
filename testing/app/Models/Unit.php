@@ -11,8 +11,9 @@ namespace Showcase\Models{
         public function __construct(){
             $this->migration = 'Unit';
             BaseModel::__construct();
+            $this->variables = ['category'];
         }
-
+        public $category = "Test";
     }
 
 }

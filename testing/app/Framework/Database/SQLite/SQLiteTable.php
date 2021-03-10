@@ -2,11 +2,12 @@
 namespace  Showcase\Framework\Database\SQLite {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\Database\Interfaces\DatabaseAdapter;
 
     /**
      * Create tables to database
      */
-    class SQLiteTable {
+    class SQLiteTable implements DatabaseAdapter {
 
         /**
          * PDO object

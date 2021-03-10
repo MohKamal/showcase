@@ -2,11 +2,12 @@
 namespace  Showcase\Framework\Database\SQLite {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\Database\Interfaces\DatabaseConnection;
 
     /**
      * SQLite connnection
      */
-    class SQLiteConnection {
+    class SQLiteConnection implements DatabaseConnection {
         /**
          * PDO instance
          * @var type 

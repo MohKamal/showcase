@@ -175,7 +175,7 @@ namespace  Showcase\Framework\Database\Config {
             $this->clean();
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
-                case 'slqlite':
+                case 'sqlite':
                     array_push($this->options, 'INTEGER');
                     $this->PHP_autoIncrement = true;
                 break;
