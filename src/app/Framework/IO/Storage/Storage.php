@@ -7,9 +7,8 @@ namespace  Showcase\Framework\IO\Storage{
     /**
      * Manage the files storage
      */
-    class Storage{
+    class Storage {
 
-        private static $_instance = null;
         private $_currentFolder;
         private $_rootFolder;
         private $_onlyFolder;
@@ -25,19 +24,19 @@ namespace  Showcase\Framework\IO\Storage{
             if(empty($name))
                 return null;
 
-            self::$_instance = new self;
-            self::$_instance->_rootFolder = dirname(__FILE__) . '/../../../../storage/';
+            $_instance = new self;
+            $_instance->_rootFolder = dirname(__FILE__) . '/../../../../storage/';
 
             //create folder if no exist
-            $folder = self::$_instance->_rootFolder . $name . '/';
+            $folder = $_instance->_rootFolder . $name . '/';
             if (!file_exists($folder)) {
                 if(!mkdir($folder, 0777, true))
                     return null;
             }
-            self::$_instance->_currentFolder = $folder;
-            self::$_instance->_onlyFolder = $name;
-            self::$_instance->_folder_type = 0;
-            return self::$_instance;
+            $_instance->_currentFolder = $folder;
+            $_instance->_onlyFolder = $name;
+            $_instance->_folder_type = 0;
+            return $_instance;
         }
 
         /**
@@ -50,19 +49,19 @@ namespace  Showcase\Framework\IO\Storage{
             if(empty($name))
                 return null;
 
-            self::$_instance = new self;
-            self::$_instance->_rootFolder = dirname(__FILE__) . '/../../../../resources/';
+            $_instance = new self;
+            $_instance->_rootFolder = dirname(__FILE__) . '/../../../../resources/';
 
             //create folder if no exist
-            $folder = self::$_instance->_rootFolder . $name . '/';
+            $folder = $_instance->_rootFolder . $name . '/';
             if (!file_exists($folder)) {
                 if(!mkdir($folder, 0777, true))
                     return null;
             }
-            self::$_instance->_currentFolder = $folder;
-            self::$_instance->_onlyFolder = $name;
-            self::$_instance->_folder_type = 1;
-            return self::$_instance;
+            $_instance->_currentFolder = $folder;
+            $_instance->_onlyFolder = $name;
+            $_instance->_folder_type = 1;
+            return $_instance;
         }
 
         /**
@@ -72,19 +71,19 @@ namespace  Showcase\Framework\IO\Storage{
          * @return \Showcase\Framework\Storage\Storage object
          */
         public static function views($name=''){
-            self::$_instance = new self;
-            self::$_instance->_rootFolder = dirname(__FILE__) . '/../../../../resources/views';
+            $_instance = new self;
+            $_instance->_rootFolder = dirname(__FILE__) . '/../../../../resources/views';
 
             //create folder if no exist
-            $folder = self::$_instance->_rootFolder . $name;
+            $folder = $_instance->_rootFolder . $name;
             if (!file_exists($folder)) {
                 if(!mkdir($folder, 0777, true))
                     return null;
             }
-            self::$_instance->_currentFolder = $folder;
-            self::$_instance->_onlyFolder = $name;
-            self::$_instance->_folder_type = 3;
-            return self::$_instance;
+            $_instance->_currentFolder = $folder;
+            $_instance->_onlyFolder = $name;
+            $_instance->_folder_type = 3;
+            return $_instance;
         }
 
         /**
@@ -94,19 +93,19 @@ namespace  Showcase\Framework\IO\Storage{
          * @return \Showcase\Framework\Storage\Storage object
          */
         public static function migrations($name=''){
-            self::$_instance = new self;
-            self::$_instance->_rootFolder = dirname(__FILE__) . '/../../../Database/Migrations';
+            $_instance = new self;
+            $_instance->_rootFolder = dirname(__FILE__) . '/../../../Database/Migrations';
 
             //create folder if no exist
-            $folder = self::$_instance->_rootFolder . $name;
+            $folder = $_instance->_rootFolder . $name;
             if (!file_exists($folder)) {
                 if(!mkdir($folder, 0777, true))
                     return null;
             }
-            self::$_instance->_currentFolder = $folder;
-            self::$_instance->_onlyFolder = $name;
-            self::$_instance->_folder_type = 4;
-            return self::$_instance;
+            $_instance->_currentFolder = $folder;
+            $_instance->_onlyFolder = $name;
+            $_instance->_folder_type = 4;
+            return $_instance;
         }
 
         /**
@@ -116,12 +115,12 @@ namespace  Showcase\Framework\IO\Storage{
          * @return \Showcase\Framework\Storage\Storage object
          */
         public static function global(){
-            self::$_instance = new self;
-            self::$_instance->_rootFolder = dirname(__FILE__) . '/../../../../';
-            self::$_instance->_currentFolder = self::$_instance->_rootFolder;
-            self::$_instance->_folder_type = 2;
+            $_instance = new self;
+            $_instance->_rootFolder = dirname(__FILE__) . '/../../../../';
+            $_instance->_currentFolder = $_instance->_rootFolder;
+            $_instance->_folder_type = 2;
 
-            return self::$_instance;
+            return $_instance;
         }
 
         /**
@@ -132,9 +131,9 @@ namespace  Showcase\Framework\IO\Storage{
          * @return boolean
          */
         public function put($filename, $content){
-            if(empty($filename) || empty($content) || is_null(self::$_instance))
+            if(empty($filename) || empty($content))
                 return null;
-            $file = self::$_instance->_currentFolder . $filename;
+            $file = $this->_currentFolder . $filename;
             if(!file_put_contents($file, $content))
                 return false;
             return true;
@@ -148,9 +147,9 @@ namespace  Showcase\Framework\IO\Storage{
          * @return boolean
          */
         public function append($filename, $content) {
-            if(empty($filename) || empty($content) || is_null(self::$_instance))
+            if(empty($filename) || empty($content))
                 return null;
-            $file = self::$_instance->_currentFolder . $filename;
+            $file = $this->_currentFolder . $filename;
             if(!file_put_contents($file, $content, FILE_APPEND))
                 return false;
             return true;
@@ -163,13 +162,13 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function get($filename){
-            if(empty($filename) || is_null(self::$_instance))
+            if(empty($filename))
                 return null;
 
-            if(!file_exists(self::$_instance->_currentFolder . $filename))
+            if(!file_exists($this->_currentFolder . $filename))
                 return false;
             
-            return file_get_contents(self::$_instance->_currentFolder . $filename);
+            return file_get_contents($this->_currentFolder . $filename);
         }
 
         /**
@@ -179,9 +178,9 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function exists($filename){
-            if(empty($filename) || is_null(self::$_instance))
+            if(empty($filename))
                 return null;
-            return file_exists(self::$_instance->_currentFolder . $filename);
+            return file_exists($this->_currentFolder . $filename);
         }
 
         /**
@@ -191,9 +190,9 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function download($filename){
-            if(empty($filename) || is_null(self::$_instance))
+            if(empty($filename))
                 return null;
-            $file = self::$_instance->_currentFolder . $filename;
+            $file = $this->_currentFolder . $filename;
             if (file_exists($file)) {
                 while (ob_get_level()) {
                     ob_end_clean();
@@ -220,12 +219,12 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function copy($filename, $newname){
-            if(empty($filename) || empty($newname) || is_null(self::$_instance))
+            if(empty($filename) || empty($newname))
                 return null;
-            $file = self::$_instance->_rootFolder . $filename;
+            $file = $this->_rootFolder . $filename;
             if(!file_exists($file))
                 return false;
-            $new = self::$_instance->_currentFolder . $newname;
+            $new = $this->_currentFolder . $newname;
             return copy($file, $new);
         }
 
@@ -237,12 +236,12 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function move($filename, $newname){
-            if(empty($filename) || empty($newname) || is_null(self::$_instance))
+            if(empty($filename) || empty($newname))
                 return null;
-            $file =self::$_instance->_rootFolder . $filename;
+            $file = $this->_rootFolder . $filename;
             if(!file_exists($file))
                 return false;
-            $new = self::$_instance->_currentFolder . $newname;
+            $new = $this->_currentFolder . $newname;
             return rename($file, $new);
         }
 
@@ -254,9 +253,9 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function remove($filename){
-            if(empty($filename) || is_null(self::$_instance))
+            if(empty($filename))
                 return null;
-            $file = self::$_instance->_currentFolder . $filename;
+            $file = $this->_currentFolder . $filename;
             if(!file_exists($file))
                 return false;
             unlink($file);
@@ -269,12 +268,12 @@ namespace  Showcase\Framework\IO\Storage{
          * 
          * @return mixed
          */
-        public function url($filename){
-            if(empty($filename) || is_null(self::$_instance))
+        public function url($filename) {
+            if(empty($filename))
                 return null;
 
-            $currentFile = self::$_instance->_currentFolder . $filename;
-            $toFile = self::$_instance->_rootFolder . "downloads/" . basename($filename);
+            $currentFile = $this->_currentFolder . $filename;
+            $toFile = $this->_rootFolder . "downloads/" . basename($filename);
 
             if(!file_exists($currentFile))
                 return false;
@@ -299,19 +298,19 @@ namespace  Showcase\Framework\IO\Storage{
          * 
          * @return mixed
          */
-        public function path($filename, $verify=true){
-            if(empty($filename) || is_null(self::$_instance))
+        public function path($filename, $verify=true) {
+            if(empty($filename))
                 return null;
-            $subfoler = "Storage";
-            if(self::$_instance->_folder_type == 1)
+            $subfoler = "storage";
+            if($this->_folder_type == 1)
                 $subfoler = "resources";
-            if(self::$_instance->_folder_type == 2)
+            if($this->_folder_type == 2)
                 $subfoler = "";
-            if(self::$_instance->_folder_type == 3)
+            if($this->_folder_type == 3)
                 $subfoler = "resources/views";
-            if(self::$_instance->_folder_type == 4)
+            if($this->_folder_type == 4)
                 $subfoler = "app/Database/Migrations";
-            $file = __DIR__ . "/../../../../$subfoler/" . self::$_instance->_onlyFolder . "/" . $filename;
+            $file = __DIR__ . "/../../../../$subfoler/" . $this->_onlyFolder . "/" . $filename;
             if ($verify) {
                 if (!file_exists($file)) {
                     return false;
