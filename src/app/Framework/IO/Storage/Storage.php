@@ -324,7 +324,7 @@ namespace  Showcase\Framework\IO\Storage{
          * 
          * @return array of files
          */
-        public function scan() {
+        public function scandir() {
             $subfoler = "storage";
             if($this->_folder_type == 1)
                 $subfoler = "resources";
