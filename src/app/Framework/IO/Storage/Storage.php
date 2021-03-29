@@ -318,5 +318,20 @@ namespace  Showcase\Framework\IO\Storage{
             }
             return $file;
         }
+        
+        /**
+         * Scan a folder and get all the files
+         * 
+         * @return array of files
+         */
+        public function scan() {
+            $subfoler = "storage";
+            if($this->_folder_type == 1)
+                $subfoler = "resources";
+            if($this->_folder_type == 2)
+                $subfoler = "";
+            $dir = __DIR__ . "/../../../$subfoler/" . $this->_onlyFolder;
+            return scandir($dir);
+        }
     }
 }
