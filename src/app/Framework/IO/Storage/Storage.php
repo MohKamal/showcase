@@ -330,7 +330,7 @@ namespace  Showcase\Framework\IO\Storage{
                 $subfoler = "resources";
             if($this->_folder_type == 2)
                 $subfoler = "";
-            $dir = __DIR__ . "/../../../$subfoler/" . $this->_onlyFolder;
+            $dir = __DIR__ . "/../../../../$subfoler/" . $this->_onlyFolder;
             return scandir($dir);
         }
     }
