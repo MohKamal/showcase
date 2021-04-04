@@ -114,12 +114,19 @@ namespace  Showcase\Framework\IO\Storage{
          * 
          * @return \Showcase\Framework\Storage\Storage object
          */
-        public static function global(){
+        public static function global($name='') {
             $_instance = new self;
             $_instance->_rootFolder = dirname(__FILE__) . '/../../../../';
-            $_instance->_currentFolder = $_instance->_rootFolder;
-            $_instance->_folder_type = 2;
 
+            //create folder if no exist
+            $folder = $_instance->_rootFolder . $name;
+            if (!file_exists($folder)) {
+                if(!mkdir($folder, 0777, true))
+                    return null;
+            }
+            $_instance->_currentFolder = $folder;
+            $_instance->_onlyFolder = $name;
+            $_instance->_folder_type = 2;
             return $_instance;
         }
 
@@ -301,16 +308,7 @@ namespace  Showcase\Framework\IO\Storage{
         public function path($filename, $verify=true) {
             if(empty($filename))
                 return null;
-            $subfoler = "storage";
-            if($this->_folder_type == 1)
-                $subfoler = "resources";
-            if($this->_folder_type == 2)
-                $subfoler = "";
-            if($this->_folder_type == 3)
-                $subfoler = "resources/views";
-            if($this->_folder_type == 4)
-                $subfoler = "app/Database/Migrations";
-            $file = __DIR__ . "/../../../../$subfoler/" . $this->_onlyFolder . "/" . $filename;
+            $file = $this->_currentFolder . "/$filename";
             if ($verify) {
                 if (!file_exists($file)) {
                     return false;
@@ -325,12 +323,7 @@ namespace  Showcase\Framework\IO\Storage{
          * @return array of files
          */
         public function scandir() {
-            $subfoler = "storage";
-            if($this->_folder_type == 1)
-                $subfoler = "resources";
-            if($this->_folder_type == 2)
-                $subfoler = "";
-            $dir = __DIR__ . "/../../../../$subfoler/" . $this->_onlyFolder;
+            $dir = $this->_currentFolder;
             return scandir($dir);
         }
     }
