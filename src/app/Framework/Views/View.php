@@ -500,7 +500,8 @@ namespace Showcase\Framework\Views {
                 return '';
 
             if(!is_array($vars))
-                return '';
+                $use_key = true;
+                
             $string = '';
             foreach ($vars as $key => $value) {
                     if (is_numeric($value)) {
