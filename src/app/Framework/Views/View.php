@@ -485,8 +485,14 @@ namespace Showcase\Framework\Views {
                     $string .= "$$key = array(" . self::arrayToStringVar($value) . ");\n";
                 elseif (is_object($value)) 
                     $string .= "$$key = " . self::objectToStringVar($value) . ";\n";
-                else
-                    $string .= "$$key = " . "'" . str_replace("'", "\'", $value) . "';\n";
+                else{
+                    if(is_bool($value))
+                        $string .= "$$key = " . ($value == true ? 'true' : 'false') . ";\n";
+                    else if(is_numeric($value))
+                        $string .= "$$key = " . $value . ";\n";
+                    else
+                        $string .= "$$key = '" . str_replace("'", "\'", $value) . "';\n";
+                }
             }
             return $string;
         }
