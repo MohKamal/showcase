@@ -482,11 +482,11 @@ namespace Showcase\Framework\Views {
             $string = '';
             foreach($vars as $key => $value){
                 if(is_array($value))
-                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
+                    $string .= "$$key = array(" . self::arrayToStringVar($value) . ");\n";
                 elseif (is_object($value)) 
-                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
+                    $string .= "$$key = " . self::objectToStringVar($value) . ";\n";
                 else
-                    $string .= "$$key=" . "'" . str_replace("'", "\'", $value) . "';\n";
+                    $string .= "$$key = " . "'" . str_replace("'", "\'", $value) . "';\n";
             }
             return $string;
         }
@@ -501,7 +501,6 @@ namespace Showcase\Framework\Views {
 
             if(!is_array($vars))
                 $use_key = true;
-                
             $string = '';
             foreach ($vars as $key => $value) {
                     if (is_numeric($value)) {
@@ -528,6 +527,15 @@ namespace Showcase\Framework\Views {
             }
             
             return substr($string, 0, -1);
+        }
+
+        /***
+         * If the user send an object inside the variables sent to the view
+         * this function convert it to string
+         */
+        static function objectToStringVar($var){
+            $reflect = new \ReflectionClass($var);
+            return "DB::model('" . $reflect->getShortName() . "')->select()->where('" . $var->getIdName() . "', '" . $var->{$var->getIdName()} ."')->first()";
         }
     }
 }
