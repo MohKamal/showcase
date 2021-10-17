@@ -541,7 +541,6 @@ namespace Showcase\Framework\Views {
          * this function convert it to string
          */
         static function objectToStringVar($var){
-            var_dump(self::get_namespace($var));
             if (self::is_in_namespace("Showcase\Models", $var)) {
                 $reflect = new \ReflectionClass($var);
                 return "DB::model('" . $reflect->getShortName() . "')->select()->where('" . $var->getIdName() . "', '" . $var->{$var->getIdName()} ."')->first()";
@@ -551,10 +550,23 @@ namespace Showcase\Framework\Views {
             }
         }
 
+        /**
+         * Check if object is from a namespace
+         * 
+         * @param string $namespace to check
+         * @param object $object
+         * @return bool
+         */
         static function is_in_namespace($namespace, $object) {
             return strpos(get_class($object), $namespace . '\\') === 0;
         }
 
+        /**
+         * Get object namespace
+         * 
+         * @param object $object
+         * @return string namespace
+         */
         function get_namespace($object) {
             $class = get_class($object);
             $pos = strrpos($class, '\\');
