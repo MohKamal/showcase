@@ -1095,6 +1095,20 @@ return self::response()->view('App/welcome', array(
 &lt;/body&gt;
                         </code></pre>
                         </div><!--//docs-code-block-->
+
+                        <div class="callout-block callout-block-info">
+                            
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-info-circle"></i>
+		                            </span><!--//icon-holder-->
+	                                Note
+	                            </h4>
+                                <p>@&#8203;display function and {&#8203;{$var}} can do the samething, you can display variables, expressions...</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
+
 					</section><!--//section-->
 					
 					<section class="docs-section" id="item-6-2">
@@ -1105,11 +1119,16 @@ return self::response()->view('App/welcome', array(
 /**
 * Return the video single page
 */
+use \Showcase\Framework\Validation\Validator;
+use \Showcase\Framework\HTTP\Gards\Auth;
+
 static function Play($request){
     if(Validator::validate($request->get(), ['id'])){
-        $url = Search::searchVideoById($request->get()['id']);
+        $url = Search::searchVideoById($request->get()['id']); // Send string
+        $currentUser = Auth::user(); // Send User Object
         return self::response()->view('App/video', array([
-            'url' => $url
+            'url' => $url,
+            'user' => $currentUser
             ]));
     }
 
