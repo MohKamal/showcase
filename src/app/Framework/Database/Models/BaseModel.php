@@ -39,6 +39,14 @@ namespace  Showcase\Framework\Database\Models {
         }
 
         /**
+         * Ge the id variable Name
+         * @return string $name
+         */
+        public function getIdName() {
+            return $this->idDetails['name'];
+        }
+
+        /**
          * Init the model and create all properties
          */
         public function __construct(){

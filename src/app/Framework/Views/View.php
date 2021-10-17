@@ -543,12 +543,13 @@ namespace Showcase\Framework\Views {
         static function objectToStringVar($var){
             if (self::is_in_namespace("Showcase\Models", $var)) {
                 $reflect = new \ReflectionClass($var);
-                return "DB::model('" . $reflect->getShortName() . "')->select()->where('" . $var->getIdName() . "', '" . $var->{$var->getIdName()} ."')->first()";
+                return "DB::factory()->model('" . $reflect->getShortName() . "')->select()->where('" . $var->getIdName() . "', '" . $var->{$var->getIdName()} ."')->first()";
             }
             else{
                 return "(object) [" . self::arrayToStringVar(json_decode(json_encode($var), true), true) . "]";
             }
         }
+
 
         /**
          * Check if object is from a namespace
