@@ -528,7 +528,8 @@ namespace Showcase\Framework\Views {
                     } elseif (is_array($value)) {
                         $string .= "[" . self::arrayToStringVar($value, true) . "],";
                     } elseif (is_object($value)) {
-                        $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
+                        // $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
+                        $string .= self::objectToStringVar($value) . ",";
                     }
             }
             
