@@ -15,13 +15,39 @@ namespace  Showcase\Framework\Validation{
          */
         public static function validate($object, array $fields){
             foreach($fields as $field){
-                if (!array_key_exists($field, $object))
-                    return false;
+                if (self::is_assoc($object)) {
+                    if (!array_key_exists($field, $object))
+                        return false;
+                }else if(self::is_list($object)){
+                    if(!in_array($field, $object))
+                        return false;
+                }
+
                 if(!self::required($object[$field]))
                     return false;
             }
 
             return true;
+        }
+
+        /**
+         * Check if array is list ['value', 'another']
+         * 
+         * @param array $array
+         * @return bool
+         */
+        static function is_list($array) {
+            return array_keys($array) === range(0, count($array) - 1);
+        }
+        
+        /**
+         * Check if the array is association ['name' => 'james', 'address' => 'some place']
+         * 
+         * @param array $array
+         * @return bool
+         */
+        static function is_assoc($array) {
+            return count(array_filter(array_keys($array), 'is_string')) == count($array);
         }
 
         /**
