@@ -789,6 +789,14 @@ if(Auth::guest())
     Log::console("Please login!!");
 else
     Log::console("User logged " . Auth:: username());
+
+// Set the authentication colum
+Auth::loginColumn('usernamme');
+
+// Set the expiring user login, default is one hour
+Auth::expiringLogin(5000);
+// or
+Auth::expiringLogin(0) // to never expire
                         </code></pre>
                         </div><!--//docs-code-block-->
                     </section><!--//section-->
