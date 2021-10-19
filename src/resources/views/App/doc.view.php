@@ -131,10 +131,11 @@
 				    </header>
 				     <section class="docs-section" id="item-3-1">
 						<h2 class="section-heading">Routes</h2>
-						<p>For now, Showcase support two methods, GET and POST.</p>
+						<p>Showcase support GET, POST, PUT and DELETE methods</p>
                         <p>To create a route, go to web file in route folder, and add new folder with method you need.</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
+// You can create anonymous function and do you thing
 $router->get('/path', function () {
     /* Code to execute */
     return $this->response()->redirect('login');
@@ -142,11 +143,43 @@ $router->get('/path', function () {
     return HomeController::Home();
 });
 
-$router->post('/path',  function ($request) {
-    return HomeController::Contact($request);
-});
+// Or call the controller directry
+$router->post('/path',  'Controllers\HomeController::store');
                         </code></pre>
 						</div><!--//docs-code-block-->
+
+                        <h4>Route parametres</h4>
+						<p>You can use parametres in the routes and directly get them on you controller functions.</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Route with parametre id : Int
+*/
+$router->get('/profil/{id}',  'Controllers\UserController::profil');
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>And now you can get this information ($id) in the function, in two formats : int or User model.</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* To get only the id as int
+* use int as type
+*/
+static function profil(int id){
+    return self::response()->view('App/main');
+}
+
+use \Showcase\Models\User;
+/**
+* To get the User Model
+* use User as type
+* And automaticaly, you gonna get the user object from database using the id in the route
+*/
+static function profil(User user){
+    return $user->email;
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
 					</section><!--//section-->
 					
 					<section class="docs-section" id="item-3-2">
