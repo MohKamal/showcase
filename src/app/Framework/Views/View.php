@@ -192,6 +192,20 @@ namespace Showcase\Framework\Views {
                     $page = str_replace($function, $result, $page);
                 }
 
+                //check for php code
+                $page = self::executeCode($page);
+                $page = self::checkVariables($page);
+                //check for foreach and for
+                $page = self::checkForLoops($page);
+                //check for if
+                $page = self::checkForConditions($page);
+                //Check for native display in html
+                $page = self::checkForDisplay($page);
+                //check for sessionAlert
+                $page = self::checkForSessionAlert($page);
+                //check for csrf
+                $page = self::checkForCSRF($page);
+
                 //Chech for include function
                 $matches = array();
                 preg_match_all('#\@include(.*?)\)#', $page, $matches);
