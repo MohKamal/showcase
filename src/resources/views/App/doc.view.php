@@ -178,8 +178,40 @@ use \Showcase\Models\User;
 static function profil(User user){
     return $user->email;
 }
+
+// To Use the Request, you need to call it
+/**
+* Route with parametre id : Int
+*/
+$router->put('/users/{id}',  'Controllers\UserController::edit');
+
+use \Showcase\Models\User;
+use \Showcase\Framework\HTTP\Routing\Request;
+
+/**
+* To get the User Model
+* use User as type
+* And automaticaly, you gonna get the user object from database using the id in the route
+* And also, you get request object
+*/
+static function profil(User user, Request $request){
+    //ToDo
+}
+
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <div class="callout-block callout-block-info">
+                            
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-info-circle"></i>
+		                            </span><!--//icon-holder-->
+	                                Note
+	                            </h4>
+                                <p>To use the $request object, you need to use the Request object<br> use \Showcase\Framework\HTTP\Routing\Request;</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
 					</section><!--//section-->
 					
 					<section class="docs-section" id="item-3-2">
