@@ -73,6 +73,8 @@ namespace Showcase\Framework\Views {
          */
         static function get($view, array $vars=array()){
             $page = self::printView($view);
+            //sections
+            $page = self::sections($page);
             //check for php code
             $page = self::executeCode($page);
             $page = self::checkVariables($page);
