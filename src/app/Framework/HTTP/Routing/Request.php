@@ -47,7 +47,7 @@ namespace  Showcase\Framework\HTTP\Routing{
                 }
                 return $body;
             }
-            if ($this->requestMethod == "POST") {
+            if ($this->requestMethod == "POST" || $this->requestMethod == "PUT" || $this->requestMethod == "DELETE") {
                 $body = array();
                 foreach ($_POST as $key => $value) {
                     if (is_array($value)) {

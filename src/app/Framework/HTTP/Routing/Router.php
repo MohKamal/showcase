@@ -124,6 +124,11 @@ namespace  Showcase\Framework\HTTP\Routing {
             }
 
             $method = $methodDictionary[$formatedRoute];
+            if(is_string($method)) {
+                $this->setMethodParametres($method);
+                echo call_user_func_array("\Showcase\\$method", array());
+                return;
+            }
             echo call_user_func_array($method, array($this->request));
         }
         
@@ -132,6 +137,88 @@ namespace  Showcase\Framework\HTTP\Routing {
             $this->resolve();
         }
 
+        /**
+         * Check if the function set to a route has any parametres and set them
+         * @param string $method path and name Controllers\HomeController::index
+         * @param array $route_with_params the user defined by the user
+         * @param array $user_parametres the parametres from the request Uri
+         * 
+         * @return bool
+         */
+        private function setMethodParametres($method, $route_with_params=[], $user_parametres=[]){
+            $reflection = new \ReflectionMethod("\Showcase\\$method");
+            $execution_params = array();
+            foreach($reflection->getParameters() AS $arg)
+            {
+                // If the param is not int or string
+                if ((string)$arg->getType() != 'int' && (string)$arg->getType() != 'string') {
+                    // if the parametre is Request
+                    if((string)$arg->getType() == 'Showcase\Framework\HTTP\Routing\Request') {
+                        echo call_user_func_array("\Showcase\\$method", array($this->request));
+                        return false;
+                    } // If not a Request, we gonna see what is it
+                    else if(strpos((string)$arg->getType(), 'Showcase\\') === 0) {
+                        // if its a model
+                        if(strpos((string)$arg->getType(), 'Showcase\Models\\') === 0) {
+                            $model_name = str_replace('Showcase\Models\\', '', (string)$arg->getType()); // get the model name like User
+                            $id = -1;
+                            $arg_name = '{' . $arg->name . '}'; // get the parameter like {id}
+                            if(in_array($arg_name, $user_parametres)){ // check if the parametre is in the route
+                                $id = $route_with_params[$arg_name];
+                            }else if(in_array("{id}", $user_parametres)){ // if not, check if the id exist
+                                $id = $route_with_params["{id}"];
+                            }
+
+                            if($id != -1) { // if there is an id we use it
+                                $class = (string)$arg->getType();
+                                $obj = new $class;
+                                $execution_params[] = DB::factory()->model($model_name)->select()->where($obj->getIdName(), $id)->first();
+                            } else {
+                                $class = (string)$arg->getType();
+                                $execution_params[] = new $class;
+                            }
+                        } else {
+                            $class = (string)$arg->getType();
+                            $execution_params[] = new $class;
+                        }
+                    }
+                } else{ // if its int or string
+                    $arg_name = '{' . $arg->name . '}'; // get the parameter like {id}
+                    if((string)$arg->getType() == 'int') {
+                        if(in_array($arg_name, $user_parametres)){
+                            if(is_numeric($route_with_params[$arg_name])){
+                                $execution_params[] = $route_with_params[$arg_name];
+                            }else {
+                                $execution_params[] = 0;
+                            }
+                        }else {
+                            $execution_params[] = 0;
+                        }
+                    }else if((string)$arg->getType() == 'string') {
+                        if(in_array($arg_name, $user_parametres)){
+                            if(is_string($route_with_params[$arg_name])){
+                                $execution_params[] = $route_with_params[$arg_name];
+                            }else {
+                                $execution_params[] = '';
+                            }
+                        }else {
+                            $execution_params[] = '';
+                        }
+                    }
+                }
+            }
+            // execute with params
+            echo call_user_func_array("\Showcase\\$method", $execution_params);
+            return true;
+        }
+
+        /**
+         * Check if the route has any parametres
+         * @param string $route from the request
+         * @param array $dictionary of the user routes
+         * 
+         * @return bool
+         */
         private function checkUrlWithParametres($route, $dictionary) {
             // Get the user routes from web.php for the method used (Get, Post...)
             $routes = array_keys($dictionary);
@@ -183,69 +270,8 @@ namespace  Showcase\Framework\HTTP\Routing {
                     $method = $dictionary[$formatRoute];
                     if(!is_string($method))
                         throw new \Exception("The callback method need to be specifyed by string, example: Controllers/Home::index");
-                    $reflection = new \ReflectionMethod("\Showcase\\$method");
-                    $execution_params = array();
-                    foreach($reflection->getParameters() AS $arg)
-                    {
-                        // If the param is not int or string
-                        if ((string)$arg->getType() != 'int' && (string)$arg->getType() != 'string') {
-                            // if the parametre is Request
-                            if((string)$arg->getType() == 'Showcase\Framework\HTTP\Routing\Request') {
-                                echo call_user_func_array("\Showcase\\$method", array($this->request));
-                            } // If not a Request, we gonna see what is it
-                            else if(strpos((string)$arg->getType(), 'Showcase\\') === 0) {
-                                // if its a model
-                                if(strpos((string)$arg->getType(), 'Showcase\Models\\') === 0) {
-                                    $model_name = str_replace('Showcase\Models\\', '', (string)$arg->getType()); // get the model name like User
-                                    $id = -1;
-                                    $arg_name = '{' . $arg->name . '}'; // get the parameter like {id}
-                                    if(in_array($arg_name, $user_parametres)){ // check if the parametre is in the route
-                                        $id = $route_with_params[$arg_name];
-                                    }else if(in_array("{id}", $user_parametres)){ // if not, check if the id exist
-                                        $id = $route_with_params["{id}"];
-                                    }
-
-                                    if($id != -1) { // if there is an id we use it
-                                        $class = (string)$arg->getType();
-                                        $obj = new $class;
-                                        $execution_params[] = DB::factory()->model($model_name)->select()->where($obj->getIdName(), $id)->first();
-                                    } else {
-                                        $class = (string)$arg->getType();
-                                        $execution_params[] = new $class;
-                                    }
-                                } else {
-                                    $class = (string)$arg->getType();
-                                    $execution_params[] = new $class;
-                                }
-                            }
-                        } else{ // if its int or string
-                            $arg_name = '{' . $arg->name . '}'; // get the parameter like {id}
-                            if((string)$arg->getType() == 'int') {
-                                if(in_array($arg_name, $user_parametres)){
-                                    if(is_numeric($route_with_params[$arg_name])){
-                                        $execution_params[] = $route_with_params[$arg_name];
-                                    }else {
-                                        $execution_params[] = 0;
-                                    }
-                                }else {
-                                    $execution_params[] = 0;
-                                }
-                            }else if((string)$arg->getType() == 'string') {
-                                if(in_array($arg_name, $user_parametres)){
-                                    if(is_string($route_with_params[$arg_name])){
-                                        $execution_params[] = $route_with_params[$arg_name];
-                                    }else {
-                                        $execution_params[] = '';
-                                    }
-                                }else {
-                                    $execution_params[] = '';
-                                }
-                            }
-                        }
-                    }
-                    // execute with params
-                    echo call_user_func_array("\Showcase\\$method", $execution_params);
-                    return true;
+                    
+                    return $this->setMethodParametres($method, $route_with_params, $user_parametres);
                 }
             }
             return false;
