@@ -151,7 +151,7 @@ namespace  Showcase\Framework\HTTP\Routing {
             foreach($reflection->getParameters() AS $arg)
             {
                 // If the param is not int or string
-                if ((string)$arg->getType() != 'int' && (string)$arg->getType() != 'string') {
+                if ((string)$arg->getType() != 'int' && (string)$arg->getType() != 'string' && (string)$arg->getType() != "") {
                     // if the parametre is Request
                     if((string)$arg->getType() == 'Showcase\Framework\HTTP\Routing\Request') {
                         echo call_user_func_array("\Showcase\\$method", array($this->request));
@@ -199,6 +199,18 @@ namespace  Showcase\Framework\HTTP\Routing {
                             if(is_string($route_with_params[$arg_name])){
                                 $execution_params[] = $route_with_params[$arg_name];
                             }else {
+                                $execution_params[] = '';
+                            }
+                        }else {
+                            $execution_params[] = '';
+                        }
+                    } else {
+                        if(in_array($arg_name, $user_parametres)){
+                            if (is_string($route_with_params[$arg_name])) {
+                                $execution_params[] = $route_with_params[$arg_name];
+                            } else if(is_numeric($route_with_params[$arg_name])){
+                                $execution_params[] = $route_with_params[$arg_name];
+                            } else {
                                 $execution_params[] = '';
                             }
                         }else {
@@ -254,24 +266,27 @@ namespace  Showcase\Framework\HTTP\Routing {
                 }
                 // if the route is not empty we saved
                 if(count($final_route) > 0 && !empty($final_route))
-                    $route_with_params = $final_route;
+                    $route_with_params[] = $final_route;
             }
 
             // check again if the route is not empty
             if (count($route_with_params) > 0 && !empty($route_with_params)) {
                 // formate the route to its original form
-                $formatRoute = '';
-                foreach($route_with_params as $key => $value)
-                    $formatRoute .= "/$key";
-                $user_parametres = array_keys($route_with_params);
-                // Check if the formated route exist in the user web.php
-                if (array_key_exists($formatRoute, $dictionary)) {
-                    // get the method
-                    $method = $dictionary[$formatRoute];
-                    if(!is_string($method))
-                        throw new \Exception("The callback method need to be specifyed by string, example: Controllers/Home::index");
-                    
-                    return $this->setMethodParametres($method, $route_with_params, $user_parametres);
+                foreach ($route_with_params as $_route) {
+                    $formatRoute = '';
+                    foreach ($_route as $key => $value) {
+                        $formatRoute .= "/$key";
+                    }
+                    $user_parametres = array_keys($route_with_params);
+                    // Check if the formated route exist in the user web.php
+                    if (array_key_exists($formatRoute, $dictionary)) {
+                        // get the method
+                        $method = $dictionary[$formatRoute];
+                        if(!is_string($method))
+                                throw new \Exception("The callback method need to be specifyed by string, example: Controllers/Home::index");
+                            
+                        return $this->setMethodParametres($method, $_route, $user_parametres);
+                    }
                 }
             }
             return false;
