@@ -68,6 +68,8 @@ namespace  Showcase\Framework\Command{
                     case 'auth':
                         $this->auth();
                         break;
+                    case 'serve':
+                        $this->serve();
                 }
             }
 
@@ -194,6 +196,19 @@ namespace  Showcase\Framework\Command{
                 }
             }
             Log::console('Migration ended!', 'success');
+        }
+
+        /**
+         * Start server
+         */
+        public function serve(){
+            $output=null;
+            $retval=null;
+            $olddir = getcwd();
+            Log::console("Prepare to run local server...\n", 'info');
+            chdir('./public');  //change to new dir
+            Log::console("server run's on http://localhost:8000", 'success');
+            exec('php -S localhost:8000', $output, $retval);
         }
 
         /**
