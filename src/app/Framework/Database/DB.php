@@ -269,7 +269,7 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function where($column, $value, $condition="="){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($column) || empty($value))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($column))
                 return null;
 
             if(!strpos($this->_query, "WHERE"))
@@ -279,11 +279,13 @@ namespace  Showcase\Framework\Database {
             
             $this->_query .= " `$column`$condition";
 
-            if(is_numeric($value))
+            if(is_null($value))
+                $this->_query .= "NULL ";
+            else if(is_numeric($value))
                 $this->_query .= "$value ";
             else if(is_string($value))
                 $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
-            
+
             return $this;
         }
 
@@ -296,7 +298,7 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function orWhere($column, $value, $condition="="){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($column) || empty($value))
+            if(empty($this->_table) || is_null(self::$_instance) || empty($column))
                 return null;
 
             if(!strpos($this->_query, "WHERE"))
@@ -306,7 +308,9 @@ namespace  Showcase\Framework\Database {
             
             $this->_query .= " `$column`$condition";
 
-            if(is_numeric($value))
+            if(is_null($value))
+                $this->_query .= "NULL ";
+            else if(is_numeric($value))
                 $this->_query .= "$value ";
             else if(is_string($value))
                 $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
