@@ -161,7 +161,7 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function delete(){
-            if(empty(self::$_table) || is_null(self::$_instance))
+            if(empty($this->_table) || is_null(self::$_instance))
                 return null;
 
             $this->_query = "DELETE ";
