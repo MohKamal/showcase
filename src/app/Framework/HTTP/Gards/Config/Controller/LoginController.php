@@ -21,7 +21,9 @@ namespace  Showcase\Controllers{
                 return self::response()->redirect('/');
 
             if (Validator::validate($request->get(), ['email', 'password'])) {
-                $remember = $request->get()['remember'] == 'on' ? true : false;
+                $remember = false;
+                if(isset($request->get()['remember']))
+                    $remember = $request->get()['remember'] == 'on' ? true : false;
                 if(!Auth::login($request->get()['email'], $request->get()['password'], $remember))
                     return self::response()->unauthorized();
             }
