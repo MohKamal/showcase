@@ -154,8 +154,13 @@ namespace  Showcase\Framework\HTTP\Routing {
                 if ((string)$arg->getType() != 'int' && (string)$arg->getType() != 'string' && (string)$arg->getType() != "") {
                     // if the parametre is Request
                     if((string)$arg->getType() == 'Showcase\Framework\HTTP\Routing\Request') {
-                        echo call_user_func_array("\Showcase\\$method", array($this->request));
-                        return false;
+                        if (count($reflection->getParameters()) == 1) {
+                            echo call_user_func_array("\Showcase\\$method", array($this->request));
+                            return false;
+                        }
+                        else{
+                            $execution_params[] = $this->request;
+                        }
                     } // If not a Request, we gonna see what is it
                     else if(strpos((string)$arg->getType(), 'Showcase\\') === 0) {
                         // if its a model
