@@ -1366,19 +1366,13 @@ Log::var_dump($data);
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Run It!</h1>
 					    <section class="docs-intro">
-                            <p>To start the showcase web site/web app to the following:</p>
-                            <p>go to the public folder with the command line</p>
+                            <p>To start the showcase web site/web app do the following:</p>
                             <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="bash hljs">
-cd /public
+php showcase serve
                         </code></pre>
                         </div><!--//docs-code-block-->
-                        <p>And run the php server</p>
-                        <div class="docs-code-block">
-							<pre class="shadow-lg rounded"><code class="bash hljs">
-php -S localhost:8000
-                        </code></pre>
-                        </div><!--//docs-code-block-->
+                        <p>Server run on http://localhost:8000</p>
 						</section><!--//docs-intro-->
 				    </header>
 			    </article><!--//docs-article-->
