@@ -864,6 +864,21 @@ Auth::expiringLogin(5000);
 Auth::expiringLogin(0) // to never expire
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <p>To make a route to be public without authentifaction, and leave some routes with authentification, you can use the third router parametre: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+namespace Showcase {
+
+//Your routes
+$router->get('/noAuth', 'Controllers\HomeController::index', true); // this route is public, no authentification needed
+$router->get('/auth', 'Controllers\HomeController::index', false); // this route need authentification
+$router->get('/auth', 'Controllers\HomeController::index'); // this route also need authentification
+
+//Auth routes
+Auth::routes($router);
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                     </section><!--//section-->
 					
 					<section class="docs-section" id="item-5-2">

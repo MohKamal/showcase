@@ -17,6 +17,9 @@ namespace  Showcase\Framework\HTTP\Routing {
     {
         private $request;
         private $response;
+        private $no_auth_url = ['/login', '/reset-password', '/download?file=',
+        '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=',
+        '/js?file=', '/css?file=', '/images?file='];
         private $supportedHttpMethods = array(
             "GET",
             "POST",
@@ -32,10 +35,16 @@ namespace  Showcase\Framework\HTTP\Routing {
 
         public function __call($name, $args)
         {
-            list($route, $method) = $args;
+            if(count($args) < 3) {
+                $args[] = false;
+            }
+            list($route, $method, $public) = $args;
             $route = preg_replace('~/public~', '', $route);
             if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
                 $this->invalidMethodHandler();
+            }
+            if($public) {
+                $this->no_auth_url[] = $route;
             }
             $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
         }
@@ -78,10 +87,19 @@ namespace  Showcase\Framework\HTTP\Routing {
              */
             if(Auth::checkAuth()){
                 if (Auth::guest()) {
-                    $auths = ['/login', '/reset-password', '/download?file=', '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=', '/js?file=', '/css?file=', '/images?file='];
                     $no_auth = true;
-                    foreach ($auths as $url) {
-                        if ($this->request->requestUri === $url || Utilities::startsWith($this->request->requestUri, $url)) {
+                    foreach ($this->no_auth_url as $url) {
+                        if($url == '/' && $this->request->requestUri == $url) {
+                            $no_auth = false;
+                            continue;
+                        }
+                        if(strpos($this->request->requestUri, '?') !== false || strpos($url, '?') !== false) {
+                            if(Utilities::startsWith($this->request->requestUri, $url)) {
+                                $no_auth = false;
+                                continue;
+                            }
+                        }
+                        if ($this->request->requestUri === $url) {
                             $no_auth = false;
                         }
                     }
