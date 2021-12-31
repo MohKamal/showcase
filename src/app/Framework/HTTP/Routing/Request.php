@@ -66,5 +66,21 @@ namespace  Showcase\Framework\HTTP\Routing{
                 return $body;
             }
         }
+
+        /**
+         * Get uploaded file
+         * 
+         * @param string $index file name (index)
+         * @param string $toFolder folder to put the file on
+         * 
+         * @return string file path
+         */
+        public function file($index='file', $toFolder='uploads') {
+            if($this->requestMethod == "POST") {
+                if(Storage::folder($toFolder)->moveUpload($_FILES[$index]['tmp_name'], $_FILES[$index]['name']))
+                    return Storage::folder($toFolder)->path($_FILES[$index]['name']);
+            }
+            return '';
+        }
     }
 }

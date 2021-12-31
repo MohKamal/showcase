@@ -326,5 +326,22 @@ namespace  Showcase\Framework\IO\Storage{
             $dir = $this->_currentFolder;
             return scandir($dir);
         }
+
+        /**
+         * Copy an uploaded file to storage folder
+         * 
+         * @param string $from uploaded file path
+         * @param string $to new file path
+         * 
+         * @return boolean
+         */
+        public function moveUpload($from, $to) {
+            $new = $this->_currentFolder . $to;
+            if(move_uploaded_file($from, $new)){
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }
