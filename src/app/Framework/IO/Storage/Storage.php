@@ -280,14 +280,18 @@ namespace  Showcase\Framework\IO\Storage{
                 return null;
 
             $currentFile = $this->_currentFolder . $filename;
-            $toFile = $this->_rootFolder . "downloads/" . basename($filename);
-
+            $folder = $this->_rootFolder . "downloads/";
+            $toFile = $folder . basename($filename);
             if(!file_exists($currentFile))
                 return false;
 
             if ($currentFile !== $toFile) {
+                if (!file_exists($folder)) {
+                    if(!mkdir($folder, 0777, true))
+                        return null;
+                }
                 if (!copy($currentFile, $toFile)) {
-                    return false;
+                        return false;
                 }
             }
 
