@@ -18,7 +18,7 @@ namespace  Showcase\Controllers{
          */
         static function login($request){
             if(Auth::check())
-                return self::response()->redirect('/');
+                return self::response()->back();
 
             if (Validator::validate($request->get(), ['email', 'password'])) {
                 $remember = false;
@@ -27,7 +27,7 @@ namespace  Showcase\Controllers{
                 if(!Auth::login($request->get()['email'], $request->get()['password'], $remember))
                     return self::response()->unauthorized();
             }
-            return self::response()->redirect('/');
+            return self::response()->backBeforeLogin();
         }
 
         /**

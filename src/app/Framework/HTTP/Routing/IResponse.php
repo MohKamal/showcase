@@ -31,6 +31,13 @@ namespace  Showcase\Framework\HTTP\Routing {
         function back($message='', $type='info');
 
         /**
+         * Redirection to preview url before login
+         * 
+         * @param string url to be redirected to
+         */
+        function backBeforeLogin($message='', $type='info');
+
+        /**
          * Return a json response
          * 
          * @param object data to return

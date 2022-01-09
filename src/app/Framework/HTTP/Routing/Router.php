@@ -4,6 +4,7 @@ namespace  Showcase\Framework\HTTP\Routing {
 
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\HTTP\Routing\Response;
+    use \Showcase\Framework\Session\Session;
     use \Showcase\Framework\HTTP\Gards\CSRF;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\HTTP\Gards\Auth;
@@ -17,9 +18,7 @@ namespace  Showcase\Framework\HTTP\Routing {
     {
         private $request;
         private $response;
-        private $no_auth_url = ['/login', '/reset-password', '/download?file=',
-        '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=',
-        '/js?file=', '/css?file=', '/images?file='];
+        private $no_auth_url = ['/login', '/reset-password', '/download?file=', '/newregister', '/auth', '/logout', '/register', '/password', '/resources?file=', '/js?file=', '/css?file=', '/images?file='];
         private $supportedHttpMethods = array(
             "GET",
             "POST",
@@ -93,12 +92,27 @@ namespace  Showcase\Framework\HTTP\Routing {
                             $no_auth = false;
                             continue;
                         }
+
                         if(strpos($this->request->requestUri, '?') !== false || strpos($url, '?') !== false) {
                             if(Utilities::startsWith($this->request->requestUri, $url)) {
                                 $no_auth = false;
                                 continue;
                             }
                         }
+
+                        if(strpos($url, '{') !== false) {
+                            $params = $this->getRouteParam($url);
+                            $_url = $url;
+                            foreach($params as $param) {
+                                $_url = str_replace($param, '', $_url);
+                            }
+
+                            if(Utilities::startsWith($this->request->requestUri, $_url)) {
+                                $no_auth = false;
+                                continue;
+                            }
+                        }
+
                         if ($this->request->requestUri === $url) {
                             $no_auth = false;
                         }
@@ -106,6 +120,7 @@ namespace  Showcase\Framework\HTTP\Routing {
 
                     if ($no_auth) {
                         if (!Auth::checkRemember()) {
+                            Session::store('backBeforeLogin', $this->request->requestUri);
                             $this->response->redirect("/login");
                         }
                     }
@@ -333,6 +348,73 @@ namespace  Showcase\Framework\HTTP\Routing {
                 }
             }
             return $parametres;
+        }
+
+        private function computeDiff($from, $to)
+        {
+            $diffValues = array();
+            $diffMask = array();
+
+            $dm = array();
+            $n1 = count($from);
+            $n2 = count($to);
+
+            for ($j = -1; $j < $n2; $j++) $dm[-1][$j] = 0;
+            for ($i = -1; $i < $n1; $i++) $dm[$i][-1] = 0;
+            for ($i = 0; $i < $n1; $i++)
+            {
+                for ($j = 0; $j < $n2; $j++)
+                {
+                    if ($from[$i] == $to[$j])
+                    {
+                        $ad = $dm[$i - 1][$j - 1];
+                        $dm[$i][$j] = $ad + 1;
+                    }
+                    else
+                    {
+                        $a1 = $dm[$i - 1][$j];
+                        $a2 = $dm[$i][$j - 1];
+                        $dm[$i][$j] = max($a1, $a2);
+                    }
+                }
+            }
+
+            $i = $n1 - 1;
+            $j = $n2 - 1;
+            while (($i > -1) || ($j > -1))
+            {
+                if ($j > -1)
+                {
+                    if ($dm[$i][$j - 1] == $dm[$i][$j])
+                    {
+                        $diffValues[] = $to[$j];
+                        $diffMask[] = 1;
+                        $j--;  
+                        continue;              
+                    }
+                }
+                if ($i > -1)
+                {
+                    if ($dm[$i - 1][$j] == $dm[$i][$j])
+                    {
+                        $diffValues[] = $from[$i];
+                        $diffMask[] = -1;
+                        $i--;
+                        continue;              
+                    }
+                }
+                {
+                    $diffValues[] = $from[$i];
+                    $diffMask[] = 0;
+                    $i--;
+                    $j--;
+                }
+            }    
+
+            $diffValues = array_reverse($diffValues);
+            $diffMask = array_reverse($diffMask);
+
+            return array('values' => $diffValues, 'mask' => $diffMask);
         }
     }
 }
