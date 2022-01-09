@@ -32,26 +32,11 @@ namespace  Showcase\Framework\Database {
          * Execute a custom query
          * @param string $query query to execute
          */
-        public static function query($query){
+        public function query($query){
             if(empty($query))
                 return false;
-            $db_type = VarLoader::env('DB_TYPE');
-            switch(strtolower($db_type)){
-                case 'sqlite':
-                    $pdo = (new SQLiteConnection())->connect();
-                    if ($pdo == null)
-                        Log::print("SQLite Error : DB.php 291 line \n Whoops, could not connect to the SQLite database!");
-                    $get = new SQLiteTable($pdo);
-                    return $get->query($query);
-                break;
-                case 'mysql':
-                    $pdo = (new MySqlConnection())->connect();
-                    if ($pdo == null)
-                        Log::print("MySql Error : DB.php 298 line \n Whoops, could not connect to the MySql database!");
-                    $get = new MySqlTable($pdo);
-                    return $get->query($query);
-                break;
-            }
+            $this->_query = $query;
+            return $this;
         }
 
         /**
@@ -446,17 +431,38 @@ namespace  Showcase\Framework\Database {
         public function run(){
             if(empty($this->_table) || is_null(self::$_instance))
                 return null;
+            $data = array();
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
                 case 'sqlite':
                     $get = new SQLiteTable($this->_pdo);
-                    return $get->query($this->_query);
+                    $data = $get->query($this->_query);
                 break;
                 case 'mysql':
                     $get = new MySqlTable($this->_pdo);
-                    return $get->query($this->_query);
+                    $data = $get->query($this->_query);
                 break;
             }
+
+            if(!empty($data) && is_array($data)){
+                if(is_null($this->_model))
+                    return $data;
+                
+                $objects = array();
+                $class = get_class($this->_model);
+                foreach($data as $record){
+                    $obj = new $class();
+                    $class_vars = get_object_vars($obj);
+                    foreach($class_vars as $key => $value){
+                        if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
+                            $obj->{$key} = $this->filterOutput($record[$key]);
+                    }
+                    $objects[] =$obj;
+                }
+                return $objects;
+            }
+
+            return $data;
         }
 
         /**

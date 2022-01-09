@@ -80,6 +80,7 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-1">Models</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-2">Controllers</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-3">Queries</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-4">Seeding</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-5"><span class="theme-icon-holder mr-2"><i class="fas fa-tools"></i></span>Security</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-5-1">Authentication</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-5-2">CSRF Guard</a></li>
@@ -781,6 +782,121 @@ $users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIK
 						    <li><strong class="mr-1">update($columns) :</strong> <code>update a model/table columns </code></li>
 						    <li><strong class="mr-1">delete() :</strong> <code>delete a record in the database, this function don't take in concidiration the soft delete, to use the soft delete, use the delete function of the models </code></li>
 						    <li><strong class="mr-1">run() :</strong> <code>call this function when using the insert, update, delete and count functions, it return the numbers of lines affected </code></li>
+                        </ul>
+                        <div class="callout-block callout-block-warning">
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-bullhorn"></i>
+		                            </span><!--//icon-holder-->
+	                                Warning
+	                            </h4>
+                                <p>If you are using model function instead of table, the select columns will be ignored.</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
+                    </section><!--//section-->
+					
+					<section class="docs-section" id="item-4-4">
+						<h2 class="section-heading">Seeding</h2>
+						<p>To seed data in new database, you can use the seeding objects.</p>
+						<p>To create a seeder, you run the command make:seeder: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="bash hljs">
+php showcase make:seeder Seeder_Name
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>You will have a class in the folder Database/Seed</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Database\Seeding\Seeder;
+use \Showcase\Framework\HTTP\Controllers\BaseController;
+use \Showcase\Framework\Utils\Utilities;
+use \Showcase\Framework\Database\DB;
+use \Showcase\Models\Category;
+
+class Category extends Seeder{
+
+    /**
+    * Seeder details
+    */
+    function execute(){
+        $this->name = 'Category';
+
+        $category = new Category();
+        $category->name = "Restaurant";
+        $category->slug = Utilities::slugify("Restaurant");
+        $category->iconPath = "/img/core-img/icon-2.png";
+        $category->save();
+
+        $category = new Category();
+        $category->name = "Cafée";
+        $category->slug = Utilities::slugify("Cafée");
+        $category->iconPath = "/img/core-img/icon-2.png";
+        $category->save();
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>After you created all the seeders, you can run them using the command seed: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+php showcase seed
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Database\DB;
+use \Showcase\Framework\IO\Debug\Log;
+
+$users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+foreach($users as $user)
+    Log::print($user->email . " | " . $user->username);
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>To select from a table, use table function, and give the table name</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+$users = DB::factory()->model('users')->select()->where('email', '%@gmail%', 'LIKE')->get();
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>This will return an array of data.</p>
+                        <p>To get an array of object for a model, use the model function, and give the model Name</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+$users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    <div class="callout-block callout-block-info">
+                            
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-info-circle"></i>
+		                            </span><!--//icon-holder-->
+	                                Note
+	                            </h4>
+                                <p>To get an array of data use get() function, to get one object, use first() function</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
+                        <h4>Function to use</h4>
+                        <ul>
+						    <li><strong class="mr-1">table($name) :</strong> <code>table name to select from </code></li>
+						    <li><strong class="mr-1">model($name) :</strong> <code>model to convert data to after fetching it </code></li>
+						    <li><strong class="mr-1">select($columns) :</strong> <code>you can specify the columns to select in case you are using the table function </code></li>
+						    <li><strong class="mr-1">where($column, $value, $condition) :</strong> <code>add where condition to you query, the condition value is '=' by default </code></li>
+						    <li><strong class="mr-1">orWhere($column, $value, $condition) :</strong> <code>add or condition to you query, the condition value is '=' by default </code></li>
+						    <li><strong class="mr-1">raw($query) :</strong> <code>add raw sql query to the build, please be carful where you put the raw function in the build of your query </code></li>
+						    <li><strong class="mr-1">limit($number) :</strong> <code>to limit the query result </code></li>
+						    <li><strong class="mr-1">distinct($column) :</strong> <code>get distinct result for all columns by default, or to specific column </code></li>
+						    <li><strong class="mr-1">count($expression) :</strong> <code>get all columns count by default, or an expression/column </code></li>
+						    <li><strong class="mr-1">first() :</strong> <code>get the first result </code></li>
+						    <li><strong class="mr-1">get() :</strong> <code>get an array of results </code></li>
+						    <li><strong class="mr-1">withTrash() :</strong> <code>in case you are using soft delete, with this function, also the deleted records will be selected </code></li>
+						    <li><strong class="mr-1">insert($columns) :</strong> <code>insert to model/table at database </code></li>
+						    <li><strong class="mr-1">update($columns) :</strong> <code>update a model/table columns </code></li>
+						    <li><strong class="mr-1">delete() :</strong> <code>delete a record in the database, this function don't take in concidiration the soft delete, to use the soft delete, use the delete function of the models </code></li>
+						    <li><strong class="mr-1">run() :</strong> <code>call this function when using the insert, update, delete and count functions, also the query() function, it return the numbers of lines affected or data from the query() function </code></li>
+						    <li><strong class="mr-1">query($qeury) :</strong> <code>Create a custom query from database, you have to call run() to execute, if your data will be a model, you can call the model() function before this query, and the result will be array of objects. </code></li>
                         </ul>
                         <div class="callout-block callout-block-warning">
                             <div class="content">
