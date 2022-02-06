@@ -159,7 +159,7 @@ namespace  Showcase\Framework\HTTP\Routing {
             $method = $methodDictionary[$formatedRoute];
             if(is_string($method)) {
                 $this->setMethodParametres($method);
-                echo call_user_func_array("\Showcase\\$method", array());
+                // echo call_user_func_array("\Showcase\\$method", array());
                 return;
             }
             echo call_user_func_array($method, array($this->request));
