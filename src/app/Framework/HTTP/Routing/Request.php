@@ -5,6 +5,7 @@ namespace  Showcase\Framework\HTTP\Routing{
      */
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\HTTP\Routing\IRequest;
+    use \Showcase\Framework\IO\Storage\Storage;
 
     class Request implements IRequest
     {
