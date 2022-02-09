@@ -303,6 +303,40 @@ namespace  Showcase\Framework\IO\Storage{
             return  $base . "/download?file=" . basename($filename); 
         }
 
+                /**
+         * Get url for download
+         * @param string $path
+         * 
+         * @return mixed
+         */
+        public function urlFromPath($path) {
+            if(empty($path))
+                return null;
+
+            $currentFile = $path;
+            $folder = $this->_rootFolder . "downloads/";
+            $toFile = $folder . basename($path);
+            if(!file_exists($currentFile))
+                return false;
+
+            if ($currentFile !== $toFile) {
+                if (!file_exists($folder)) {
+                    if(!mkdir($folder, 0777, true))
+                        return null;
+                }
+                if (!copy($currentFile, $toFile)) {
+                        return false;
+                }
+            }
+
+            if(!file_exists($toFile))
+                return false;
+            $base = URL::base();
+            if(Utilities::endsWith($base, '/'))
+                $base = substr($base, 0, -1);
+            return  $base . "/download?file=" . basename($path); 
+        }
+
         /**
          * Get file path
          * @param string $filename
