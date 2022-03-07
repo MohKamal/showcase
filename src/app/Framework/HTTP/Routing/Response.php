@@ -62,6 +62,15 @@ namespace  Showcase\Framework\HTTP\Routing {
         }
 
         /**
+         * get url before Login
+         * 
+         * @param string url to be redirected to
+         */
+        function getUrlBeforeLogin(){
+            return Session::retrieve('backBeforeLogin');
+        }
+
+        /**
          * Return a json response
          * 
          * @param object data to return

@@ -89,12 +89,16 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-1">Functions inside views</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-2">Variables from Controllers to View</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-3">Styles & Javascript & other Files</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-7"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Storage</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-1">Files, folders and download</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-8"><span class="theme-icon-holder mr-2"><i class="fas fa-tablet-alt"></i></span>Debug</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-1">File</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-2">Console</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-9"><span class="theme-icon-holder mr-2"><i class="fas fa-book-reader"></i></span>Run It!</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-7"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Session & Cookies</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-1">Session</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-2">Cookies</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-3">SessionAlert</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-8"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Storage</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-1">Files, folders and download</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-9"><span class="theme-icon-holder mr-2"><i class="fas fa-tablet-alt"></i></span>Debug</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-9-1">File</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-9-2">Console</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-10"><span class="theme-icon-holder mr-2"><i class="fas fa-book-reader"></i></span>Run It!</a></li>
 			    </ul>
 
 		    </nav><!--//docs-nav-->
@@ -201,6 +205,17 @@ static function profil(User user, Request $request){
 
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        <p>If you use Authentifaction, and you want to have a public routes without login to access them, use the route parametre 'public_route', it's false by default:</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Public route
+*/
+$router->get('/product/{id}',  'Controllers\ProductController::show', true); // set the third parametre to true
+
+$router->get('/profil/{id}',  'Controllers\UserController::profil', false); // need to be logged
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                         <div class="callout-block callout-block-info">
                             
                             <div class="content">
@@ -237,6 +252,18 @@ static function Index(){
 */
 static function Index(){
     return self::response()->view('App/main');
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+						<p>You can add variables to the view</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Return the client profil
+*/
+static function show(int $id){
+    $client = DB::factory()->model('Client')->select()->where('id', $id)->first();
+    return self::response()->view('Private/Client/profil', ['user' => $client, 'displayHeader' => false]);
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -283,6 +310,36 @@ static function Index(){
 */
 static function Index(){
     return self::response()->back('please fill all inputs', 'error'); // there is 4 types : info, error, warning and success
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        
+						<h4>Response after login</h4>
+						<p>To redirect a user to an url before login, use a backBeforeLogin response</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Redirect to last url before the login
+* backBeforeLogin($message='', $type='info')
+*/
+static function Index(){
+    return self::response()->backBeforeLogin();
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+						<p>If the user access directly the login page, the last function backBeforeLogin() will do nothing good, so, to check if the last url was /login, use the function getUrlBeforeLogin()</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Redirect to last url before the login
+* getUrlBeforeLogin()
+*/
+static function Index(){
+    $url = self::response()->getUrlBeforeLogin();
+    if($url != '/login') {
+        return self::response()->backBeforeLogin();
+    }
+    return self::response()->redirect('/');
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -533,12 +590,14 @@ class HomeController extends BaseController{
                         <p>Database will not be initialized if not set to 'true' at appsettings.json file (USE_DB parametre).</p> 
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="json hljs">
+"_comment": "For SQLite connection",
 {
     "USE_DB": "true",
     "DB_HOST": "your_file_name.db",
     "DB_TYPE": "SQLite",
 }
 
+"_comment": "For MySQL connection",
 {
     "USE_DB": "true",
     "DB_HOST": "localhost",
@@ -561,7 +620,7 @@ php showcase make:migration migration_name
                         <p>Column Type :</p>
                         <ul>
 						    <li><strong class="mr-1">int()</strong></li>
-						    <li><strong class="mr-1">string()</strong></li>
+						    <li><strong class="mr-1">string($length=250)</strong></li>
 						    <li><strong class="mr-1">double()</strong></li>
 						    <li><strong class="mr-1">blob()</strong></li>
 						    <li><strong class="mr-1">bool()</strong></li>
@@ -1307,12 +1366,93 @@ static function Play($request){
 
                 <article class="docs-article" id="section-7">
 				    <header class="docs-header">
+					    <h1 class="docs-heading">Session & Cookies</h1>
+					    <section class="docs-intro">
+                            <p>To use session & cookies, save and retrieve data from them, use the Objects: Session, Cookie, there is also SessionAlert to display messages to any pages</p>
+						</section><!--//docs-intro-->
+				    </header>
+				     <section class="docs-section" id="item-7-1">
+						<h2 class="section-heading">Session</h2>
+						<p>To use the session, save and retrieve data from session, use:</p>
+                        <ul>
+						    <li><strong class="mr-1">store($name, $value, $lifetime=0) :</strong> <code>Save a value to session with a name, to retrieve it.</code></li>
+						    <li><strong class="mr-1">retrieve($name) :</strong> <code>if the was not found in the session, null is returned.</code></li>
+						    <li><strong class="mr-1">clear($name) :</strong> <code>Remove the value from the session.</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Session\Session;
+
+Session::store('current_user_id', $userId);
+
+// get the value
+
+$id = Session::retrieve('current_user_id');
+if($id != null) {
+    // Todo
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section><!--//section-->
+				     <section class="docs-section" id="item-7-2">
+						<h2 class="section-heading">Cookies</h2>
+						<p>To use the cookie, save and retrieve data from it, use like session:</p>
+                        <ul>
+						    <li><strong class="mr-1">store($name, $value, $options=array()) :</strong> <code>Save a value to cookies with a name, to retrieve it, you can also add the options like natif php.</code></li>
+						    <li><strong class="mr-1">retrieve($name) :</strong> <code>if the was not found in the session, null is returned.</code></li>
+						    <li><strong class="mr-1">clear($name) :</strong> <code>Remove the value from the session.</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Session\Cookie;
+
+Cookie::store('current_user_id', $userId);
+
+// get the value
+
+$id = Cookie::retrieve('current_user_id');
+if($id != null) {
+    // Todo
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section>
+				     <section class="docs-section" id="item-7-3">
+						<h2 class="section-heading">SessionAlert</h2>
+						<p>If you wanna show a message to your page with it's html (to display error colors for example), but using a session value, you can use this object:</p>
+                        <ul>
+						    <li><strong class="mr-1">create($message, $message_type='info') :</strong> <code>Save a message to session with a type: info, error, warning and success.</code></li>
+						    <li><strong class="mr-1">show() :</strong> <code>Put this function in the php page to display the message. (in the view, use @sessionAlert )</code></li>
+						    <li><strong class="mr-1">clear() :</strong> <code>Remove the message from the session.</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Session\SessionAlert;
+
+SessionAlert::create('No email was found', 'error');
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="html hljs">
+&lt;body&gt;
+    &lt;div class="form-group"&gt;
+    &lt;input class="form-control" name="email" placeholder="Your email" /&gt;
+    @&#8203;sessionAlert
+    &lt;/div&gt;
+&lt;/body&gt;
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section><!--//section-->
+			    </article><!--//docs-article-->
+
+                <article class="docs-article" id="section-8">
+				    <header class="docs-header">
 					    <h1 class="docs-heading">Storage</h1>
 					    <section class="docs-intro">
 						    <p>Some users find it hard and repetitive in the files managing level, to make a bite easy to use showcase with file management, you can use the Storage Object.</p>
 						</section><!--//docs-intro-->
 				    </header>
-				     <section class="docs-section" id="item-7-1">
+				     <section class="docs-section" id="item-8-1">
 						<h2 class="section-heading">Files, folders and download</h2>
 						<p>To create, copy, move and save data to file, you can use the Storage following functions :</p>
 						<p>First, you need to select the folder, there is 3 functions to that : </p>
@@ -1374,14 +1514,14 @@ class HomeController extends BaseController{
 			    </article><!--//docs-article-->
 			    
 			    
-			    <article class="docs-article" id="section-8">
+			    <article class="docs-article" id="section-9">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Debug</h1>
 					    <section class="docs-intro">
 						    <p>To print out data to a log file, or terminal, use the Log Class. The data can be string or array only!</p>
 						</section><!--//docs-intro-->
 				    </header>
-				     <section class="docs-section" id="item-8-1">
+				     <section class="docs-section" id="item-9-1">
 						<h2 class="section-heading">File</h2>
 						<p>To log data to file log use the print function. The file log is created at Storage/logs, with the current day as name.</p>
                         <div class="docs-code-block">
@@ -1393,7 +1533,7 @@ Log::print("Message to print in log file");
                         </div><!--//docs-code-block-->
                     </section><!--//section-->
 					
-					<section class="docs-section" id="item-8-2">
+					<section class="docs-section" id="item-9-2">
 						<h2 class="section-heading">Console</h2>
                         <p>To log data to console use the console function.</p>
                         <div class="docs-code-block">
@@ -1412,7 +1552,7 @@ Log::console("No File was Found!", 'error');
                         </code></pre>
                         </div><!--//docs-code-block-->
 					
-					<section class="docs-section" id="item-8-3">
+					<section class="docs-section" id="item-9-3">
 						<h2 class="section-heading">var_dump</h2>
                         <p>To catch var_dump result and display it in the file or console use the var_dump function</p>
                         <div class="docs-code-block">
@@ -1427,7 +1567,7 @@ Log::var_dump($data);
 			    </article><!--//docs-article-->
 			    
 			    
-			    <article class="docs-article" id="section-9">
+			    <article class="docs-article" id="section-10">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Run It!</h1>
 					    <section class="docs-intro">

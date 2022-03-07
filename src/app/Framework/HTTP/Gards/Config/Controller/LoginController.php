@@ -10,13 +10,14 @@ namespace  Showcase\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Models\User;
     use \Showcase\Framework\HTTP\Gards\Auth;
+    use \Showcase\Framework\HTTP\Routing\Request;
 
     class LoginController extends BaseController{
 
         /**
          * Login a user
          */
-        static function login($request){
+        static function login(Request $request){
             if(Auth::check())
                 return self::response()->redirect('/');
 
