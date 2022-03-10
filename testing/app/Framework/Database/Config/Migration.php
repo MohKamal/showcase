@@ -2,6 +2,7 @@
 namespace  Showcase\Database\Migrations {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Database\Config\Foreign;
 
     class MigrationName extends Table{
 

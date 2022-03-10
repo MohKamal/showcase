@@ -40,7 +40,6 @@ namespace  Showcase\Framework\HTTP\Gards{
          * @return boolean
          */
         public static function checkAuth();
-        
 
         /**
          * Check if the user is connect

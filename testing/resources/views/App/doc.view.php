@@ -80,6 +80,7 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-1">Models</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-2">Controllers</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-3">Queries</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-4">Seeding</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-5"><span class="theme-icon-holder mr-2"><i class="fas fa-tools"></i></span>Security</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-5-1">Authentication</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-5-2">CSRF Guard</a></li>
@@ -88,12 +89,16 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-1">Functions inside views</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-2">Variables from Controllers to View</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-6-3">Styles & Javascript & other Files</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-7"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Storage</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-1">Files, folders and download</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-8"><span class="theme-icon-holder mr-2"><i class="fas fa-tablet-alt"></i></span>Debug</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-1">File</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-2">Console</a></li>
-				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-9"><span class="theme-icon-holder mr-2"><i class="fas fa-book-reader"></i></span>Run It!</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-7"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Session & Cookies</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-1">Session</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-2">Cookies</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-7-3">SessionAlert</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-8"><span class="theme-icon-holder mr-2"><i class="fas fa-laptop-code"></i></span>Storage</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-8-1">Files, folders and download</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-9"><span class="theme-icon-holder mr-2"><i class="fas fa-tablet-alt"></i></span>Debug</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-9-1">File</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-9-2">Console</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-10"><span class="theme-icon-holder mr-2"><i class="fas fa-book-reader"></i></span>Run It!</a></li>
 			    </ul>
 
 		    </nav><!--//docs-nav-->
@@ -131,10 +136,11 @@
 				    </header>
 				     <section class="docs-section" id="item-3-1">
 						<h2 class="section-heading">Routes</h2>
-						<p>For now, Showcase support two methods, GET and POST.</p>
+						<p>Showcase support GET, POST, PUT and DELETE methods</p>
                         <p>To create a route, go to web file in route folder, and add new folder with method you need.</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
+// You can create anonymous function and do you thing
 $router->get('/path', function () {
     /* Code to execute */
     return $this->response()->redirect('login');
@@ -142,11 +148,86 @@ $router->get('/path', function () {
     return HomeController::Home();
 });
 
-$router->post('/path',  function ($request) {
-    return HomeController::Contact($request);
-});
+// Or call the controller directry
+$router->post('/path',  'Controllers\HomeController::store');
                         </code></pre>
 						</div><!--//docs-code-block-->
+
+                        <h4>Route parametres</h4>
+						<p>You can use parametres in the routes and directly get them on you controller functions.</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Route with parametre id : Int
+*/
+$router->get('/profil/{id}',  'Controllers\UserController::profil');
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>And now you can get this information ($id) in the function, in two formats : int or User model.</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* To get only the id as int
+* use int as type
+*/
+static function profil(int id){
+    return self::response()->view('App/main');
+}
+
+use \Showcase\Models\User;
+/**
+* To get the User Model
+* use User as type
+* And automaticaly, you gonna get the user object from database using the id in the route
+*/
+static function profil(User user){
+    return $user->email;
+}
+
+// To Use the Request, you need to call it
+/**
+* Route with parametre id : Int
+*/
+$router->put('/users/{id}',  'Controllers\UserController::edit');
+
+use \Showcase\Models\User;
+use \Showcase\Framework\HTTP\Routing\Request;
+
+/**
+* To get the User Model
+* use User as type
+* And automaticaly, you gonna get the user object from database using the id in the route
+* And also, you get request object
+*/
+static function profil(User user, Request $request){
+    //ToDo
+}
+
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>If you use Authentifaction, and you want to have a public routes without login to access them, use the route parametre 'public_route', it's false by default:</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Public route
+*/
+$router->get('/product/{id}',  'Controllers\ProductController::show', true); // set the third parametre to true
+
+$router->get('/profil/{id}',  'Controllers\UserController::profil', false); // need to be logged
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <div class="callout-block callout-block-info">
+                            
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-info-circle"></i>
+		                            </span><!--//icon-holder-->
+	                                Note
+	                            </h4>
+                                <p>To use the $request object, you need to use the Request object<br> use \Showcase\Framework\HTTP\Routing\Request;</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
 					</section><!--//section-->
 					
 					<section class="docs-section" id="item-3-2">
@@ -171,6 +252,18 @@ static function Index(){
 */
 static function Index(){
     return self::response()->view('App/main');
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+						<p>You can add variables to the view</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Return the client profil
+*/
+static function show(int $id){
+    $client = DB::factory()->model('Client')->select()->where('id', $id)->first();
+    return self::response()->view('Private/Client/profil', ['user' => $client, 'displayHeader' => false]);
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -220,6 +313,36 @@ static function Index(){
 }
                         </code></pre>
                         </div><!--//docs-code-block-->
+                        
+						<h4>Response after login</h4>
+						<p>To redirect a user to an url before login, use a backBeforeLogin response</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Redirect to last url before the login
+* backBeforeLogin($message='', $type='info')
+*/
+static function Index(){
+    return self::response()->backBeforeLogin();
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+						<p>If the user access directly the login page, the last function backBeforeLogin() will do nothing good, so, to check if the last url was /login, use the function getUrlBeforeLogin()</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Redirect to last url before the login
+* getUrlBeforeLogin()
+*/
+static function Index(){
+    $url = self::response()->getUrlBeforeLogin();
+    if($url != '/login') {
+        return self::response()->backBeforeLogin();
+    }
+    return self::response()->redirect('/');
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                         <h4>Response codes and error pages</h4>
 						<p>To return codes and error pages use :</p>
 						<ul>
@@ -251,7 +374,7 @@ static function Index(){
 * Redirect to contact
 */
 static function Index(){
-    $data = DB::model('User')->select()->where('active', 1)->get();
+    $data = DB::factory()->model('User')->select()->where('active', 1)->get();
 
     return self::response()->json($data, 200);
 }
@@ -316,7 +439,7 @@ use \Showcase\JsonResources\UserResource;
 
 class HomeController extends BaseController{
     static function Index(){
-        $user = DB::model('User')->select()->where('id', 5)->first();
+        $user = DB::factory()->model('User')->select()->where('id', 5)->first();
         return self::response()->json(new UserResource($user));
     }
 }
@@ -339,7 +462,7 @@ use \Showcase\JsonResources\UserResource;
 
 class HomeController extends BaseController{
     static function Index(){
-        $user = DB::model('User')->select()->where('id', 5)->first();
+        $user = DB::factory()->model('User')->select()->where('id', 5)->first();
         $json = new UserResource($user);
         return self::response()->json($json->withoutKeys());
     }
@@ -364,7 +487,7 @@ use \Showcase\JsonResources\UserResource;
 
 class HomeController extends BaseController{
     static function Index(){
-        $users = DB::model('User')->select()->limit(15)->get();
+        $users = DB::factory()->model('User')->select()->limit(15)->get();
         return self::response()->json(UserResource::array($users));
     }
 }
@@ -404,7 +527,7 @@ class HomeController extends BaseController{
 
 class HomeController extends BaseController{
     static function Index(){
-        $users = DB::model('User')->select()->limit(15)->get();
+        $users = DB::factory()->model('User')->select()->limit(15)->get();
         return self::response()->json(UserResource::array($users, false));
     }
 }
@@ -467,12 +590,14 @@ class HomeController extends BaseController{
                         <p>Database will not be initialized if not set to 'true' at appsettings.json file (USE_DB parametre).</p> 
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="json hljs">
+"_comment": "For SQLite connection",
 {
     "USE_DB": "true",
     "DB_HOST": "your_file_name.db",
     "DB_TYPE": "SQLite",
 }
 
+"_comment": "For MySQL connection",
 {
     "USE_DB": "true",
     "DB_HOST": "localhost",
@@ -495,7 +620,7 @@ php showcase make:migration migration_name
                         <p>Column Type :</p>
                         <ul>
 						    <li><strong class="mr-1">int()</strong></li>
-						    <li><strong class="mr-1">string()</strong></li>
+						    <li><strong class="mr-1">string($length=250)</strong></li>
 						    <li><strong class="mr-1">double()</strong></li>
 						    <li><strong class="mr-1">blob()</strong></li>
 						    <li><strong class="mr-1">bool()</strong></li>
@@ -598,7 +723,7 @@ $model->save();
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
 use \Showcase\Framework\Database\DB;
-$model = DB::model('Model')->select()->where('id', 5)->first();
+$model = DB::factory()->model('Model')->select()->where('id', 5)->first();
 $model->param = "new value";
 $model->save();
                         </code></pre>
@@ -608,7 +733,7 @@ $model->save();
                         <p>To delete model, use the delete function :</p> 
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$model = DB::model('Model')->select()->where('id', 5)->first();
+$model = DB::factory()->model('Model')->select()->where('id', 5)->first();
 $model->delete();
                         </code></pre>
                         </div><!--//docs-code-block-->  
@@ -618,7 +743,7 @@ $model->delete();
                         <p>To get one model from database by any columns/properties you need, use where function:</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$model = DB::model('Model')->select()->where('column', $value)->first();
+$model = DB::factory()->model('Model')->select()->where('column', $value)->first();
 Log::print($model->paramName);
                         </code></pre>
                         </div><!--//docs-code-block--> 
@@ -626,7 +751,7 @@ Log::print($model->paramName);
                         <p>To get array of models, you gonna use the static function toList() :</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$models = DB::model('Model')->select()->where('column', $value)->get();
+$models = DB::factory()->model('Model')->select()->where('column', $value)->get();
 Log::print($models[0]->paramName);
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -634,7 +759,7 @@ Log::print($models[0]->paramName);
                         <p>To get array of models, with one, or more conditions, you gonna use the static function toList() :</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$models = DB::model('Model')->select()->where('column', $value)->withTrash()->get();
+$models = DB::factory()->model('Model')->select()->where('column', $value)->withTrash()->get();
 Log::print($models[0]->paramName);
                         </code></pre>
                         </div><!--//docs-code-block-->
@@ -668,7 +793,7 @@ class HomeController extends BaseController{
 use \Showcase\Framework\Database\DB;
 use \Showcase\Framework\IO\Debug\Log;
 
-$users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+$users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
 foreach($users as $user)
     Log::print($user->email . " | " . $user->username);
                         </code></pre>
@@ -676,14 +801,14 @@ foreach($users as $user)
                         <p>To select from a table, use table function, and give the table name</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$users = DB::table('users')->select()->where('email', '%@gmail%', 'LIKE')->get();
+$users = DB::factory()->model('users')->select()->where('email', '%@gmail%', 'LIKE')->get();
                         </code></pre>
                         </div><!--//docs-code-block-->
                         <p>This will return an array of data.</p>
                         <p>To get an array of object for a model, use the model function, and give the model Name</p>
                         <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="php hljs">
-$users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
+$users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
                         </code></pre>
                         </div><!--//docs-code-block-->
                     <div class="callout-block callout-block-info">
@@ -728,6 +853,55 @@ $users = DB::model('User')->select()->where('email', '%@gmail%', 'LIKE')->get();
                                 <p>If you are using model function instead of table, the select columns will be ignored.</p>
                             </div><!--//content-->
                         </div><!--//callout-block-->
+                    </section><!--//section-->
+					
+					<section class="docs-section" id="item-4-4">
+						<h2 class="section-heading">Seeding</h2>
+						<p>To seed data in new database, you can use the seeding objects.</p>
+						<p>To create a seeder, you run the command make:seeder: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="bash hljs">
+php showcase make:seeder Seeder_Name
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>You will have a class in the folder Database/Seed</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Database\Seeding\Seeder;
+use \Showcase\Framework\HTTP\Controllers\BaseController;
+use \Showcase\Framework\Utils\Utilities;
+use \Showcase\Framework\Database\DB;
+use \Showcase\Models\Category;
+
+class Category extends Seeder{
+
+    /**
+    * Seeder details
+    */
+    function execute(){
+        $this->name = 'Category';
+
+        $category = new Category();
+        $category->name = "Restaurant";
+        $category->slug = Utilities::slugify("Restaurant");
+        $category->iconPath = "/img/core-img/icon-2.png";
+        $category->save();
+
+        $category = new Category();
+        $category->name = "Cafée";
+        $category->slug = Utilities::slugify("Cafée");
+        $category->iconPath = "/img/core-img/icon-2.png";
+        $category->save();
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>After you created all the seeders, you can run them using the command seed: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+php showcase seed
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                     </section><!--//section-->
 			    </article><!--//docs-article-->
 			    
@@ -789,6 +963,29 @@ if(Auth::guest())
     Log::console("Please login!!");
 else
     Log::console("User logged " . Auth:: username());
+
+// Set the authentication colum
+Auth::loginColumn('usernamme');
+
+// Set the expiring user login, default is one hour
+Auth::expiringLogin(5000);
+// or
+Auth::expiringLogin(0) // to never expire
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>To make a route to be public without authentifaction, and leave some routes with authentification, you can use the third router parametre: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+namespace Showcase {
+
+//Your routes
+$router->get('/noAuth', 'Controllers\HomeController::index', true); // this route is public, no authentification needed
+$router->get('/auth', 'Controllers\HomeController::index', false); // this route need authentification
+$router->get('/auth', 'Controllers\HomeController::index'); // this route also need authentification
+
+//Auth routes
+Auth::routes($router);
+}
                         </code></pre>
                         </div><!--//docs-code-block-->
                     </section><!--//section-->
@@ -933,6 +1130,19 @@ static function store($request){
                         <h4>Extend</h4>
                         <p>Extend is used to call a layout page. for example, you have same nav and footer, so you create a page with nav and footer and html structure and you call it main.view.php</p>
                         <p>Every page you call gonna extend from the main view</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="html hljs">
+&lt;!-- Extend from main index --&gt;
+@&#8203;extend("App/main")
+&lt;div class="container"&gt;
+&lt;/div&gt;
+
+&lt;!-- main --&gt;
+&lt;body&gt;
+    @&#8203;render()
+&lt;/body&gt;
+                        </code></pre>
+                        </div><!--//docs-code-block-->
                         <div class="callout-block callout-block-info">
                             
                             <div class="content">
@@ -1082,6 +1292,20 @@ return self::response()->view('App/welcome', array(
 &lt;/body&gt;
                         </code></pre>
                         </div><!--//docs-code-block-->
+
+                        <div class="callout-block callout-block-info">
+                            
+                            <div class="content">
+                                <h4 class="callout-title">
+	                                <span class="callout-icon-holder mr-1">
+		                                <i class="fas fa-info-circle"></i>
+		                            </span><!--//icon-holder-->
+	                                Note
+	                            </h4>
+                                <p>@&#8203;display function and {&#8203;{$var}} can do the samething, you can display variables, expressions...</p>
+                            </div><!--//content-->
+                        </div><!--//callout-block-->
+
 					</section><!--//section-->
 					
 					<section class="docs-section" id="item-6-2">
@@ -1092,11 +1316,16 @@ return self::response()->view('App/welcome', array(
 /**
 * Return the video single page
 */
+use \Showcase\Framework\Validation\Validator;
+use \Showcase\Framework\HTTP\Gards\Auth;
+
 static function Play($request){
     if(Validator::validate($request->get(), ['id'])){
-        $url = Search::searchVideoById($request->get()['id']);
+        $url = Search::searchVideoById($request->get()['id']); // Send string
+        $currentUser = Auth::user(); // Send User Object
         return self::response()->view('App/video', array([
-            'url' => $url
+            'url' => $url,
+            'user' => $currentUser
             ]));
     }
 
@@ -1137,12 +1366,93 @@ static function Play($request){
 
                 <article class="docs-article" id="section-7">
 				    <header class="docs-header">
+					    <h1 class="docs-heading">Session & Cookies</h1>
+					    <section class="docs-intro">
+                            <p>To use session & cookies, save and retrieve data from them, use the Objects: Session, Cookie, there is also SessionAlert to display messages to any pages</p>
+						</section><!--//docs-intro-->
+				    </header>
+				     <section class="docs-section" id="item-7-1">
+						<h2 class="section-heading">Session</h2>
+						<p>To use the session, save and retrieve data from session, use:</p>
+                        <ul>
+						    <li><strong class="mr-1">store($name, $value, $lifetime=0) :</strong> <code>Save a value to session with a name, to retrieve it.</code></li>
+						    <li><strong class="mr-1">retrieve($name) :</strong> <code>if the was not found in the session, null is returned.</code></li>
+						    <li><strong class="mr-1">clear($name) :</strong> <code>Remove the value from the session.</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Session\Session;
+
+Session::store('current_user_id', $userId);
+
+// get the value
+
+$id = Session::retrieve('current_user_id');
+if($id != null) {
+    // Todo
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section><!--//section-->
+				     <section class="docs-section" id="item-7-2">
+						<h2 class="section-heading">Cookies</h2>
+						<p>To use the cookie, save and retrieve data from it, use like session:</p>
+                        <ul>
+						    <li><strong class="mr-1">store($name, $value, $options=array()) :</strong> <code>Save a value to cookies with a name, to retrieve it, you can also add the options like natif php.</code></li>
+						    <li><strong class="mr-1">retrieve($name) :</strong> <code>if the was not found in the session, null is returned.</code></li>
+						    <li><strong class="mr-1">clear($name) :</strong> <code>Remove the value from the session.</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Session\Cookie;
+
+Cookie::store('current_user_id', $userId);
+
+// get the value
+
+$id = Cookie::retrieve('current_user_id');
+if($id != null) {
+    // Todo
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section>
+				     <section class="docs-section" id="item-7-3">
+						<h2 class="section-heading">SessionAlert</h2>
+						<p>If you wanna show a message to your page with it's html (to display error colors for example), but using a session value, you can use this object:</p>
+                        <ul>
+						    <li><strong class="mr-1">create($message, $message_type='info') :</strong> <code>Save a message to session with a type: info, error, warning and success.</code></li>
+						    <li><strong class="mr-1">show() :</strong> <code>Put this function in the php page to display the message. (in the view, use @sessionAlert )</code></li>
+						    <li><strong class="mr-1">clear() :</strong> <code>Remove the message from the session.</code></li>
+                        </ul>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Session\SessionAlert;
+
+SessionAlert::create('No email was found', 'error');
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="html hljs">
+&lt;body&gt;
+    &lt;div class="form-group"&gt;
+    &lt;input class="form-control" name="email" placeholder="Your email" /&gt;
+    @&#8203;sessionAlert
+    &lt;/div&gt;
+&lt;/body&gt;
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                    </section><!--//section-->
+			    </article><!--//docs-article-->
+
+                <article class="docs-article" id="section-8">
+				    <header class="docs-header">
 					    <h1 class="docs-heading">Storage</h1>
 					    <section class="docs-intro">
 						    <p>Some users find it hard and repetitive in the files managing level, to make a bite easy to use showcase with file management, you can use the Storage Object.</p>
 						</section><!--//docs-intro-->
 				    </header>
-				     <section class="docs-section" id="item-7-1">
+				     <section class="docs-section" id="item-8-1">
 						<h2 class="section-heading">Files, folders and download</h2>
 						<p>To create, copy, move and save data to file, you can use the Storage following functions :</p>
 						<p>First, you need to select the folder, there is 3 functions to that : </p>
@@ -1204,14 +1514,14 @@ class HomeController extends BaseController{
 			    </article><!--//docs-article-->
 			    
 			    
-			    <article class="docs-article" id="section-8">
+			    <article class="docs-article" id="section-9">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Debug</h1>
 					    <section class="docs-intro">
 						    <p>To print out data to a log file, or terminal, use the Log Class. The data can be string or array only!</p>
 						</section><!--//docs-intro-->
 				    </header>
-				     <section class="docs-section" id="item-8-1">
+				     <section class="docs-section" id="item-9-1">
 						<h2 class="section-heading">File</h2>
 						<p>To log data to file log use the print function. The file log is created at Storage/logs, with the current day as name.</p>
                         <div class="docs-code-block">
@@ -1223,7 +1533,7 @@ Log::print("Message to print in log file");
                         </div><!--//docs-code-block-->
                     </section><!--//section-->
 					
-					<section class="docs-section" id="item-8-2">
+					<section class="docs-section" id="item-9-2">
 						<h2 class="section-heading">Console</h2>
                         <p>To log data to console use the console function.</p>
                         <div class="docs-code-block">
@@ -1242,7 +1552,7 @@ Log::console("No File was Found!", 'error');
                         </code></pre>
                         </div><!--//docs-code-block-->
 					
-					<section class="docs-section" id="item-8-3">
+					<section class="docs-section" id="item-9-3">
 						<h2 class="section-heading">var_dump</h2>
                         <p>To catch var_dump result and display it in the file or console use the var_dump function</p>
                         <div class="docs-code-block">
@@ -1257,23 +1567,17 @@ Log::var_dump($data);
 			    </article><!--//docs-article-->
 			    
 			    
-			    <article class="docs-article" id="section-9">
+			    <article class="docs-article" id="section-10">
 				    <header class="docs-header">
 					    <h1 class="docs-heading">Run It!</h1>
 					    <section class="docs-intro">
-                            <p>To start the showcase web site/web app to the following:</p>
-                            <p>go to the public folder with the command line</p>
+                            <p>To start the showcase web site/web app do the following:</p>
                             <div class="docs-code-block">
 							<pre class="shadow-lg rounded"><code class="bash hljs">
-cd /public
+php showcase serve
                         </code></pre>
                         </div><!--//docs-code-block-->
-                        <p>And run the php server</p>
-                        <div class="docs-code-block">
-							<pre class="shadow-lg rounded"><code class="bash hljs">
-php -S localhost:8000
-                        </code></pre>
-                        </div><!--//docs-code-block-->
+                        <p>Server run on http://localhost:8000</p>
 						</section><!--//docs-intro-->
 				    </header>
 			    </article><!--//docs-article-->

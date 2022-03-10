@@ -4,6 +4,9 @@ namespace  Showcase\Controllers{
     use \Showcase\Framework\HTTP\Controllers\BaseController;
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Framework\HTTP\Links\URL;
+    use \Showcase\Framework\HTTP\Gards\Auth;
+    use \Showcase\Framework\HTTP\Routing\Request;
+    use \Showcase\Framework\Database\DB;
 
     class NameController extends BaseController{
 
@@ -26,11 +29,12 @@ namespace  Showcase\Controllers{
          * @param \Showcase\Framework\HTTP\Routing\Request
          * @return Redirection
          */
-        static function store($request){
+        static function store(Request $request){
             if(Validator::validate($request->get(), ['email', 'password'])){
+                    // email and password found
                     return self::response()->redirect('/'); 
             }
-            return self::response()->redirect('/contact'); 
+            return self::response()->redirect('/create', 'please fill all inputs', 'error'); 
         }
     }
 }

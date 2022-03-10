@@ -1,6 +1,7 @@
 <?php
 namespace Showcase\Models{
     use \Showcase\Framework\Database\Models\BaseModel;
+    use \Showcase\Framework\Database\DB;
     use \Exception;
     
     class Unit extends BaseModel

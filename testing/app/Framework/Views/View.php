@@ -73,6 +73,8 @@ namespace Showcase\Framework\Views {
          */
         static function get($view, array $vars=array()){
             $page = self::printView($view);
+            //sections
+            $page = self::sections($page);
             //check for php code
             $page = self::executeCode($page);
             $page = self::checkVariables($page);
@@ -191,6 +193,20 @@ namespace Showcase\Framework\Views {
                     $result = self::parsingFunctions($_function);
                     $page = str_replace($function, $result, $page);
                 }
+
+                //check for php code
+                $page = self::executeCode($page);
+                $page = self::checkVariables($page);
+                //check for foreach and for
+                $page = self::checkForLoops($page);
+                //check for if
+                $page = self::checkForConditions($page);
+                //Check for native display in html
+                $page = self::checkForDisplay($page);
+                //check for sessionAlert
+                $page = self::checkForSessionAlert($page);
+                //check for csrf
+                $page = self::checkForCSRF($page);
 
                 //Chech for include function
                 $matches = array();
@@ -482,11 +498,17 @@ namespace Showcase\Framework\Views {
             $string = '';
             foreach($vars as $key => $value){
                 if(is_array($value))
-                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
+                    $string .= "$$key = array(" . self::arrayToStringVar($value) . ");\n";
                 elseif (is_object($value)) 
-                    $string .= "$$key=array(" . self::arrayToStringVar($value) . ");\n";
-                else
-                    $string .= "$$key=" . "'" . str_replace("'", "\'", $value) . "';\n";
+                    $string .= "$$key = " . self::objectToStringVar($value) . ";\n";
+                else{
+                    if(is_bool($value))
+                        $string .= "$$key = " . ($value == true ? 'true' : 'false') . ";\n";
+                    else if(is_numeric($value))
+                        $string .= "$$key = " . $value . ";\n";
+                    else
+                        $string .= "$$key = '" . str_replace("'", "\'", $value) . "';\n";
+                }
             }
             return $string;
         }
@@ -500,7 +522,7 @@ namespace Showcase\Framework\Views {
                 return '';
 
             if(!is_array($vars))
-                return '';
+                $use_key = true;
             $string = '';
             foreach ($vars as $key => $value) {
                     if (is_numeric($value)) {
@@ -522,11 +544,50 @@ namespace Showcase\Framework\Views {
                     } elseif (is_array($value)) {
                         $string .= "[" . self::arrayToStringVar($value, true) . "],";
                     } elseif (is_object($value)) {
-                        $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
+                        // $string .= "[" . self::arrayToStringVar(json_decode(json_encode($value), true), true) . "],";
+                        $string .= self::objectToStringVar($value) . ",";
                     }
             }
             
             return substr($string, 0, -1);
+        }
+
+        /***
+         * If the user send an object inside the variables sent to the view
+         * this function convert it to string
+         */
+        static function objectToStringVar($var){
+            if (self::is_in_namespace("Showcase\Models", $var)) {
+                $reflect = new \ReflectionClass($var);
+                return "DB::factory()->model('" . $reflect->getShortName() . "')->select()->where('" . $var->getIdName() . "', '" . $var->{$var->getIdName()} ."')->first()";
+            }
+            else{
+                return "(object) [" . self::arrayToStringVar(json_decode(json_encode($var), true), true) . "]";
+            }
+        }
+
+
+        /**
+         * Check if object is from a namespace
+         * 
+         * @param string $namespace to check
+         * @param object $object
+         * @return bool
+         */
+        static function is_in_namespace($namespace, $object) {
+            return strpos(get_class($object), $namespace . '\\') === 0;
+        }
+
+        /**
+         * Get object namespace
+         * 
+         * @param object $object
+         * @return string namespace
+         */
+        function get_namespace($object) {
+            $class = get_class($object);
+            $pos = strrpos($class, '\\');
+            return substr($class, 0, $pos);
         }
     }
 }

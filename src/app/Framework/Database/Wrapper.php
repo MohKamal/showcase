@@ -57,12 +57,12 @@ namespace  Showcase\Framework\Database {
                 case 'sqlite':
                     $table->handle();
                     $create = new SQLiteTable($this->pdo);
-                    $create->createTables($table->name, $table->columns);
+                    $create->createTables($table->name, $table->columns, $table->foreigns);
                 break;
                 case 'mysql':
                     $table->handle();
                     $create = new MySqlTable($this->pdo);
-                    $create->createTables($table->name, $table->columns);
+                    $create->createTables($table->name, $table->columns, $table->foreigns);
                 break;
             }
         }

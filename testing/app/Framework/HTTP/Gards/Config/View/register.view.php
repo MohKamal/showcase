@@ -7,7 +7,7 @@
 
 		<!-- STYLE CSS -->
 		<link rel="stylesheet" href="@{{Bootsrap-style}}">
-		<link rel="stylesheet" href="@{{Styles}}/style.css">
+		<link rel="stylesheet" href="@{{Assets}}/css/style.css">
 
 	</head>
 
@@ -18,6 +18,7 @@
 					<img src="@{{Assets}}/images/images.jpg" alt="">
 				</div>
 				<form method="post" action='/newregister'>
+					@csrf
 					@foreach($errors as $error)
 						<div class='alert alert-danger' role='alert'> @display $error @enddisplay </div>
 					@endforeach

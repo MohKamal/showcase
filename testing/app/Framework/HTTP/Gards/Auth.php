@@ -18,11 +18,25 @@ namespace  Showcase\Framework\HTTP\Gards{
         // current user email if connected
         static $login_column = 'email';
 
+        // expiring time for login user
+        static $expiring_time = 3600;
+
         /**
          * Set the column to login with
+         * @param string $column name
          */
         public static function loginColumn($column='email'){
             self::$login_column = $column;
+        }
+
+        /**
+         * Set the expiring time for a user
+         */
+        public static function expiringLogin($time=3600){
+            if($time <= 0)
+                self::$expiring_time = 2147483647;
+            else
+                self::$expiring_time = $time;
         }
 
         /**
@@ -39,14 +53,14 @@ namespace  Showcase\Framework\HTTP\Gards{
             $user = DB::factory()->model('User')->select()->where(self::$login_column, $email)->first();
 
             if ($user == null) {
-                Log::print("Auth: No user was found with email " . $email);
+                Log::print("Auth: No user was found with " . self::$login_column . " " . $email);
                 return false;
             }
             
             if($user->validHash($password, $user->password)){
-                Cookie::store('ses_user_id', $user->id, ['expires' => time() + 3600]);
-                Cookie::store('ses_user_email', $user->email, ['expires' => time() + 3600]);
-                Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
+                Cookie::store('ses_user_id', $user->id, ['expires' => time() + self::$expiring_time]);
+                Cookie::store('ses_user_email', $user->email, ['expires' => time() + self::$expiring_time]);
+                Cookie::store('ses_user_name', $user->username, ['expires' => time() + self::$expiring_time]);
                 if($remember){
                     $token = self::generateRandomString(36);
                     DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();

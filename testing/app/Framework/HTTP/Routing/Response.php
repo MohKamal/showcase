@@ -4,6 +4,7 @@ namespace  Showcase\Framework\HTTP\Routing {
 
     use \Showcase\Framework\HTTP\Routing\IResponse;
     use \Showcase\Framework\Initializer\VarLoader;
+    use \Showcase\Framework\Session\Session;
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Views\View;
     use \Showcase\Framework\IO\Debug\Log;
@@ -47,6 +48,26 @@ namespace  Showcase\Framework\HTTP\Routing {
          */
         function back($message='', $type='info'){
             return URL::redirectWithMessage('', $message, $type);
+        }
+
+        /**
+         * Redirection to preview url before login
+         * 
+         * @param string url to be redirected to
+         */
+        function backBeforeLogin($message='', $type='info'){
+            $url = Session::retrieve('backBeforeLogin');
+            Session::clear('backBeforeLogin');
+            return URL::redirectWithMessage($url, $message, $type);
+        }
+
+        /**
+         * get url before Login
+         * 
+         * @param string url to be redirected to
+         */
+        function getUrlBeforeLogin(){
+            return Session::retrieve('backBeforeLogin');
         }
 
         /**

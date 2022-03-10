@@ -25,7 +25,7 @@ namespace  Showcase\Framework\Database\MySql {
         /**
          * create tables 
          */
-        public function createTables($name, array $columns) {
+        public function createTables($name, array $columns, array $foreigns = array()) {
             $query = 'CREATE TABLE IF NOT EXISTS ' . $name . ' (';
             foreach($columns as $col){
                 $query .= $col['name'];
@@ -33,6 +33,14 @@ namespace  Showcase\Framework\Database\MySql {
                     $query .= ' ' . $p;
                 }
                 $query .= ', ';
+            }
+            
+            if(count($foreigns) > 0) {
+                foreach($foreigns as $foreign){
+                    if ($foreign->add_to_query) {
+                        $query .= 'FOREIGN KEY (' . $foreign->current_table_column_name . ') REFERENCES ' . $foreign->foreign_table_name . '(' . $foreign->foreign_table_column_name . '), ';
+                    }
+                }
             }
             $query = rtrim($query, ", ");
             $query .= ')';

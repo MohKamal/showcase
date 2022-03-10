@@ -45,6 +45,9 @@ namespace  Showcase\Framework\Command{
                         case 'migration':
                             $this->createMigration($command[2]);
                             break;
+                        case 'seeder':
+                            $this->createSeeder($command[2]);
+                            break;
                     }
                 }
             }
@@ -68,6 +71,10 @@ namespace  Showcase\Framework\Command{
                     case 'auth':
                         $this->auth();
                         break;
+                    case 'serve':
+                        $this->serve();
+                    case 'seed':
+                        $this->seed();
                 }
             }
 
@@ -194,6 +201,62 @@ namespace  Showcase\Framework\Command{
                 }
             }
             Log::console('Migration ended!', 'success');
+        }   
+        
+        /**
+         * Create new Model file
+         * @param string new model name
+         */
+        public function createSeeder($name){
+            if(!empty($name)){
+                $file = file_get_contents(dirname(__FILE__) . '/../Database/Config/Seeder.php');
+                $content = str_replace('SeederName', $name, $file);
+                $file_name = $name . '.php';
+                $base_dir = dirname(__FILE__) . '/../../Database/Seed/';
+                if (!file_exists($base_dir)) {
+                    mkdir($base_dir, 0777, true);
+                }
+                $dir = $base_dir . $file_name;
+                file_put_contents($dir, $content);
+                Log::console($name . ' seeding file added succefully', 'success');
+            }
+        }     
+        
+        /**
+        * Seed models to the databse
+        */
+       public function seed(){
+           $dir = dirname(__FILE__) . '/../../Database/Seed';
+           $db = new Wrapper();
+           foreach (glob($dir . '/*.php') as $file)
+           {
+               require_once $file;
+
+               // get the file name of the current file without the extension
+               // which is essentially the class name
+               $class = '\Showcase\Database\Seed\\' . basename($file, '.php');
+
+               if (class_exists($class))
+               {
+                   $obj = new $class;
+                   $db->seedData($obj);
+                   Log::console("Seed $obj->name created!\n", 'success');
+               }
+           }
+           Log::console('Seeding ended!', 'success');
+       }
+
+        /**
+         * Start server
+         */
+        public function serve(){
+            $output=null;
+            $retval=null;
+            $olddir = getcwd();
+            Log::console("Prepare to run local server...\n", 'info');
+            chdir('./public');  //change to new dir
+            Log::console("server run's on http://localhost:8000", 'success');
+            exec('php -S localhost:8000', $output, $retval);
         }
 
         /**

@@ -10,13 +10,14 @@ namespace  Showcase\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Models\User;
     use \Showcase\Framework\HTTP\Gards\Auth;
+    use \Showcase\Framework\HTTP\Routing\Request;
 
     class RegisterController extends BaseController{
 
         /**
          * Store new user
          */
-        static function store($request){
+        static function store(Request $request){
             $errors = Validator::validation($request->get(), [
                 'email' => 'required | email', 
                 'password' => 'required | min:8', 

@@ -8,6 +8,7 @@ namespace  Showcase\Framework\Database {
     use \Showcase\Framework\Database\MySql\MySqlConnection;
     use \Showcase\Framework\Database\MySql\MySqlTable;
     use \Showcase\Framework\Database\Config\Table;
+    use \Showcase\Framework\Database\Seeding\Seeder;
     use \Showcase\Framework\Database\Config\Column;
     
     class Wrapper{
@@ -56,13 +57,24 @@ namespace  Showcase\Framework\Database {
                 case 'sqlite':
                     $table->handle();
                     $create = new SQLiteTable($this->pdo);
-                    $create->createTables($table->name, $table->columns);
+                    $create->createTables($table->name, $table->columns, $table->foreigns);
                 break;
                 case 'mysql':
                     $table->handle();
                     $create = new MySqlTable($this->pdo);
-                    $create->createTables($table->name, $table->columns);
+                    $create->createTables($table->name, $table->columns, $table->foreigns);
                 break;
+            }
+        }
+
+        /**
+         * Seed the data to database
+         */
+        public function seedData(Seeder $seeder){
+            if($this->pdo == null)
+                $this->Initialize();
+            if ($seeder) {
+                $seeder->execute();
             }
         }
     }

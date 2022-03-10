@@ -29,6 +29,14 @@ namespace  Showcase\Framework\Database {
         }
 
         /**
+         * Get the current made query
+         * @return string $query
+         */
+        public function getQuery() {
+            return $this->_query;
+        }
+
+        /**
          * Execute a custom query
          * @param string $query query to execute
          */

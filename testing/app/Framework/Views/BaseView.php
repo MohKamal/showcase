@@ -11,6 +11,9 @@ use \Showcase\Framework\IO\Debug\Log;
 use \Showcase\Framework\HTTP\Gards\Auth;
 use \Showcase\Framework\HTTP\Gards\CSRF;
 use \Showcase\Framework\Session\Session;
+use \Showcase\Framework\Session\Cookie;
 use \Showcase\Framework\Database\DB;
+use \Showcase\Framework\IO\Storage\Storage;
+use \Showcase\Framework\Utils\Utilities;
 
 $csrf = new CSRF();

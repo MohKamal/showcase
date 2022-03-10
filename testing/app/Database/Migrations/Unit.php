@@ -2,6 +2,7 @@
 namespace  Showcase\Database\Migrations {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Database\Config\Foreign;
 
     class Unit extends Table{
 
@@ -19,6 +20,9 @@ namespace  Showcase\Database\Migrations {
             );
             $this->column(
                 Column::factory()->name('value')->double()
+            );
+            $this->foreign(
+                Foreign::factory()->model('User')->toOne('userunits', 'unit_id', 'user_id')->dontAddItToQuery()
             );
             $this->timespan();
             $this->softDelete();

@@ -86,13 +86,13 @@ namespace  Showcase\Framework\Database\Config {
          * This column is string
          * @return \Framework\Database\Config\Column
          */
-        public function string(){
+        public function string($max=250){
             $type =  VarLoader::env('DB_TYPE');
             $this->clean();
             if(strtolower($type) == 'sqlite')
                 array_push($this->options, 'TEXT');
             else if(strtolower($type) == 'mysql')
-                array_push($this->options, "VARCHAR(250)");
+                array_push($this->options, "VARCHAR($max)");
             $this->PHP_type = "string";
             return $this;
         }

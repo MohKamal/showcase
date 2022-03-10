@@ -62,7 +62,7 @@ namespace  Showcase\Framework\Database\Models {
                 {
                     $table = new $class;
                     $table->handle();
-                    foreach($table->columns as $_col){
+                    foreach($table->columns as $_col) {
                         $col = new Column();
                         $col->instance($_col['name'], $_col['options']);
                         if($col != null){
@@ -77,8 +77,67 @@ namespace  Showcase\Framework\Database\Models {
                             $this->createProperty($col->name, $value);
                         }
                     }
+
+                    foreach($table->foreigns as $foreign) {
+                        if($foreign !== null) {
+                            if (!empty($foreign->foreign_model_name)) {
+                                if (empty($foreign->foreign_middle_table_name)) {
+                                    $value = function () use (&$foreign) {
+                                        return DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name})->first();
+                                    };
+                                    
+                                    $setter = function ($arg) use (&$foreign) {
+                                        $foreignModel = $arg[0];
+                                        $this->{$foreign->foreign_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
+                                        $thus->save();
+                                    };
+                                    $this->createProperty(strtolower($foreign->foreign_model_name), $setter);
+                                } else {
+                                    $value = function() {};
+                                    $methodName = strtolower($foreign->foreign_model_name);
+                                    if ($foreign->one_object_to_return) {
+                                        $value = function () use (&$foreign) {
+                                            $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
+                                            return DB::factory()->model($foreign->foreign_model_name)->query($query)->first();
+                                        };
+                                    } else {
+                                        $value = function () use (&$foreign) {
+                                            $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
+                                            return DB::factory()->model($foreign->foreign_model_name)->query($query)->get();
+                                        };
+                                        $methodName = $methodName . 's';
+                                    }
+                                    
+                                    $setter = function ($arg) use (&$foreign) {
+                                        $foreignModel = $arg[0];
+                                        $values = [
+                                            $foreign->foreign_model_column_name => $foreignModel->{$foreignModel->getIdName()},
+                                            $foreign->foreign_middle_table_current_column => $this->{$this->getIdName()},
+                                            'created_at' => date("Y-m-d H:i:s"),
+                                            'updated_at' => date("Y-m-d H:i:s")
+                                        ];
+                                        DB::factory()->table($foreign->foreign_middle_table_name)->insert($values)->run();
+                                    };
+                                    $this->createProperty($methodName, $value);
+                                    $this->createProperty('set' . ucfirst(strtolower($foreign->foreign_model_name)), $setter);
+                                }
+                            }
+                        }
+                    }
                 }
             }
+        }
+
+        /**
+         * Call dynamic method
+         * @param string $name method name
+         * @param array $arguments method arguments
+         * 
+         * @return Mixte
+         */
+        public function __call($name, $arguments)
+        {
+            return call_user_func($this->{$name}, $arguments);
         }
 
         /**
@@ -165,6 +224,11 @@ namespace  Showcase\Framework\Database\Models {
                     unset($class_vars[$variable]);
                 unset($class_vars['variables']);
 
+                foreach($class_vars as $key => $value) {
+                    if(is_callable($this->{$key})) 
+                        unset($class_vars[$key]);
+                }
+
                 $this->{$this->idDetails["name"]} = DB::factory()->model($this->className())->insert($class_vars)->run();
             }else{
                 $this->updated_at = date("Y-m-d H:i:s");
@@ -174,6 +238,11 @@ namespace  Showcase\Framework\Database\Models {
                 foreach($this->variables as $variable)
                     unset($class_vars[$variable]);
                 unset($class_vars['variables']);
+
+                foreach($class_vars as $key => $value) {
+                    if(is_callable($this->{$key})) 
+                        unset($class_vars[$key]);
+                }
 
                 DB::factory()->model($this->className())->update($class_vars)->where($this->idDetails["name"], $this->{$this->idDetails["name"]})->run();
             }

@@ -2,6 +2,7 @@
 namespace  Showcase\Framework\Database\Config {
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Database\Config\Foreign;
     
     class Table{
 
@@ -17,6 +18,12 @@ namespace  Showcase\Framework\Database\Config {
         public $columns = array();
 
         /**
+         * Table Foreign keys
+         * @var array
+         */
+        public $foreigns = array();
+
+        /**
          * Add column to the table
          * @var \Showcase\Framework\Database\Config\Column
          * @return boolean
@@ -25,6 +32,18 @@ namespace  Showcase\Framework\Database\Config {
             if($column == null)
                 return false;
             array_push($this->columns, ["name" => $column->name, "options" => $column->options]);
+            return true;
+        }
+
+        /**
+         * Add foreign to the table
+         * @var \Showcase\Framework\Database\Config\Foreign
+         * @return boolean
+         */
+        public function foreign(Foreign $foreignKey){
+            if($foreignKey == null)
+                return false;
+            array_push($this->foreigns, $foreignKey);
             return true;
         }
 

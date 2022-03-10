@@ -10,22 +10,25 @@ namespace  Showcase\Controllers{
     use \Showcase\Framework\Validation\Validator;
     use \Showcase\Models\User;
     use \Showcase\Framework\HTTP\Gards\Auth;
+    use \Showcase\Framework\HTTP\Routing\Request;
 
     class LoginController extends BaseController{
 
         /**
          * Login a user
          */
-        static function login($request){
+        static function login(Request $request){
             if(Auth::check())
                 return self::response()->redirect('/');
 
             if (Validator::validate($request->get(), ['email', 'password'])) {
-                $remember = $request->get()['remember'] == 'on' ? true : false;
+                $remember = false;
+                if(isset($request->get()['remember']))
+                    $remember = $request->get()['remember'] == 'on' ? true : false;
                 if(!Auth::login($request->get()['email'], $request->get()['password'], $remember))
                     return self::response()->unauthorized();
             }
-            return self::response()->redirect('/');
+            return self::response()->backBeforeLogin();
         }
 
         /**

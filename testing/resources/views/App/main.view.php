@@ -4,7 +4,6 @@
 		<meta charset="utf-8">
 		<title>Showcase</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="icon" href="@{{Assets}}/images/favicon.ico" />
 		<!-- STYLE CSS -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 		<link rel="stylesheet" href="@{{Bootsrap-style}}">
@@ -45,38 +44,9 @@
 	</head>
 
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="#">Showcase</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav">
-				<li class="nav-item active">
-					<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/documentation">{{$doc}}</a>
-				</li>
-				@if(Auth::guest())
-					<li class='nav-item'><a class='nav-link' href='/login'>Login</a></li>
-					<li class='nav-item'><a class='nav-link' href='/register'>Register</a></li>
-				@else
-					<li class='nav-item'><a class='nav-link disabled' href='#'> {{Auth::user() == null ? '' : \Showcase\Framework\HTTP\Gards\Auth::user()->username}} </a></li>
-					<li class='nav-item'><a class='nav-link' href='#' id='logout'>Logout</a></li><form id='logout_form' style='display:none' method='post' action='/logout'>@csrf</form>
-				@endif
-				</ul>
-			</div>
-		</nav>
 		@render()
 		<script src="@{{Jquery}}"></script>
 		<link rel="stylesheet" href="@{{Bootsrap-script}}">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script>
-			$("#logout").on('click', function(e){
-				e.preventDefault();
-				$("#logout_form").submit();
-			})
-		</script>
 	</body>
 </html>

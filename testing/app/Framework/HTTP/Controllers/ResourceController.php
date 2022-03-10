@@ -11,13 +11,14 @@ namespace  Showcase\Framework\HTTP\Controllers{
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Utils\Utilities;
     use \Showcase\Framework\IO\Storage\Storage;
+    use \Showcase\Framework\HTTP\Routing\Request;
 
     class ResourceController extends BaseController{
 
         /**
          * Return any file
          */
-        static function ressource($request){
+        static function ressource(Request $request){
             $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
@@ -31,7 +32,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
         /**
          * Return style files
          */
-        static function css($request){
+        static function css(Request $request){
             $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
@@ -45,7 +46,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
         /**
          * Return script files
          */
-        static function js($request){
+        static function js(Request $request){
             $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
@@ -59,7 +60,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
         /**
          * Return script files
          */
-        static function images($request){
+        static function images(Request $request){
             $errors = Validator::validation($request->get(), ['file' => 'required | string']);
 
             if (empty($errors)) {
@@ -73,7 +74,7 @@ namespace  Showcase\Framework\HTTP\Controllers{
         /**
          * Return a file
          */
-        static function download($request){
+        static function download(Request $request){
             $errors = Validator::validation($request->get(), ['file' => 'required | string']);
             if (empty($errors)) {
                 $file = Storage::folder("downloads")->path($request->get()['file']);
