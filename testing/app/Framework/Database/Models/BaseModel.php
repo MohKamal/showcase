@@ -80,7 +80,14 @@ namespace  Showcase\Framework\Database\Models {
 
                     foreach($table->foreigns as $foreign) {
                         if($foreign !== null) {
+                            $methodName = '';
+                            $setterName = '';
+                            $value = function() {};
+                            $setter = null;
                             if (!empty($foreign->foreign_model_name)) {
+                                $methodName = strtolower($foreign->foreign_model_name);
+                                $setterName = 'set' . ucfirst(strtolower($foreign->foreign_model_name));
+
                                 if (empty($foreign->foreign_middle_table_name)) {
                                     $value = function () use (&$foreign) {
                                         return DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name})->first();
@@ -89,24 +96,18 @@ namespace  Showcase\Framework\Database\Models {
                                     $setter = function ($arg) use (&$foreign) {
                                         $foreignModel = $arg[0];
                                         $this->{$foreign->foreign_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
-                                        $thus->save();
+                                        $this->save();
                                     };
-                                    $this->createProperty(strtolower($foreign->foreign_model_name), $setter);
                                 } else {
-                                    $value = function() {};
-                                    $methodName = strtolower($foreign->foreign_model_name);
-                                    if ($foreign->one_object_to_return) {
-                                        $value = function () use (&$foreign) {
-                                            $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
-                                            return DB::factory()->model($foreign->foreign_model_name)->query($query)->first();
-                                        };
-                                    } else {
-                                        $value = function () use (&$foreign) {
-                                            $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
-                                            return DB::factory()->model($foreign->foreign_model_name)->query($query)->get();
-                                        };
+                                    $value = function () use (&$foreign) {
+                                        $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
+                                        $qb = DB::factory()->model($foreign->foreign_model_name)->query($query);
+                                        if($foreign->one_object_to_return)
+                                            return $qb->first();
+                                        return $qb->get();
+                                    };
+                                    if(!$foreign->one_object_to_return)
                                         $methodName = $methodName . 's';
-                                    }
                                     
                                     $setter = function ($arg) use (&$foreign) {
                                         $foreignModel = $arg[0];
@@ -118,10 +119,22 @@ namespace  Showcase\Framework\Database\Models {
                                         ];
                                         DB::factory()->table($foreign->foreign_middle_table_name)->insert($values)->run();
                                     };
-                                    $this->createProperty($methodName, $value);
-                                    $this->createProperty('set' . ucfirst(strtolower($foreign->foreign_model_name)), $setter);
                                 }
+                            } else if(!empty($foreign->foreign_table_name)) {
+                                $value = function () use (&$foreign) {
+                                    $qb = DB::factory()->table($foreign->foreign_table_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name});
+                                    if($foreign->one_object_to_return)
+                                        return $qb->first();
+                                    return $qb->get();
+                                };
                             }
+
+                            if(!empty($foreign->method_alias)) {
+                                $methodName = $foreign->method_alias;
+                            }
+                            
+                            $this->createProperty($methodName, $value);
+                            if($setter !== null) { $this->createProperty($setterName, $setter); }
                         }
                     }
                 }

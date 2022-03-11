@@ -2,6 +2,7 @@
 namespace  Showcase\Database\Migrations {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Database\Config\Foreign;
 
     class User extends Table{
 
@@ -28,12 +29,15 @@ namespace  Showcase\Database\Migrations {
             );
             $this->column(
                 Column::factory()->name('email')->string()
-            );
+            ); 
             $this->column(
                 Column::factory()->name('phone')->string()->nullable()
             );
             $this->column(
                 Column::factory()->name('email_verify')->datetime()->nullable()
+            );
+            $this->foreign(
+                Foreign::factory()->model('Unit')->toMany('userunits', 'user_id', 'unit_id')->dontAddItToQuery()
             );
             $this->timespan();
         }

@@ -2,6 +2,7 @@
 namespace  Showcase\Database\Migrations {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Database\Config\Foreign;
 
     class rememberMe extends Table{
 
@@ -19,6 +20,9 @@ namespace  Showcase\Database\Migrations {
             );
             $this->column(
                 Column::factory()->name('token')->string()
+            );
+            $this->foreign(
+                Foreign::factory()->column('user_id')->model('User')->updateCascade()
             );
             $this->timespan();
         }

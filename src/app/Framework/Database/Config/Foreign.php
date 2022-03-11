@@ -47,6 +47,11 @@ namespace  Showcase\Framework\Database\Config {
         public $foreign_model_column_name = '';
 
         /**
+         * @var string calling method alias name
+         */
+        public $method_alias = '';
+
+        /**
          * @var bool if true it return only one object, if false it return array of objects
          */
         public $one_object_to_return = true;
@@ -112,6 +117,18 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function dontAddItToQuery() {
             $this->add_to_query = false;
+            return $this;
+        }
+
+        /**
+         * Set method alias to call from an model object
+         * @param string $name method alias
+         * @return \Framework\Database\Config\Foreign
+         */
+        public function alias($name) {
+            if (!empty($name)) {
+                $this->method_alias = $name;
+            }
             return $this;
         }
 

@@ -47,6 +47,11 @@ namespace  Showcase\Framework\Database\Config {
         public $foreign_model_column_name = '';
 
         /**
+         * @var string calling method alias name
+         */
+        public $method_alias = '';
+
+        /**
          * @var bool if true it return only one object, if false it return array of objects
          */
         public $one_object_to_return = true;
@@ -116,29 +121,45 @@ namespace  Showcase\Framework\Database\Config {
         }
 
         /**
+         * Set method alias to call from an model object
+         * @param string $name method alias
+         * @return \Framework\Database\Config\Foreign
+         */
+        public function alias($name) {
+            if (!empty($name)) {
+                $this->method_alias = $name;
+            }
+            return $this;
+        }
+
+        /**
          * Get the table name and model object to generate the query
          * @param string $name Model name
          * 
          * @return \Framework\Database\Config\Foreign
          */
-        public function model($name, $column = 'id'){
+        public function model($name, $column = 'id') {
             if(empty($name))
                 return null;
-            
+            $model = null;
             //get model and migration
             $m_file = dirname(__FILE__) . '/../../../Models/' . $name . '.php';
             if (file_exists($m_file)) {
                 require_once $m_file;
+
                 // get the file name of the current file without the extension
                 // which is essentially the class name
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
-                if (class_exists($class))
-                    $this->_model = new $class;
+                if (class_exists($class)) {
+                    $model = new $class();
+                }
             }
 
-            $this->foreign_table_name = $this->_model->tableName();
-            $this->foreign_model_name = $name;
-            $this->foreign_table_column_name = $column;
+            if ($model !== null) {
+                $this->foreign_table_name = $model->tableName();
+                $this->foreign_model_name = $name;
+                $this->foreign_table_column_name = $column;
+            }
 
             return $this;
         }

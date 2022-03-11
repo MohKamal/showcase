@@ -34,6 +34,15 @@ namespace  Showcase\Framework\Database\SQLite {
                 }
                 $query .= ', ';
             }
+            
+            if(count($foreigns) > 0) {
+                foreach($foreigns as $foreign){
+                    if ($foreign->add_to_query) {
+                        $query .= 'FOREIGN KEY (' . $foreign->current_table_column_name . ') REFERENCES ' . $foreign->foreign_table_name . '(' . $foreign->foreign_table_column_name . '), ';
+                    }
+                }
+            }
+            
             $query = rtrim($query, ", ");
             $query .= ')';
             $commands = [$query];
