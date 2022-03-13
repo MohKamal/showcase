@@ -50,21 +50,25 @@ namespace  Showcase\Framework\Database {
         /**
          * Migrate the tables to database
          */
-        public function createTable(Table $table){
+        public function createTable(Table $table, bool $handle=true, bool $handleForeign = true){
             if($this->pdo == null)
                 $this->Initialize();
+            if ($handle) {
+                $table->handle();
+            }
+            if ($handleForeign) {
+                $table->handleForeign();
+            }
+            $create = null;
             switch(strtolower($this->type)){
                 case 'sqlite':
-                    $table->handle();
                     $create = new SQLiteTable($this->pdo);
-                    $create->createTables($table->name, $table->columns, $table->foreigns);
                 break;
                 case 'mysql':
-                    $table->handle();
                     $create = new MySqlTable($this->pdo);
-                    $create->createTables($table->name, $table->columns, $table->foreigns);
                 break;
             }
+            $create->createTables($table->name, $table->columns, $table->foreigns);
         }
 
         /**
