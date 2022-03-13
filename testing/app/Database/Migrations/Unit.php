@@ -21,11 +21,14 @@ namespace  Showcase\Database\Migrations {
             $this->column(
                 Column::factory()->name('value')->double()
             );
+            $this->timespan();
+            $this->softDelete();
+        }
+
+        function handleForeign() {
             $this->foreign(
                 Foreign::factory()->model('User')->toOne('userunits', 'unit_id', 'user_id')->dontAddItToQuery()
             );
-            $this->timespan();
-            $this->softDelete();
         }
     }
 }

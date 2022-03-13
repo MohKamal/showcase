@@ -138,7 +138,7 @@ namespace  Showcase\Framework\Database\Config {
          * 
          * @return \Framework\Database\Config\Foreign
          */
-        public function model($name, $column = 'id') {
+        public function model($name, $column = 'id'){
             if(empty($name))
                 return null;
             $model = null;
@@ -146,22 +146,32 @@ namespace  Showcase\Framework\Database\Config {
             $m_file = dirname(__FILE__) . '/../../../Models/' . $name . '.php';
             if (file_exists($m_file)) {
                 require_once $m_file;
-
                 // get the file name of the current file without the extension
                 // which is essentially the class name
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
                 if (class_exists($class)) {
-                    $model = new $class();
+                    $model = new $class;
+                    $model->initializeTable(false);
                 }
             }
 
-            if ($model !== null) {
+            if ($model) {
                 $this->foreign_table_name = $model->tableName();
                 $this->foreign_model_name = $name;
                 $this->foreign_table_column_name = $column;
             }
 
             return $this;
+        }
+
+        function createInstance($className, array $arguments = array())
+        {
+            if(class_exists($className)) {
+                return call_user_func_array(array(
+                    new \ReflectionClass($className), 'newInstance'), 
+                    $arguments);
+            }
+            return false;
         }
 
         /**

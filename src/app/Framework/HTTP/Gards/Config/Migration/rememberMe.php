@@ -21,10 +21,17 @@ namespace  Showcase\Database\Migrations {
             $this->column(
                 Column::factory()->name('token')->string()
             );
-            $this->foreign(
-                Foreign::factory()->column('user_id')->model('User')->updateCascade()
-            );
             $this->timespan();
         }
+        
+        /**
+        * Migration Relation details
+        * @return array of foreign relations
+        */
+       function handleForeign(){
+            $this->foreign(
+                Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+            );
+       }
     }
 }

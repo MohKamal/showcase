@@ -2,6 +2,7 @@
 namespace  Showcase\Database\Migrations {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Database\Config\Foreign;
 
     class rememberMe extends Table{
 
@@ -22,5 +23,15 @@ namespace  Showcase\Database\Migrations {
             );
             $this->timespan();
         }
+        
+        /**
+        * Migration Relation details
+        * @return array of foreign relations
+        */
+       function foreign(){
+            $this->foreign(
+                Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+            );
+       }
     }
 }

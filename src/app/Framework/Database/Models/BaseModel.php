@@ -50,6 +50,10 @@ namespace  Showcase\Framework\Database\Models {
          * Init the model and create all properties
          */
         public function __construct(){
+            // ToDo
+        }
+
+        public function initializeTable(bool $runForeign = true) {
             $file = Storage::migrations()->path($this->migration . '.php');
             if($file !== false)
             {
@@ -62,6 +66,8 @@ namespace  Showcase\Framework\Database\Models {
                 {
                     $table = new $class;
                     $table->handle();
+                    if($runForeign)
+                        $table->handleForeign();
                     foreach($table->columns as $_col) {
                         $col = new Column();
                         $col->instance($_col['name'], $_col['options']);

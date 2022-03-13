@@ -36,10 +36,13 @@ namespace  Showcase\Database\Migrations {
             $this->column(
                 Column::factory()->name('email_verify')->datetime()->nullable()
             );
+            $this->timespan();
+        }
+
+        function handleForeign() {
             $this->foreign(
                 Foreign::factory()->model('Unit')->toMany('userunits', 'user_id', 'unit_id')->dontAddItToQuery()
             );
-            $this->timespan();
         }
     }
 }

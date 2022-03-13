@@ -98,8 +98,10 @@ namespace  Showcase\Framework\Database {
                 // get the file name of the current file without the extension
                 // which is essentially the class name
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
-                if (class_exists($class))
+                if (class_exists($class)) {
                     $this->_model = new $class;
+                    $this->_model->initializeTable();
+                }
             }
 
             $this->_table = $this->_model->tableName();
@@ -420,6 +422,7 @@ namespace  Showcase\Framework\Database {
                     return $data[0];
                 $class = get_class($this->_model);
                 $obj = new $class();
+                $obj->initializeTable();
                 $class_vars = get_object_vars($obj);
                 foreach($class_vars as $key => $value){
                     if (array_key_exists($key, $class_vars) && array_key_exists($key, $data[0]))
@@ -460,6 +463,7 @@ namespace  Showcase\Framework\Database {
                 $class = get_class($this->_model);
                 foreach($data as $record){
                     $obj = new $class();
+                    $obj->initializeTable();
                     $class_vars = get_object_vars($obj);
                     foreach($class_vars as $key => $value){
                         if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
@@ -506,6 +510,7 @@ namespace  Showcase\Framework\Database {
                 $class = get_class($this->_model);
                 foreach($data as $record){
                     $obj = new $class();
+                    $obj->initializeTable();
                     $class_vars = get_object_vars($obj);
                     foreach($class_vars as $key => $value){
                         if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))

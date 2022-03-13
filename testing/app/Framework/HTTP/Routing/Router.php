@@ -210,14 +210,19 @@ namespace  Showcase\Framework\HTTP\Routing {
                             if($id != -1) { // if there is an id we use it
                                 $class = (string)$arg->getType();
                                 $obj = new $class;
+                                $obj->initializeTable();
                                 $execution_params[] = DB::factory()->model($model_name)->select()->where($obj->getIdName(), $id)->first();
                             } else {
                                 $class = (string)$arg->getType();
-                                $execution_params[] = new $class;
+                                $obj = new $class;
+                                $obj->initializeTable();
+                                $execution_params[] = $obj;
                             }
                         } else {
                             $class = (string)$arg->getType();
-                            $execution_params[] = new $class;
+                            $obj = new $class;
+                            $obj->initializeTable();
+                            $execution_params[] = $obj;
                         }
                     }
                 } else{ // if its int or string

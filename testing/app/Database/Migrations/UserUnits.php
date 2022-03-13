@@ -21,13 +21,16 @@ namespace  Showcase\Database\Migrations {
             $this->column(
                 Column::factory()->name('unit_id')->int()
             );
+            $this->timespan();
+        }
+
+        function handleForeign() {
             $this->foreign(
                 Foreign::factory()->column('user_id')->model('User')->updateCascade()
             );
             $this->foreign(
                 Foreign::factory()->column('unit_id')->model('Unit')->updateCascade()
             );
-            $this->timespan();
         }
     }
 }

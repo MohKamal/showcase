@@ -80,7 +80,8 @@
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-1">Models</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-2">Controllers</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-3">Queries</a></li>
-				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-4">Seeding</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-4">Relations</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-4-5">Seeding</a></li>
 				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-5"><span class="theme-icon-holder mr-2"><i class="fas fa-tools"></i></span>Security</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-5-1">Authentication</a></li>
 				    <li class="nav-item"><a class="nav-link scrollto" href="#item-5-2">CSRF Guard</a></li>
@@ -856,6 +857,193 @@ $users = DB::factory()->model('User')->select()->where('email', '%@gmail%', 'LIK
                     </section><!--//section-->
 					
 					<section class="docs-section" id="item-4-4">
+						<h2 class="section-heading">Relations</h2>
+						<p>To create relations between your entities in the database, use the Foreign object in the handleForeign() function in your migrations</p>
+						<p>Create a migration, and in the function handleForeign put the relations: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+use \Showcase\Framework\Database\Config\Table;
+use \Showcase\Framework\Database\Config\Column;
+use \Showcase\Framework\Database\Config\Foreign;
+
+class rememberMe extends Table{
+
+    /**
+    * Migration details
+    * @return array of columns
+    */
+    function handle(){
+        $this->name = 'remembers';
+        $this->column(
+            Column::factory()->name('id')->autoIncrement()->primary()
+        );
+        $this->column(
+            Column::factory()->name('user_id')->string()
+        );
+        $this->column(
+            Column::factory()->name('token')->string()
+        );
+        $this->timespan();
+    }
+    
+    /**
+    * Migration Relation details
+    * @return array of foreign relations
+    */
+    function handleForeign(){
+        $this->foreign(
+            Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+        );
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>Let's see how it work.</p>
+                        <h4>One to One/ One to Many</h4>
+                        <p>One to One or One to Many relation is too easy, put the foreign key in the migration, and specify the model the columns to index, example:</p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+/**
+* Migration Relation details
+* @return array of foreign relations
+*/
+function handleForeign(){
+    $this->foreign(
+        Foreign::factory()->column('user_id')->model('User')->deleteCascade() // user_id is the local column in this migration, pointing to the model User at it's 'id' by default
+    );
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>Now you can use this relation in the model level as so: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+$role->user(); // return the user from the relation
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <h4>Many to Many</h4>
+                        <p>Many to Many relation can be tricky, You need to create a migration in the middle, let's get the example of User and Role.</p>
+                        <p>We gonna create a user migration, and role migration, and a userRole migration, let's take a look at the userRole migration: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+class UserRole extends Table
+{
+    /**
+     * Migration details
+     * @return array of columns
+     */
+    public function handle()
+    {
+        $this->name = 'userroles';
+        $this->column(
+            Column::factory()->name('id')->autoIncrement()->primary()
+        );
+        $this->column(
+            Column::factory()->name('user_id')->int()
+        );
+        $this->column(
+            Column::factory()->name('role_id')->int()
+        );
+        $this->timespan();
+    }
+
+    /**
+     * Migration Relation details
+    * @return array of foreign relations
+     */
+    public function handleForeign()
+    {
+        // pointing at user->id
+        $this->foreign(
+            Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+        );
+        // pointing at role->id
+        $this->foreign(
+            Foreign::factory()->column('role_id')->model('Role')->deleteCascade()
+        );
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <p>Now we have the relations we need, let's see the User Migration: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+class User extends Table{
+
+        /**
+        * Migration details
+        * @return array of columns
+        */
+    function handle(){
+        $this->name = 'users';
+        $this->column(
+            Column::factory()->name('id')->autoIncrement()->primary()
+        );
+        $this->column(
+            Column::factory()->name('firstname')->string()->nullable()
+        );
+        $this->column(
+            Column::factory()->name('lastname')->string()->nullable()
+        );
+        $this->column(
+            Column::factory()->name('username')->string()->default('user')
+        );
+        $this->column(
+            Column::factory()->name('password')->string()
+        );
+        $this->column(
+            Column::factory()->name('email')->string()
+        ); 
+        $this->column(
+            Column::factory()->name('phone')->string()->nullable()
+        );
+        $this->column(
+            Column::factory()->name('email_verify')->datetime()->nullable()
+        );
+        $this->timespan();
+    }
+
+    /**
+    * Migration Relation details
+    * @return array of foreign relations
+    */
+    function handleForeign() {
+        // pointing to the role model but throw the userroles table
+        $this->foreign(
+            Foreign::factory()->model('Role')->toMany('userroles', 'user_id', 'role_id')->dontAddItToQuery()
+        );
+    }
+}
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        </div><!--//docs-code-block-->
+                        <p>Now you can use this relation in the model level as so: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+$user->roles(); // return array of roles from the relation
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <h4>Setter</h4>
+                        <p>When you declare a foreign relation, a setter is created in your models, so you don't have to create one, to use, you need to call the model name with 'set' as prefix, example: </p>
+                        <div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="php hljs">
+$user->setRole($role); // add new role to the user
+                        </code></pre>
+                        </div><!--//docs-code-block-->
+                        <h4>Function to use</h4>
+                        <ul>
+						    <li><strong class="mr-1">column($name) :</strong> <code>current migration column to index </code></li>
+						    <li><strong class="mr-1">on($foreignTable, $column='id') :</strong> <code>table name where the index gonna point, the column name is 'id' by default </code></li>
+						    <li><strong class="mr-1">model($foreignModel, $column='id') :</strong> <code>model name where the index gonna point, the column name is 'id' by default </code></li>
+						    <li><strong class="mr-1">toOne($middleTableName, $currentMigrationColumn, $middleTableColumn) :</strong> <code>set the middle table name, the current migration column to index and also the middle table column to index </code></li>
+						    <li><strong class="mr-1">toMany($middleTableName, $currentMigrationColumn, $middleTableColumn) :</strong> <code>set the middle table name, the current migration column to index and also the middle table column to index </code></li>
+						    <li><strong class="mr-1">alias($alias) :</strong> <code>if you to use a different name to the calling function ($user->role()), you can use the alias ($user->myRole()) </code></li>
+						    <li><strong class="mr-1">dontAddItToQuery() :</strong> <code>this function is use it mostly in the many to many relation, it indicate to the migration, that this foreign relation will not be added to the database query </code></li>
+						    <li><strong class="mr-1">deleteCascade() :</strong> <code>add on Delete Cascade to the query </code></li>
+						    <li><strong class="mr-1">updateCascade() :</strong> <code>add on Update Cascade to the query </code></li>
+                        </ul>
+                    </section><!--//section-->
+					
+					<section class="docs-section" id="item-4-5">
 						<h2 class="section-heading">Seeding</h2>
 						<p>To seed data in new database, you can use the seeding objects.</p>
 						<p>To create a seeder, you run the command make:seeder: </p>

@@ -196,6 +196,7 @@ namespace  Showcase\Framework\Command{
                 if (class_exists($class))
                 {
                     $obj = new $class;
+                    $obj->initializeTable();
                     $db->createTable($obj);
                     Log::console("Migration $obj->name created!\n", 'success');
                 }
@@ -238,9 +239,10 @@ namespace  Showcase\Framework\Command{
 
                if (class_exists($class))
                {
-                   $obj = new $class;
-                   $db->seedData($obj);
-                   Log::console("Seed $obj->name created!\n", 'success');
+                    $obj = new $class;
+                    $obj->initializeTable();
+                    $db->seedData($obj);
+                    Log::console("Seed $obj->name created!\n", 'success');
                }
            }
            Log::console('Seeding ended!', 'success');

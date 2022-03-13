@@ -38,5 +38,15 @@ namespace  Showcase\Database\Migrations {
             );
             $this->timespan();
         }
+        
+        /**
+        * Migration Relation details
+        * @return array of foreign relations
+        */
+       function handleForeign(){
+            /*$this->foreign(
+                Foreign::factory()->column('other_id')->model('Other')->deleteCascade()
+            );*/
+       }
     }
 }
