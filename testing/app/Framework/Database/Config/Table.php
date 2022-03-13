@@ -12,6 +12,11 @@ namespace  Showcase\Framework\Database\Config {
         public $name = "table_name";
 
         /**
+         * @var int migration execution order
+         */
+        public $order = -1;
+
+        /**
          * Table columns
          * @var array
          */

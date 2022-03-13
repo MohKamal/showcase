@@ -185,6 +185,7 @@ namespace  Showcase\Framework\Command{
         public function migrate(){
             $dir = dirname(__FILE__) . '/../../Database/Migrations';
             $db = new Wrapper();
+            $migrations = array();
             foreach (glob($dir . '/*.php') as $file)
             {
                 require_once $file;
@@ -196,13 +197,37 @@ namespace  Showcase\Framework\Command{
                 if (class_exists($class))
                 {
                     $obj = new $class;
-                    $obj->initializeTable();
-                    $db->createTable($obj);
-                    Log::console("Migration $obj->name created!\n", 'success');
+                    $obj->handle();
+                    $migrations[] = $obj;
                 }
             }
+            $sortedMigration = $this->quickSort($migrations);
+
+            foreach($sortedMigration as $mig) {
+                $db->createTable($mig);
+                Log::console("Migration $mig->name created!\n", 'success');
+            }
             Log::console('Migration ended!', 'success');
-        }   
+        } 
+        
+        public function quickSort($array)
+        {
+            if (!$length = count($array)) {
+                return $array;
+            }
+            
+            $k = $array[0];
+            $x = $y = array();
+            
+            for ($i=1;$i<$length;$i++) {
+                if ($array[$i]->order <= $k->order) {
+                    $x[] = $array[$i];
+                } else {
+                    $y[] = $array[$i];
+                }
+            }
+            return array_merge($this->quickSort($x),array($k),$this->quickSort($y));
+        }
         
         /**
          * Create new Model file

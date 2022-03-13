@@ -12,6 +12,7 @@ namespace  Showcase\Database\Migrations {
          */
         function handle(){
             $this->name = 'userunits';
+            $this->order = 4;
             $this->column(
                 Column::factory()->name('id')->autoIncrement()->primary()
             );

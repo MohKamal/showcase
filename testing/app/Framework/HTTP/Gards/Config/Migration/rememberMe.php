@@ -28,7 +28,7 @@ namespace  Showcase\Database\Migrations {
         * Migration Relation details
         * @return array of foreign relations
         */
-       function foreign(){
+       function handleForeign(){
             $this->foreign(
                 Foreign::factory()->column('user_id')->model('User')->deleteCascade()
             );

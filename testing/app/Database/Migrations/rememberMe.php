@@ -11,6 +11,7 @@ namespace  Showcase\Database\Migrations {
          */
         function handle(){
             $this->name = 'remembers';
+            $this->order = 3;
             $this->column(
                 Column::factory()->name('id')->autoIncrement()->primary()
             );

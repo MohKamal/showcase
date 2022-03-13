@@ -43,7 +43,7 @@ namespace  Showcase\Database\Migrations {
         * Migration Relation details
         * @return array of foreign relations
         */
-       function foreign(){
+       function handleForeign(){
             /*$this->foreign(
                 Foreign::factory()->column('other_id')->model('Other')->deleteCascade()
             );*/
