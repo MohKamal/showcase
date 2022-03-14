@@ -165,5 +165,13 @@ namespace  Showcase\Framework\IO\Debug {
             else
                 self::console($result);
         }
+
+        /**
+         * Display a var_dump to a html
+         * @param mixte $var
+         */
+        public static function echo_var($var) {
+            echo '<pre>' . var_dump($var) . '</pre>';
+        }
     }
 }

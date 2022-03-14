@@ -95,17 +95,17 @@ namespace  Showcase\Framework\Database\Models {
                                 $setterName = 'set' . ucfirst(strtolower($foreign->foreign_model_name));
 
                                 if (empty($foreign->foreign_middle_table_name)) {
-                                    $value = function () use (&$foreign) {
+                                    $value = function () use ($foreign) {
                                         return DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name})->first();
                                     };
                                     
-                                    $setter = function ($arg) use (&$foreign) {
+                                    $setter = function ($arg) use ($foreign) {
                                         $foreignModel = $arg[0];
-                                        $this->{$foreign->foreign_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
+                                        $this->{$foreign->current_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
                                         $this->save();
                                     };
                                 } else {
-                                    $value = function () use (&$foreign) {
+                                    $value = function () use ($foreign) {
                                         $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
                                         $qb = DB::factory()->model($foreign->foreign_model_name)->query($query);
                                         if($foreign->one_object_to_return)
@@ -115,7 +115,7 @@ namespace  Showcase\Framework\Database\Models {
                                     if(!$foreign->one_object_to_return)
                                         $methodName = $methodName . 's';
                                     
-                                    $setter = function ($arg) use (&$foreign) {
+                                    $setter = function ($arg) use ($foreign) {
                                         $foreignModel = $arg[0];
                                         $values = [
                                             $foreign->foreign_model_column_name => $foreignModel->{$foreignModel->getIdName()},
@@ -127,7 +127,7 @@ namespace  Showcase\Framework\Database\Models {
                                     };
                                 }
                             } else if(!empty($foreign->foreign_table_name)) {
-                                $value = function () use (&$foreign) {
+                                $value = function () use ($foreign) {
                                     $qb = DB::factory()->table($foreign->foreign_table_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name});
                                     if($foreign->one_object_to_return)
                                         return $qb->first();
