@@ -34,7 +34,7 @@ namespace  Showcase\Database\Migrations {
         */
        function handleForeign(){
             /*$this->foreign(
-                Foreign::factory()->column('other_id')->model('Other')->deleteCascade()
+                Foreign::factory()->column('other_id')->on('others_table')->model('Other')->deleteCascade()
             );*/
        }
     }

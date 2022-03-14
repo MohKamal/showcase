@@ -641,7 +641,8 @@ php showcase make:migration migration_name
 * Migration details
 */
 function handle(){
-    $this->name = 'MigrationName';
+    $this->name = 'MigrationName'; // Migration name, used by models
+    $this->order = -1; // Migration execution order
     $this->column(
         Column::factory()->name('id')->int()
     );

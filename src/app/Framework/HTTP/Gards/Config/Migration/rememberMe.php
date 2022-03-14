@@ -17,7 +17,7 @@ namespace  Showcase\Database\Migrations {
                 Column::factory()->name('id')->autoIncrement()->primary()
             );
             $this->column(
-                Column::factory()->name('user_id')->string()
+                Column::factory()->name('user_id')->int()
             );
             $this->column(
                 Column::factory()->name('token')->string()
@@ -31,7 +31,7 @@ namespace  Showcase\Database\Migrations {
         */
        function handleForeign(){
             $this->foreign(
-                Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+                Foreign::factory()->column('user_id')->on('users')->model('User')->deleteCascade()
             );
        }
     }
