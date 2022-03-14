@@ -265,7 +265,6 @@ namespace  Showcase\Framework\Command{
                if (class_exists($class))
                {
                     $obj = new $class;
-                    $obj->initializeTable();
                     $db->seedData($obj);
                     Log::console("Seed $obj->name created!\n", 'success');
                }

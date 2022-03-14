@@ -100,7 +100,6 @@ namespace  Showcase\Framework\Database {
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
                 if (class_exists($class)) {
                     $this->_model = new $class;
-                    $this->_model->initializeTable();
                 }
             }
 
@@ -422,7 +421,6 @@ namespace  Showcase\Framework\Database {
                     return $data[0];
                 $class = get_class($this->_model);
                 $obj = new $class();
-                $obj->initializeTable();
                 $class_vars = get_object_vars($obj);
                 foreach($class_vars as $key => $value){
                     if (array_key_exists($key, $class_vars) && array_key_exists($key, $data[0]))
@@ -463,7 +461,6 @@ namespace  Showcase\Framework\Database {
                 $class = get_class($this->_model);
                 foreach($data as $record){
                     $obj = new $class();
-                    $obj->initializeTable();
                     $class_vars = get_object_vars($obj);
                     foreach($class_vars as $key => $value){
                         if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
@@ -510,7 +507,6 @@ namespace  Showcase\Framework\Database {
                 $class = get_class($this->_model);
                 foreach($data as $record){
                     $obj = new $class();
-                    $obj->initializeTable();
                     $class_vars = get_object_vars($obj);
                     foreach($class_vars as $key => $value){
                         if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))

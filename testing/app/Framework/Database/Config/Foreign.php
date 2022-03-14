@@ -138,11 +138,10 @@ namespace  Showcase\Framework\Database\Config {
          * 
          * @return \Framework\Database\Config\Foreign
          */
-        public function model($name, $column = 'id'){
+        public function model($name){
             if(empty($name))
                 return null;
-            $model = null;
-            //get model and migration
+            //vertify model
             $m_file = dirname(__FILE__) . '/../../../Models/' . $name . '.php';
             if (file_exists($m_file)) {
                 require_once $m_file;
@@ -150,15 +149,8 @@ namespace  Showcase\Framework\Database\Config {
                 // which is essentially the class name
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
                 if (class_exists($class)) {
-                    $model = new $class;
-                    $model->initializeTable(false);
+                    $this->foreign_model_name = $name;
                 }
-            }
-
-            if ($model) {
-                $this->foreign_table_name = $model->tableName();
-                $this->foreign_model_name = $name;
-                $this->foreign_table_column_name = $column;
             }
 
             return $this;

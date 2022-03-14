@@ -50,10 +50,10 @@ namespace  Showcase\Framework\Database\Models {
          * Init the model and create all properties
          */
         public function __construct(){
-            // ToDo
+            $this->initializeTable();
         }
 
-        public function initializeTable(bool $runForeign = true) {
+        private function initializeTable(bool $runForeign = true) {
             $file = Storage::migrations()->path($this->migration . '.php');
             if($file !== false)
             {

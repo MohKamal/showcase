@@ -892,7 +892,7 @@ class rememberMe extends Table{
     */
     function handleForeign(){
         $this->foreign(
-            Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+            Foreign::factory()->column('user_id')->on('users)->model('User')->deleteCascade()
         );
     }
 }
@@ -909,7 +909,7 @@ class rememberMe extends Table{
 */
 function handleForeign(){
     $this->foreign(
-        Foreign::factory()->column('user_id')->model('User')->deleteCascade() // user_id is the local column in this migration, pointing to the model User at it's 'id' by default
+        Foreign::factory()->column('user_id')->on('users')->model('User')->deleteCascade() // user_id is the local column in this migration, pointing to the model User at it's 'id' by default
     );
 }
                         </code></pre>
@@ -954,11 +954,11 @@ class UserRole extends Table
     {
         // pointing at user->id
         $this->foreign(
-            Foreign::factory()->column('user_id')->model('User')->deleteCascade()
+            Foreign::factory()->column('user_id')->on('users')->model('User')->deleteCascade()
         );
         // pointing at role->id
         $this->foreign(
-            Foreign::factory()->column('role_id')->model('Role')->deleteCascade()
+            Foreign::factory()->column('role_id')->on('roles')->model('Role')->deleteCascade()
         );
     }
 }
@@ -1033,7 +1033,7 @@ $user->setRole($role); // add new role to the user
                         <ul>
 						    <li><strong class="mr-1">column($name) :</strong> <code>current migration column to index </code></li>
 						    <li><strong class="mr-1">on($foreignTable, $column='id') :</strong> <code>table name where the index gonna point, the column name is 'id' by default </code></li>
-						    <li><strong class="mr-1">model($foreignModel, $column='id') :</strong> <code>model name where the index gonna point, the column name is 'id' by default </code></li>
+						    <li><strong class="mr-1">model($foreignModel) :</strong> <code>model name to where the data will be converted </code></li>
 						    <li><strong class="mr-1">toOne($middleTableName, $currentMigrationColumn, $middleTableColumn) :</strong> <code>set the middle table name, the current migration column to index and also the middle table column to index </code></li>
 						    <li><strong class="mr-1">toMany($middleTableName, $currentMigrationColumn, $middleTableColumn) :</strong> <code>set the middle table name, the current migration column to index and also the middle table column to index </code></li>
 						    <li><strong class="mr-1">alias($alias) :</strong> <code>if you to use a different name to the calling function ($user->role()), you can use the alias ($user->myRole()) </code></li>
