@@ -93,10 +93,15 @@ namespace  Showcase\Framework\Database\Models {
                             if (!empty($foreign->foreign_model_name)) {
                                 $methodName = strtolower($foreign->foreign_model_name);
                                 $setterName = 'set' . ucfirst(strtolower($foreign->foreign_model_name));
+                                if(!$foreign->one_object_to_return)
+                                    $methodName = $methodName . 's';
 
                                 if (empty($foreign->foreign_middle_table_name)) {
                                     $value = function () use ($foreign) {
-                                        return DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name})->first();
+                                        $qb = DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name});
+                                        if($foreign->one_object_to_return)
+                                            return $qb->first();
+                                        return $qb->get();
                                     };
                                     
                                     $setter = function ($arg) use ($foreign) {
@@ -112,8 +117,6 @@ namespace  Showcase\Framework\Database\Models {
                                             return $qb->first();
                                         return $qb->get();
                                     };
-                                    if(!$foreign->one_object_to_return)
-                                        $methodName = $methodName . 's';
                                     
                                     $setter = function ($arg) use ($foreign) {
                                         $foreignModel = $arg[0];

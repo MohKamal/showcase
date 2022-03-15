@@ -157,6 +157,15 @@ namespace  Showcase\Framework\Database\Config {
         }
 
         /**
+         * Get array of object of the method
+         * @return \Framework\Database\Config\Foreign
+         */
+        public function many() {
+            $this->one_object_to_return = false;
+            return $this;
+        }
+
+        /**
          * Connect model to another with middle table
          * @param string $table middle table
          * @param string $current_object_column current model id in the middle table (user_id)

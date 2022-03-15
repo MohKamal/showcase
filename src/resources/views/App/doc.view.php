@@ -1010,7 +1010,7 @@ class User extends Table{
     function handleForeign() {
         // pointing to the role model but throw the userroles table
         $this->foreign(
-            Foreign::factory()->model('Role')->toMany('userroles', 'user_id', 'role_id')->dontAddItToQuery()
+            Foreign::factory()->on('roles')->model('Role')->toMany('userroles', 'user_id', 'role_id')->dontAddItToQuery()
         );
     }
 }
@@ -1037,6 +1037,7 @@ $user->setRole($role); // add new role to the user
 						    <li><strong class="mr-1">model($foreignModel) :</strong> <code>model name to where the data will be converted </code></li>
 						    <li><strong class="mr-1">toOne($middleTableName, $currentMigrationColumn, $middleTableColumn) :</strong> <code>set the middle table name, the current migration column to index and also the middle table column to index </code></li>
 						    <li><strong class="mr-1">toMany($middleTableName, $currentMigrationColumn, $middleTableColumn) :</strong> <code>set the middle table name, the current migration column to index and also the middle table column to index </code></li>
+						    <li><strong class="mr-1">many() :</strong> <code>get an array of objects from the method </code></li>
 						    <li><strong class="mr-1">alias($alias) :</strong> <code>if you to use a different name to the calling function ($user->role()), you can use the alias ($user->myRole()) </code></li>
 						    <li><strong class="mr-1">dontAddItToQuery() :</strong> <code>this function is use it mostly in the many to many relation, it indicate to the migration, that this foreign relation will not be added to the database query </code></li>
 						    <li><strong class="mr-1">deleteCascade() :</strong> <code>add on Delete Cascade to the query </code></li>
