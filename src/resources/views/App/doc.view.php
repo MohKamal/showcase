@@ -893,7 +893,7 @@ class rememberMe extends Table{
     */
     function handleForeign(){
         $this->foreign(
-            Foreign::factory()->column('user_id')->on('users)->model('User')->deleteCascade()
+            Foreign::factory()->column('user_id')->on('users')->model('User')->deleteCascade()
         );
     }
 }

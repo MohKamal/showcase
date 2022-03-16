@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Showcase</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/favicon.ico" />
+    <!-- STYLE CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.2/styles/atom-one-dark.min.css">
+</head>
+
+<body style="overflow: hidden;">
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-4" style="max-width: 30%; overflow: scroll; background-color: gray; padding: 0; margin-right: 10px;">
+                <div style="padding: 10px; background-color: #343434; color: white;">
+                    <p><span style="color:red;">ErrorException</span>(E_ERROR)</p>
+                    <p>An exception has been thrown during the rendering of a template ("expecting color: line: 152").</p>
+                </div>
+                <div class="d-flex flex-column" style="margin-top: 20px;">
+                    <article style="padding: 10px; margin: 5px; background-color: #b3b3b3; border-radius: 8px;">
+                        <p style="padding: 0; margin: 0;">ErrorException</p>
+                        <p style="color:gray; font-size: 10px;">D:\GitHub\php-Showcase-template\src\storage\temp\_temp_web.php
+                            <br/> Index
+                        </p>
+                    </article>
+                    <article style="padding: 10px; margin: 5px; background-color: #b3b3b3; border-radius: 8px;">
+                        <p style="padding: 0; margin: 0;">Twig_Error</p>
+                        <p style="color:gray; font-size: 10px;">D:\GitHub\php-Showcase-template\src\storage\temp\_temp_web.php
+                            <br/> Index
+                        </p>
+                    </article>
+                </div>
+            </aside>
+            <!-- Center -->
+            <section class="col-8" style="margin: 0; padding: 0;">
+                <div class="row">
+                    <h4 style="font-weight: lighter; font-size: 10px;">Showcase</h4>
+                </div>
+                <div class="row" style="background-color: #343434; color: white;">
+                    <div class="docs-code-block">
+                        <pre class="shadow-lg rounded"><code class="php hljs" data-ln-start-from="312">
+public function urlFromPath($path) {
+    if(empty($path))
+        return null;
+
+    $currentFile = $path;
+    $folder = $this->_rootFolder . "downloads/";
+    $toFile = $folder . basename($path);
+    if(!file_exists($currentFile))
+        return false;
+
+    if ($currentFile !== $toFile) {
+        if (!file_exists($folder)) {
+            if(!mkdir($folder, 0777, true))
+                return null;
+        }
+        if (!copy($currentFile, $toFile)) {
+                return false;
+        }
+    }
+                    </code></pre>
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/TRSasasusu/highlightjs-highlight-lines.js@1.2.0/highlightjs-highlight-lines.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+        hljs.initHighlightLinesOnLoad([
+            [{
+                start: 1,
+                end: 3,
+                color: '#555'
+            }, {
+                start: 6,
+                end: 6,
+                color: 'yellow'
+            }, ], // Highlight line 4 from line 2 and line 7 in the first <pre><code></code></pre> block.
+            [{
+                start: 2,
+                end: 3,
+                color: 'rgba(255, 255, 255, 0.2)'
+            }, ], // Highlight line 4 from line 3 in the second <pre><code></code></pre> block.
+        ]);
+        $(document).ready(function() {
+            $("b").remove();
+            $("br").remove();
+        });
+    </script>
+</body>
+
+</html>

@@ -16,7 +16,7 @@ namespace Showcase\Controllers{
          * Return the welcome view
          */
         static function Index(){
-            $a = DB::factory()->model('Unit')->select()->where('id', 1)->first();
+            throw new \Exception('<h1 style="color: red;">Error</h1>');
             return self::response()->view('App/welcome', ['doc' => 'Hola']);
         }
     }
