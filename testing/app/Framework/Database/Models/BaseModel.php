@@ -4,6 +4,8 @@ namespace  Showcase\Framework\Database\Models {
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Config\Column;
     use \Showcase\Framework\IO\Storage\Storage;
+    use \Showcase\Framework\HTTP\Exceptions\ModelException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     class BaseModel{
 
@@ -53,6 +55,10 @@ namespace  Showcase\Framework\Database\Models {
             $this->initializeTable();
         }
 
+        /**
+         * Create this model propeties and methods from the migrations
+         * @param bool $runForeign verify foreign relation and create their methods
+         */
         private function initializeTable(bool $runForeign = true) {
             $file = Storage::migrations()->path($this->migration . '.php');
             if($file !== false)
@@ -71,7 +77,7 @@ namespace  Showcase\Framework\Database\Models {
                     foreach($table->columns as $_col) {
                         $col = new Column();
                         $col->instance($_col['name'], $_col['options']);
-                        if($col != null){
+                        if($col != null) {
                             $value = 0;
                             if($col->PHP_type == "string")
                                 $value = "";
@@ -93,29 +99,32 @@ namespace  Showcase\Framework\Database\Models {
                             if (!empty($foreign->foreign_model_name)) {
                                 $methodName = strtolower($foreign->foreign_model_name);
                                 $setterName = 'set' . ucfirst(strtolower($foreign->foreign_model_name));
+                                if(!$foreign->one_object_to_return)
+                                    $methodName = $methodName . 's';
 
                                 if (empty($foreign->foreign_middle_table_name)) {
-                                    $value = function () use (&$foreign) {
-                                        return DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name})->first();
+                                    $value = function () use ($foreign) {
+                                        $qb = DB::factory()->model($foreign->foreign_model_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name});
+                                        if($foreign->one_object_to_return)
+                                            return $qb->first();
+                                        return $qb->get();
                                     };
                                     
-                                    $setter = function ($arg) use (&$foreign) {
+                                    $setter = function ($arg) use ($foreign) {
                                         $foreignModel = $arg[0];
-                                        $this->{$foreign->foreign_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
+                                        $this->{$foreign->current_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
                                         $this->save();
                                     };
                                 } else {
-                                    $value = function () use (&$foreign) {
+                                    $value = function () use ($foreign) {
                                         $query = 'SELECT * FROM ' . $foreign->foreign_table_name . ' WHERE ' . $foreign->foreign_table_column_name . ' IN ' . '(SELECT ' . $foreign->foreign_model_column_name . ' FROM ' . $foreign->foreign_middle_table_name . ' WHERE ' . $foreign->foreign_middle_table_current_column . '=' . $this->{$this->getIdName()} . ')'; 
                                         $qb = DB::factory()->model($foreign->foreign_model_name)->query($query);
                                         if($foreign->one_object_to_return)
                                             return $qb->first();
                                         return $qb->get();
                                     };
-                                    if(!$foreign->one_object_to_return)
-                                        $methodName = $methodName . 's';
                                     
-                                    $setter = function ($arg) use (&$foreign) {
+                                    $setter = function ($arg) use ($foreign) {
                                         $foreignModel = $arg[0];
                                         $values = [
                                             $foreign->foreign_model_column_name => $foreignModel->{$foreignModel->getIdName()},
@@ -127,7 +136,7 @@ namespace  Showcase\Framework\Database\Models {
                                     };
                                 }
                             } else if(!empty($foreign->foreign_table_name)) {
-                                $value = function () use (&$foreign) {
+                                $value = function () use ($foreign) {
                                     $qb = DB::factory()->table($foreign->foreign_table_name)->select()->where($foreign->foreign_table_column_name, $this->{$foreign->current_table_column_name});
                                     if($foreign->one_object_to_return)
                                         return $qb->first();
@@ -143,7 +152,11 @@ namespace  Showcase\Framework\Database\Models {
                             if($setter !== null) { $this->createProperty($setterName, $setter); }
                         }
                     }
+                } else {
+                    throw new ModelException('Migration class was not found, please check the migration file name and it\'s class name.', ExecptionEnum::MIGRATION_NOT_FOUND);
                 }
+            } else {
+                throw new ModelException('Migration file was not found, please check the model migration name.', ExecptionEnum::MIGRATION_NOT_FOUND);
             }
         }
 

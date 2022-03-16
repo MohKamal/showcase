@@ -138,7 +138,7 @@ namespace  Showcase\Framework\Database\Config {
          * 
          * @return \Framework\Database\Config\Foreign
          */
-        public function model($name){
+        public function model($name) {
             if(empty($name))
                 return null;
             //vertify model
@@ -153,6 +153,15 @@ namespace  Showcase\Framework\Database\Config {
                 }
             }
 
+            return $this;
+        }
+
+        /**
+         * Get array of object of the method
+         * @return \Framework\Database\Config\Foreign
+         */
+        public function many() {
+            $this->one_object_to_return = false;
             return $this;
         }
 

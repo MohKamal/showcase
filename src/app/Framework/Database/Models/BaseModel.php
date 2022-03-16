@@ -4,6 +4,8 @@ namespace  Showcase\Framework\Database\Models {
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Config\Column;
     use \Showcase\Framework\IO\Storage\Storage;
+    use \Showcase\Framework\HTTP\Exceptions\ModelException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     class BaseModel{
 
@@ -53,6 +55,10 @@ namespace  Showcase\Framework\Database\Models {
             $this->initializeTable();
         }
 
+        /**
+         * Create this model propeties and methods from the migrations
+         * @param bool $runForeign verify foreign relation and create their methods
+         */
         private function initializeTable(bool $runForeign = true) {
             $file = Storage::migrations()->path($this->migration . '.php');
             if($file !== false)
@@ -71,7 +77,7 @@ namespace  Showcase\Framework\Database\Models {
                     foreach($table->columns as $_col) {
                         $col = new Column();
                         $col->instance($_col['name'], $_col['options']);
-                        if($col != null){
+                        if($col != null) {
                             $value = 0;
                             if($col->PHP_type == "string")
                                 $value = "";
@@ -146,7 +152,11 @@ namespace  Showcase\Framework\Database\Models {
                             if($setter !== null) { $this->createProperty($setterName, $setter); }
                         }
                     }
+                } else {
+                    throw new ModelException('Migration class was not found, please check the migration file name and it\'s class name.', ExecptionEnum::MIGRATION_NOT_FOUND);
                 }
+            } else {
+                throw new ModelException('Migration file was not found, please check the model migration name.', ExecptionEnum::MIGRATION_NOT_FOUND);
             }
         }
 

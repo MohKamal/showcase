@@ -204,7 +204,7 @@ namespace  Showcase\Framework\Command{
             $sortedMigration = $this->quickSort($migrations);
 
             foreach($sortedMigration as $mig) {
-                $db->createTable($mig);
+                $db->createTable($mig, false);
                 Log::console("Migration $mig->name created!\n", 'success');
             }
             Log::console('Migration ended!', 'success');
