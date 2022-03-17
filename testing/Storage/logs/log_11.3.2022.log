@@ -1,5 +1,0 @@
-09:20 - PDOException MySql : MySqlConnection.php line 35 
- => SQLSTATE[HY000] [2002] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée.
-
-09:20 - MySql Error : Wrapper.php 43 line 
- Whoops, could not connect to the MySql database!

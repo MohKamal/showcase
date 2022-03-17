@@ -110,15 +110,12 @@ namespace Showcase\Framework\HTTP\Exceptions{
                         <div class="row">
                         <h4 style="font-weight: lighter; font-size: 10px; text-align: center;">Showcase</h4>
                         </div>
-                        <div class="row" style="background-color: #343434; color: white;">
+                        <div class="" style="background-color: #343434; color: white; height: 100vh;">
                         <div class="docs-code-block">
                         <pre class="shadow-lg rounded"><code class="php hljs" data-ln-start-from="312">';
                 $code = $this->getFileCode();
                 $page .= $code['code'];
                 $page .= '</code></pre>
-                        </div>
-                        <div class="row">
-                        
                         </div>
                         </div>
                         </section>
@@ -151,6 +148,7 @@ namespace Showcase\Framework\HTTP\Exceptions{
          * @return array $line to be colored and $code to be displayed
          */
         private function getFileCode() {
+            $offsetLines = 30;
             $firstTrace = $this->getTrace()[0];
             $file = $this->file;
             $fileLine = $this->line;
@@ -166,15 +164,18 @@ namespace Showcase\Framework\HTTP\Exceptions{
             }
 
             $lines = file($file);
-            $start = 0;
-            if($fileLine > 10)
-                $start = $fileLine - 10;
-            $end = $fileLine + 10;
+            $start = 2;
+            if($fileLine > $offsetLines)
+                $start = $fileLine - $offsetLines;
+            $end = $fileLine + $offsetLines;
             if($end > count($lines))
                 $end = count($lines);
+
             $store = [];
             $found = false;
             $lineNumber = 0;
+            var_dump($start);
+            var_dump($end);
             for($i = $start-1; $i< $end-1; $i++) {
                 $store[] = ($i + 1) . '. ' . $lines[$i];
                 if($i+1 == $fileLine)
