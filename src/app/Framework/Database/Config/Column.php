@@ -2,6 +2,8 @@
 namespace  Showcase\Framework\Database\Config {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framewok\IO\Debug\Log;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     class Column{
 
@@ -233,7 +235,7 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function default($value){
             if(!$value)
-                return $this;
+                throw new DatabaseException('No value was giving to the default index in the migration', ExecptionEnum::NULL_VALUE);
             array_push($this->options, "DEFAULT '" . $value . "'");
             return $this;
         }

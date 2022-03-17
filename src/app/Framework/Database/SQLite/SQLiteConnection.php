@@ -3,6 +3,8 @@ namespace  Showcase\Framework\Database\SQLite {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Interfaces\DatabaseConnection;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
 
     /**
      * SQLite connnection
@@ -30,7 +32,7 @@ namespace  Showcase\Framework\Database\SQLite {
                 }
                 return $this->pdo;
             } catch (\PDOException $e) {
-                Log::print("PDOException SQLite : SQLiteConnection.php line 32 \n => " . $e->getMessage());
+                throw new GeneralException("PDOException SQLite :  " . $e->getMessage(), ExecptionEnum::ERROR_DATABASE_CONNECTION);
             }
             return null;
         }

@@ -3,6 +3,8 @@ namespace  Showcase\Framework\Database\Config {
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Config\Column;
     use \Showcase\Framework\Database\Config\Foreign;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     class Table{
 
@@ -35,7 +37,7 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function column(Column $column){
             if($column == null)
-                return false;
+                throw new DatabaseException('No valid column was giving', ExecptionEnum::NULL_VALUE);
             array_push($this->columns, ["name" => $column->name, "options" => $column->options]);
             return true;
         }
@@ -47,7 +49,7 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function foreign(Foreign $foreignKey){
             if($foreignKey == null)
-                return false;
+                throw new DatabaseException('No valid foreign was giving', ExecptionEnum::NULL_VALUE);
             array_push($this->foreigns, $foreignKey);
             return true;
         }
