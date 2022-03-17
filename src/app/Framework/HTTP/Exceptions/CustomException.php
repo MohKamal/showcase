@@ -174,8 +174,6 @@ namespace Showcase\Framework\HTTP\Exceptions{
             $store = [];
             $found = false;
             $lineNumber = 0;
-            var_dump($start);
-            var_dump($end);
             for($i = $start-1; $i< $end-1; $i++) {
                 $store[] = ($i + 1) . '. ' . $lines[$i];
                 if($i+1 == $fileLine)

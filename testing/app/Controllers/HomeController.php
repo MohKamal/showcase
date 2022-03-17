@@ -10,7 +10,7 @@ namespace Showcase\Controllers{
     use \Showcase\Models\Unit;
     use \Showcase\Models\User;
 
-    class HomeController extends BaseController{
+    class HomeController extends BaseController {
 
         /**
          * Return the welcome view
