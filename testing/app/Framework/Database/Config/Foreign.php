@@ -2,6 +2,8 @@
 namespace  Showcase\Framework\Database\Config {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framewok\IO\Debug\Log;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     class Foreign{
 
@@ -14,7 +16,7 @@ namespace  Showcase\Framework\Database\Config {
         /**
          * @var string column name
          */
-        public $current_table_column_name = '';
+        private $current_table_column_name = '';
 
         /**
          * @var string table name
@@ -72,11 +74,11 @@ namespace  Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Foreign
          */
         public function column(string $name) {
-            if(!empty($name)) {
-                $this->current_table_column_name = $name;
-                return $this;
+            if (empty($name)) {
+                throw new DatabaseException('Foreign column was not define', ExecptionEnum::NULL_VALUE);
             }
-            return null;
+            $this->current_table_column_name = $name;
+            return $this;
         }
 
         /**
@@ -86,10 +88,11 @@ namespace  Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Foreign
          */
         public function on(string $table, string $column = 'id') {
-            if(!empty($table) && !empty($column)) {
-                $this->foreign_table_name = $table;
-                $this->foreign_table_column_name = $column;
+            if(empty($table) && empty($column)) {
+                throw new DatabaseException('Foreign table or column was not define', ExecptionEnum::NULL_VALUE);
             }
+            $this->foreign_table_name = $table;
+            $this->foreign_table_column_name = $column;
             return $this;
         }
 
@@ -126,9 +129,10 @@ namespace  Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Foreign
          */
         public function alias($name) {
-            if (!empty($name)) {
-                $this->method_alias = $name;
+            if (empty($name)) {
+                throw new DatabaseException('No correct alias was giving', ExecptionEnum::NULL_VALUE);
             }
+            $this->method_alias = $name;
             return $this;
         }
 
@@ -140,7 +144,8 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function model($name) {
             if(empty($name))
-                return null;
+                throw new DatabaseException('No correct model name was giving', ExecptionEnum::NULL_VALUE);
+
             //vertify model
             $m_file = dirname(__FILE__) . '/../../../Models/' . $name . '.php';
             if (file_exists($m_file)) {
@@ -150,7 +155,11 @@ namespace  Showcase\Framework\Database\Config {
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
                 if (class_exists($class)) {
                     $this->foreign_model_name = $name;
+                } else {
+                    throw new DatabaseException('Model class was not found', ExecptionEnum::MODEL_NOT_FOUND);
                 }
+            } else {
+                throw new DatabaseException('Model file was not found', ExecptionEnum::MODEL_NOT_FOUND);
             }
 
             return $this;
@@ -175,17 +184,21 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function toOne(string $table, string $current_object_column, string $foreign_object_column) {
             $this->one_object_to_return = true;
-            if(!empty($table)) {
-                $this->foreign_middle_table_name = $table;
+            if(empty($table)) {
+                throw new DatabaseException('Middle table name was not giving', ExecptionEnum::NULL_VALUE);
             }
 
-            if(!empty($current_object_column)) {
-                $this->foreign_middle_table_current_column = $current_object_column;
+            if(empty($current_object_column)) {
+                throw new DatabaseException('Current migration column was not giving', ExecptionEnum::NULL_VALUE);
             }
 
-            if(!empty($foreign_object_column)) {
-                $this->foreign_model_column_name = $foreign_object_column;
+            if(empty($foreign_object_column)) {
+                throw new DatabaseException('Foreign migration column was not giving', ExecptionEnum::NULL_VALUE);
             }
+
+            $this->foreign_middle_table_name = $table;
+            $this->foreign_middle_table_current_column = $current_object_column;
+            $this->foreign_model_column_name = $foreign_object_column;
 
             return $this;
         }
@@ -200,17 +213,21 @@ namespace  Showcase\Framework\Database\Config {
          */
         public function toMany(string $table, string $current_object_column, string $foreign_object_column) {
             $this->one_object_to_return = false;
-            if(!empty($table)) {
-                $this->foreign_middle_table_name = $table;
+            if(empty($table)) {
+                throw new DatabaseException('Middle table name was not giving', ExecptionEnum::NULL_VALUE);
             }
 
-            if(!empty($current_object_column)) {
-                $this->foreign_middle_table_current_column = $current_object_column;
+            if(empty($current_object_column)) {
+                throw new DatabaseException('Current migration column was not giving', ExecptionEnum::NULL_VALUE);
             }
 
-            if(!empty($foreign_object_column)) {
-                $this->foreign_model_column_name = $foreign_object_column;
+            if(empty($foreign_object_column)) {
+                throw new DatabaseException('Foreign migration column was not giving', ExecptionEnum::NULL_VALUE);
             }
+            
+            $this->foreign_middle_table_name = $table;
+            $this->foreign_middle_table_current_column = $current_object_column;
+            $this->foreign_model_column_name = $foreign_object_column;
 
             return $this;
         }

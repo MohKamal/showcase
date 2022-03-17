@@ -6,6 +6,8 @@ namespace Showcase\Framework\Views {
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Session\SessionAlert;
     use \Showcase\Framework\IO\Storage\Storage;
+    use \Showcase\Framework\HTTP\Exceptions\ViewException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     /**
      * Loading and showing views files
@@ -241,6 +243,8 @@ namespace Showcase\Framework\Views {
                 
                 //Displaying the page
                 return $page;
+            } else {
+                throw new ViewException('No view was found on ' . $file, GeneralException::FILE_NOT_FOUND);
             }
             return '';
         }

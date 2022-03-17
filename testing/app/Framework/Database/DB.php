@@ -8,6 +8,8 @@ namespace  Showcase\Framework\Database {
     use \Showcase\Framework\Database\MySql\MySqlConnection;
     use \Showcase\Framework\Database\Config\Column;
     use \Showcase\Framework\Initializer\VarLoader;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
 
     class DB extends Wrapper{
 
@@ -42,7 +44,7 @@ namespace  Showcase\Framework\Database {
          */
         public function query($query){
             if(empty($query))
-                return false;
+                throw new DatabaseException('No valid query was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
             $this->_query = $query;
             return $this;
         }
@@ -88,7 +90,7 @@ namespace  Showcase\Framework\Database {
          */
         public function model($name){
             if(empty($name))
-                return null;
+                throw new DatabaseException('No valid model name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
             
             $this->initPDO();
             //get model and migration
@@ -100,8 +102,15 @@ namespace  Showcase\Framework\Database {
                 $class = '\Showcase\Models\\' . basename($m_file, '.php');
                 if (class_exists($class)) {
                     $this->_model = new $class;
+                } else {
+                    throw new DatabaseException('No model class was found', ExecptionEnum::MODEL_NOT_FOUND);
                 }
+            } else {
+                throw new DatabaseException('No model file was found', ExecptionEnum::MODEL_NOT_FOUND);
             }
+
+            if(!$this->_model)
+                throw new DatabaseException('No valid model was found', ExecptionEnum::MODEL_NOT_FOUND);
 
             $this->_table = $this->_model->tableName();
 
@@ -117,7 +126,7 @@ namespace  Showcase\Framework\Database {
          */
         public function table($name){
             if(empty($name))
-                return null;
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
             $this->initPDO();
             $this->_table = $name;
             return $this;
@@ -130,18 +139,21 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function select(array $columns=array()){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
 
-                $this->_query = "SELECT ";
-
+            $this->_query = "SELECT ";
             if(!empty($columns) && is_null($this->_model)){
                 foreach($columns as $col)
                 $this->_query .= " $col,";
                 
                 $this->_query = substr($this->_query, 0, -1);
-            }else
-            $this->_query .= " * ";
+            } else {
+                $this->_query .= " * ";
+            }
 
             $this->_query .= " FROM " . "`" . $this->_table . "`";
 
@@ -155,8 +167,11 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function delete(){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             $this->_query = "DELETE ";
             $this->_query .= " FROM " . "`" . $this->_table . "`";
@@ -171,8 +186,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function insert(array $columns){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($columns))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($columns))
+                throw new DatabaseException('No valid columns were giving to the insert', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             $this->_query = "INSERT INTO ";
 
@@ -204,8 +225,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function update(array $columns){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($columns))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($columns))
+                throw new DatabaseException('No valid columns were giving to the update', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             $this->_query = "UPDATE ";
 
@@ -247,8 +274,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function raw($query){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($query))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($query))
+                throw new DatabaseException('No valid query was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             $this->_query .= $query;
             return $this;
@@ -263,8 +296,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function where($column, $value, $condition="="){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($column))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($columns))
+                throw new DatabaseException('No valid columns were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             if(!strpos($this->_query, "WHERE"))
                 $this->_query .= " WHERE ";
@@ -292,8 +331,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function orWhere($column, $value, $condition="="){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($column))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($columns))
+                throw new DatabaseException('No valid columns were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             if(!strpos($this->_query, "WHERE"))
                 $this->_query .= " WHERE ";
@@ -319,8 +364,14 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function limit($limit){
-            if(empty($this->_table) || is_null(self::$_instance) || empty($limit))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($limit))
+                throw new DatabaseException('No valid limit was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             if(!is_numeric($limit))
                 return $this;
@@ -337,8 +388,12 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function count($column="*"){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
             if (strpos($this->_query, "SELECT") !== false) {
                 $search = "#(SELECT).*?(FROM)#";
                 $replace = '$1' . " COUNT($column) " . '$2';
@@ -353,8 +408,12 @@ namespace  Showcase\Framework\Database {
          * @return \Showcase\Framework\Database\DB
          */
         public function distinct($column=""){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
             if(strpos($this->_query, "SELECT") !== false)
                 $this->_query = str_replace("SELECT", "SELECT DISTINCT $column", $this->_query);
             return $this;
@@ -376,6 +435,8 @@ namespace  Showcase\Framework\Database {
                     }
                 }
             }
+
+            return $this;
         }
 
         /**
@@ -395,9 +456,12 @@ namespace  Showcase\Framework\Database {
          * @return object
          */
         public function first(){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
-
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+                
             $this->soft();
                 
             if(!strpos($this->_query, "LIMIT"))
@@ -438,8 +502,12 @@ namespace  Showcase\Framework\Database {
          * @return object
          */
         public function run(){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+                
             $data = array();
             $db_type = VarLoader::env('DB_TYPE');
             switch(strtolower($db_type)){
@@ -482,8 +550,12 @@ namespace  Showcase\Framework\Database {
          * @return array
          */
         public function get(){
-            if(empty($this->_table) || is_null(self::$_instance))
-                return null;
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+                
             //check for soft delete
             $this->soft();
             $data = array();

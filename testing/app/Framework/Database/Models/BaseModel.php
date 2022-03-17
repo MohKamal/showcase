@@ -169,7 +169,11 @@ namespace  Showcase\Framework\Database\Models {
          */
         public function __call($name, $arguments)
         {
-            return call_user_func($this->{$name}, $arguments);
+            try {
+                return call_user_func($this->{$name}, $arguments);
+            }catch(\Exception $e) {
+                throw new ModelException($e->getMessage(), ExecptionEnum::CUSTOM);
+            }
         }
 
         /**
@@ -238,6 +242,9 @@ namespace  Showcase\Framework\Database\Models {
          */
         public function save(){
             $class_vars = get_object_vars($this);
+            if(empty($class_vars)) {
+                throw new ModelException('No property or method was found for ' . $this->className(), ExecptionEnum::NO_PROPERTY_FOUND);
+            }
             if(empty($this->{$this->idDetails["name"]})){
                 if(array_key_exists('created_at', $class_vars) && array_key_exists('updated_at', $class_vars)){
                     $this->created_at = date("Y-m-d H:i:s");
@@ -287,6 +294,9 @@ namespace  Showcase\Framework\Database\Models {
          */
         public function delete(){
             $class_vars = get_object_vars($this);
+            if(empty($class_vars)) {
+                throw new ModelException('No property or method was found for ' . $this->className(), ExecptionEnum::NO_PROPERTY_FOUND);
+            }
             if (array_key_exists("deleted_at", $class_vars)){
                 $this->deleted_at = date("Y-m-d H:i:s");
                 $this->active = 0;

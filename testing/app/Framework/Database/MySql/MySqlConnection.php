@@ -3,6 +3,8 @@ namespace  Showcase\Framework\Database\MySql {
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\IO\Debug\Log;
     use \Showcase\Framework\Database\Interfaces\DatabaseConnection;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
 
     /**
      * MySql connnection
@@ -33,7 +35,8 @@ namespace  Showcase\Framework\Database\MySql {
                 }
                 return $this->pdo;
             } catch(\PDOException $e) {
-                Log::print("PDOException MySql : MySqlConnection.php line 35 \n => " . $e->getMessage());
+                throw new GeneralException("PDOException MySql :  " . $e->getMessage(), ExecptionEnum::ERROR_DATABASE_CONNECTION);
+                // Log::print("PDOException MySql : MySqlConnection.php line 35 \n => " . $e->getMessage());
             }
             return null;
         }

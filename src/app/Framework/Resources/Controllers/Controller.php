@@ -7,6 +7,8 @@ namespace  Showcase\Controllers{
     use \Showcase\Framework\HTTP\Gards\Auth;
     use \Showcase\Framework\HTTP\Routing\Request;
     use \Showcase\Framework\Database\DB;
+    use \Showcase\Framework\HTTP\Exceptions\GeneralException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
 
     class NameController extends BaseController{
 
@@ -31,8 +33,8 @@ namespace  Showcase\Controllers{
          */
         static function store(Request $request){
             if(Validator::validate($request->get(), ['email', 'password'])){
-                    // email and password found
-                    return self::response()->redirect('/'); 
+                // email and password found
+                throw new StorageException('email and password found', GeneralException::CUSTOM);
             }
             return self::response()->redirect('/create', 'please fill all inputs', 'error'); 
         }

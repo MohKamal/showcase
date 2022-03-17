@@ -12,5 +12,6 @@ namespace Showcase\Framework\HTTP\Exceptions{
         const NULL_VALUE = 4;
         const ERROR_DATABASE_CONNECTION = 5;
         const DATABASE_QUERY_ERROR = 6;
+        const FILE_NOT_FOUND = 7;
     }
 }

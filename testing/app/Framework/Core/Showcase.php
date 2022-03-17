@@ -8,6 +8,8 @@ namespace  Showcase\Framework\Core{
     use \Showcase\Framework\Database\Wrapper;
     use \Showcase\Framework\Initializer\VarLoader;
     use \Showcase\Framework\Core\RouteInitializer;
+    use \Showcase\Framework\HTTP\Exceptions\GeneralException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
 
     class Showcase {
         /**

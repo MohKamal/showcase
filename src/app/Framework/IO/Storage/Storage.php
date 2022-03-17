@@ -4,6 +4,9 @@ namespace  Showcase\Framework\IO\Storage{
     use \Showcase\Framework\HTTP\Links\URL;
     use \Showcase\Framework\Utils\Utilities;
     use \Showcase\Framework\IO\Debug\Log;
+    use \Showcase\Framework\HTTP\Exceptions\StorageException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
+
     /**
      * Manage the files storage
      */
@@ -22,7 +25,7 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public static function folder($name){
             if(empty($name))
-                return null;
+                throw new StorageException('No folder name was giving', ExecptionEnum::NULL_VALUE);
 
             $_instance = new self;
             $_instance->_rootFolder = dirname(__FILE__) . '/../../../../storage/';
@@ -47,7 +50,7 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public static function resources($name){
             if(empty($name))
-                return null;
+                throw new StorageException('No folder name was giving', ExecptionEnum::NULL_VALUE);
 
             $_instance = new self;
             $_instance->_rootFolder = dirname(__FILE__) . '/../../../../resources/';
@@ -138,8 +141,11 @@ namespace  Showcase\Framework\IO\Storage{
          * @return boolean
          */
         public function put($filename, $content){
-            if(empty($filename) || empty($content))
-                return null;
+            if(empty($filename))
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+            if(empty($content))
+                throw new StorageException('No content was giving', ExecptionEnum::NULL_VALUE);
+
             $file = $this->_currentFolder . $filename;
             if(!file_put_contents($file, $content))
                 return false;
@@ -154,8 +160,11 @@ namespace  Showcase\Framework\IO\Storage{
          * @return boolean
          */
         public function append($filename, $content) {
-            if(empty($filename) || empty($content))
-                return null;
+            if(empty($filename))
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+            if(empty($content))
+                throw new StorageException('No content was giving', ExecptionEnum::NULL_VALUE);
+                
             $file = $this->_currentFolder . $filename;
             if(!file_put_contents($file, $content, FILE_APPEND))
                 return false;
@@ -170,7 +179,7 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function get($filename){
             if(empty($filename))
-                return null;
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
 
             if(!file_exists($this->_currentFolder . $filename))
                 return false;
@@ -186,7 +195,7 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function exists($filename){
             if(empty($filename))
-                return null;
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
             return file_exists($this->_currentFolder . $filename);
         }
 
@@ -198,7 +207,7 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function download($filename){
             if(empty($filename))
-                return null;
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
             $file = $this->_currentFolder . $filename;
             if (file_exists($file)) {
                 while (ob_get_level()) {
@@ -226,8 +235,12 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function copy($filename, $newname){
-            if(empty($filename) || empty($newname))
-                return null;
+            if(empty($filename))
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+                
+            if(empty($newname))
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+
             $file = $this->_rootFolder . $filename;
             if(!file_exists($file))
                 return false;
@@ -243,8 +256,12 @@ namespace  Showcase\Framework\IO\Storage{
          * @return mixed
          */
         public function move($filename, $newname){
-            if(empty($filename) || empty($newname))
-                return null;
+            if(empty($filename))
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+                
+            if(empty($newname))
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+
             $file = $this->_rootFolder . $filename;
             if(!file_exists($file))
                 return false;
@@ -261,7 +278,8 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function remove($filename){
             if(empty($filename))
-                return null;
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+
             $file = $this->_currentFolder . $filename;
             if(!file_exists($file))
                 return false;
@@ -277,13 +295,13 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function url($filename) {
             if(empty($filename))
-                return null;
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
 
             $currentFile = $this->_currentFolder . $filename;
             $folder = $this->_rootFolder . "downloads/";
             $toFile = $folder . basename($filename);
             if(!file_exists($currentFile))
-                return false;
+                throw new StorageException('No file was found on ' . $currentFile, ExecptionEnum::FILE_NOT_FOUND);
 
             if ($currentFile !== $toFile) {
                 if (!file_exists($folder)) {
@@ -296,7 +314,7 @@ namespace  Showcase\Framework\IO\Storage{
             }
 
             if(!file_exists($toFile))
-                return false;
+                throw new StorageException('No file was found on ' . $toFile, ExecptionEnum::FILE_NOT_FOUND);
             $base = URL::base();
             if(Utilities::endsWith($base, '/'))
                 $base = substr($base, 0, -1);
@@ -311,13 +329,13 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function urlFromPath($path) {
             if(empty($path))
-                return null;
+                throw new StorageException('No path was giving', ExecptionEnum::NULL_VALUE);
 
             $currentFile = $path;
             $folder = $this->_rootFolder . "downloads/";
             $toFile = $folder . basename($path);
             if(!file_exists($currentFile))
-                return false;
+                throw new StorageException('No file was found on ' . $currentFile, ExecptionEnum::FILE_NOT_FOUND);
 
             if ($currentFile !== $toFile) {
                 if (!file_exists($folder)) {
@@ -330,7 +348,7 @@ namespace  Showcase\Framework\IO\Storage{
             }
 
             if(!file_exists($toFile))
-                return false;
+                throw new StorageException('No file was found on ' . $toFile, ExecptionEnum::FILE_NOT_FOUND);
             $base = URL::base();
             if(Utilities::endsWith($base, '/'))
                 $base = substr($base, 0, -1);
@@ -345,11 +363,12 @@ namespace  Showcase\Framework\IO\Storage{
          */
         public function path($filename, $verify=true) {
             if(empty($filename))
-                return null;
+                throw new StorageException('No file name was giving', ExecptionEnum::NULL_VALUE);
+
             $file = $this->_currentFolder . "/$filename";
             if ($verify) {
                 if (!file_exists($file)) {
-                    return false;
+                    throw new StorageException('No file was found on ' . $file, ExecptionEnum::FILE_NOT_FOUND);
                 }
             }
             return $file;

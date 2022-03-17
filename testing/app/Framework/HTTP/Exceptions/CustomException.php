@@ -151,11 +151,25 @@ namespace Showcase\Framework\HTTP\Exceptions{
          * @return array $line to be colored and $code to be displayed
          */
         private function getFileCode() {
-            $lines = file($this->file);
+            $firstTrace = $this->getTrace()[0];
+            $file = $this->file;
+            $fileLine = $this->line;
+            if (isset($firstTrace['file'])) {
+                if (file_exists($firstTrace['file'])) {
+                    $file = $firstTrace['file'];
+                    if(isset($firstTrace['line']))
+                        $fileLine = intval($firstTrace['line']);
+                    else{
+                        $file = $this->file;
+                    }
+                }
+            }
+
+            $lines = file($file);
             $start = 0;
-            if($this->line > 10)
-                $start = $this->line - 10;
-            $end = $this->line + 10;
+            if($fileLine > 10)
+                $start = $fileLine - 10;
+            $end = $fileLine + 10;
             if($end > count($lines))
                 $end = count($lines);
             $store = [];
@@ -163,7 +177,7 @@ namespace Showcase\Framework\HTTP\Exceptions{
             $lineNumber = 0;
             for($i = $start-1; $i< $end-1; $i++) {
                 $store[] = ($i + 1) . '. ' . $lines[$i];
-                if($i+1 == $this->line)
+                if($i+1 == $fileLine)
                     $found = true;
                 if(!$found)
                     $lineNumber++;

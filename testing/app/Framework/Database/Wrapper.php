@@ -10,6 +10,8 @@ namespace  Showcase\Framework\Database {
     use \Showcase\Framework\Database\Config\Table;
     use \Showcase\Framework\Database\Seeding\Seeder;
     use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
     
     class Wrapper{
 
@@ -36,13 +38,15 @@ namespace  Showcase\Framework\Database {
             switch(strtolower($this->type)){
                 case 'sqlite':
                     $this->pdo = (new SQLiteConnection())->connect();
-                    if ($this->pdo == null)
-                        Log::print("SQLite Error : Wrapper.php 38 line \n Whoops, could not connect to the SQLite database!");
+                    if ($this->pdo == null) {
+                        throw new DatabaseException('SQLite Error: Whoops, could not connect to the SQLite database!', ExecptionEnum::ERROR_DATABASE_CONNECTION);
+                    }
                 break;
                 case 'mysql':
                     $this->pdo = (new MySqlConnection())->connect();
-                    if ($this->pdo == null)
-                        Log::print("MySql Error : Wrapper.php 43 line \n Whoops, could not connect to the MySql database!");
+                    if ($this->pdo == null) {
+                        throw new DatabaseException('MySql Error: Whoops, could not connect to the SQLite database!', ExecptionEnum::ERROR_DATABASE_CONNECTION);
+                    }
                 break;
             }
         }
