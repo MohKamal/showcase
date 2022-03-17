@@ -1,262 +1,595 @@
 <?php
-namespace  Showcase\Framework\HTTP\Gards{
-    
-    use \Showcase\Framework\HTTP\Gards\IAuth;
-    use \Showcase\Models\User;
+namespace  Showcase\Framework\Database {
+    use \Showcase\Framework\Database\Wrapper;
     use \Showcase\Framework\IO\Debug\Log;
-    use \Showcase\Framework\Session\Session;
-    use \Showcase\Framework\Session\Cookie;
-    use \Showcase\Framework\Database\DB;
-    
-    /**
-     * 
-     * The Base controller with the basic includes
-     * 
-     */
-    class Auth implements IAuth{
-        
-        // current user email if connected
-        static $login_column = 'email';
+    use \Showcase\Framework\Database\SQLite\SQLiteTable;
+    use \Showcase\Framework\Database\MySql\MySqlTable;
+    use \Showcase\Framework\Database\SQLite\SQLiteConnection;
+    use \Showcase\Framework\Database\MySql\MySqlConnection;
+    use \Showcase\Framework\Database\Config\Column;
+    use \Showcase\Framework\Initializer\VarLoader;
+    use \Showcase\Framework\HTTP\Exceptions\DatabaseException;
+    use \Showcase\Framework\HTTP\Exceptions\ExecptionEnum;
 
-        // expiring time for login user
-        static $expiring_time = 3600;
+    class DB extends Wrapper{
 
-        /**
-         * Set the column to login with
-         * @param string $column name
-         */
-        public static function loginColumn($column='email'){
-            self::$login_column = $column;
+        private $_pdo = null;
+        private static $_instance = null;
+        private $_table = '';
+        private $_query = '';
+        private $_model = null;
+        private $_withTrash = false;
+
+        public function __construct(){
+            parent::__construct();
+            $this->Initialize();
+        }
+
+        public static function factory(){
+            self::$_instance = new self;
+            return self::$_instance;
         }
 
         /**
-         * Set the expiring time for a user
+         * Get the current made query
+         * @return string $query
          */
-        public static function expiringLogin($time=3600){
-            if($time <= 0)
-                self::$expiring_time = 2147483647;
+        public function getQuery() {
+            return $this->_query;
+        }
+
+        /**
+         * Execute a custom query
+         * @param string $query query to execute
+         */
+        public function query($query){
+            if(empty($query))
+                throw new DatabaseException('No valid query was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            $this->_query = $query;
+            return $this;
+        }
+
+        /**
+         * Init the PDO object for the database
+         */
+        private function initPDO(){
+            $this->_table = '';
+            $this->_query = '';
+            $this->_model = null;
+            $db_type = VarLoader::env('DB_TYPE');
+            switch(strtolower($db_type)){
+                case 'sqlite':
+                    $pdo = (new SQLiteConnection())->connect();
+                    if ($pdo == null){
+                        Log::print("SQLite Error : DB.php 320 line \n Whoops, could not connect to the SQLite database!");
+                        return null;
+                    }
+                    if ($this->_pdo === null) {
+                        $this->_pdo = $pdo;
+                    }
+                break;
+                case 'mysql':
+                    $pdo = (new MySqlConnection())->connect();
+                    if ($pdo == null) {
+                        Log::print("MySql Error : DB.php 328 line \n Whoops, could not connect to the MySql database!");
+                        return null;
+                    }
+                    if ($this->_pdo === null) {
+                        $this->_pdo = $pdo;
+                    }
+                break;
+            }
+        }
+
+        /**
+         * Get the table name and model object to generate the query
+         * also init the PDO object
+         * @param string $name Model name
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function model($name){
+            if(empty($name))
+                throw new DatabaseException('No valid model name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            $this->initPDO();
+            //get model and migration
+            $m_file = dirname(__FILE__) . '/../../Models/' . $name . '.php';
+            if (file_exists($m_file)) {
+                require_once $m_file;
+                // get the file name of the current file without the extension
+                // which is essentially the class name
+                $class = '\Showcase\Models\\' . basename($m_file, '.php');
+                if (class_exists($class)) {
+                    $this->_model = new $class;
+                } else {
+                    throw new DatabaseException('No model class was found', ExecptionEnum::MODEL_NOT_FOUND);
+                }
+            } else {
+                throw new DatabaseException('No model file was found', ExecptionEnum::MODEL_NOT_FOUND);
+            }
+
+            if(!$this->_model)
+                throw new DatabaseException('No valid model was found', ExecptionEnum::MODEL_NOT_FOUND);
+
+            $this->_table = $this->_model->tableName();
+
+            return $this;
+        }
+
+        /**
+         * Get the table name to generate the query
+         * also init the PDO object
+         * @param string $name table name
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function table($name){
+            if(empty($name))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            $this->initPDO();
+            $this->_table = $name;
+            return $this;
+        }
+
+        /**
+         * Get the select columns to add to query
+         * @param array $columns names
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function select(array $columns=array()){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            $this->_query = "SELECT ";
+            if(!empty($columns) && is_null($this->_model)){
+                foreach($columns as $col)
+                $this->_query .= " $col,";
+                
+                $this->_query = substr($this->_query, 0, -1);
+            } else {
+                $this->_query .= " * ";
+            }
+
+            $this->_query .= " FROM " . "`" . $this->_table . "`";
+
+            return $this;
+        }
+
+        /**
+         * Get the delete to query
+         * @param array $columns names
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function delete(){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            $this->_query = "DELETE ";
+            $this->_query .= " FROM " . "`" . $this->_table . "`";
+
+            return $this;
+        }
+
+        /**
+         * Set the columns to update to query
+         * @param array $columns names and new values
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function insert(array $columns){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($columns))
+                throw new DatabaseException('No valid columns were giving to the insert', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            $this->_query = "INSERT INTO ";
+
+            $this->_query .= "`" . $this->_table . "` (";
+
+            foreach($columns as $key => $value){
+                $this->_query .= "$key,";
+            }
+            $this->_query = substr($this->_query, 0, -1);
+            $this->_query .= ') VALUES (';
+            foreach($columns as $key => $value){
+                if(is_null($value))
+                    $this->_query .= "NULL,";
+                else if(is_numeric($value))
+                    $this->_query .= $this->filterInput($value) . ",";
+                else if(is_string($value))
+                    $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
+            }
+            $this->_query = substr($this->_query, 0, -1);
+            $this->_query .= ')';
+
+            return $this;
+        }
+
+        /**
+         * Set the columns to update to query
+         * @param array $columns names and new values
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function update(array $columns){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($columns))
+                throw new DatabaseException('No valid columns were giving to the update', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            $this->_query = "UPDATE ";
+
+            $this->_query .= "`" . $this->_table . "` SET ";
+
+            foreach($columns as $key => $value){
+                $this->_query .= " `$key`=";
+                if(is_numeric($value))
+                    $this->_query .= $value . ",";
+                else if(is_string($value))
+                    $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "',";
+            }
+
+            $this->_query = substr($this->_query, 0, -1);
+
+            return $this;
+        }
+
+        function filterInput($content)
+        {
+            $content = trim($content);
+            $content = stripslashes($content);
+            return $content;
+        }
+
+        //filter for viewing data
+        function filterOutput($content)
+        {
+            $content = htmlentities($content, ENT_NOQUOTES);
+            $content = nl2br($content, false);
+
+            return $content;
+        }
+
+        /**
+         * Add a raw sql query
+         * @param string $query sql
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function raw($query){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($query))
+                throw new DatabaseException('No valid query was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            $this->_query .= $query;
+            return $this;
+        }
+
+        /**
+         * Add where condition to the query
+         * @param string $column names
+         * @param string $value to test
+         * @param string $condition to test with
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function where($column, $value, $condition="="){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($column))
+                throw new DatabaseException('No valid column were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(!strpos($this->_query, "WHERE"))
+                $this->_query .= " WHERE ";
             else
-                self::$expiring_time = $time;
-        }
-
-        /**
-         * Login function  with email and password, classic function
-         * @param String
-         * @return Boolean
-         */
-        public static function login($email, $password, $remember=false){
-            if (empty($email) || empty($password)) {
-                Log::print("Auth: Trying to log with empty coordinates");
-                return false;
-            }
-
-            $user = DB::factory()->model('User')->select()->where(self::$login_column, $email)->first();
-
-            if ($user == null) {
-                Log::print("Auth: No user was found with " . self::$login_column . " " . $email);
-                return false;
-            }
+                $this->_query .= " AND ";
             
-            if($user->validHash($password, $user->password)){
-                Cookie::store('ses_user_id', $user->id, ['expires' => time() + self::$expiring_time]);
-                Cookie::store('ses_user_email', $user->email, ['expires' => time() + self::$expiring_time]);
-                Cookie::store('ses_user_name', $user->username, ['expires' => time() + self::$expiring_time]);
-                if($remember){
-                    $token = self::generateRandomString(36);
-                    DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
-                    Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
-                    Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
-                }
+            $this->_query .= " `$column`$condition";
 
-                Log::print("Auth: user connected " . $email);
-                return true;
-            }
-            Log::print("Auth: Wrong password for " . $email);
-            return false;
+            if(is_null($value))
+                $this->_query .= "NULL ";
+            else if(is_numeric($value))
+                $this->_query .= "$value ";
+            else if(is_string($value))
+                $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
+
+            return $this;
         }
 
-        /**
-         * Login function with only email
-         * @param String
-         * @return Boolean
+                /**
+         * Add where condition to the query
+         * @param string $column names
+         * @param string $value to test
+         * @param string $condition to test with
+         * 
+         * @return \Showcase\Framework\Database\DB
          */
-        public static function loginWithEmail($email, $remember=false){
-            if (empty($email)) {
-                Log::print("Auth: Trying to log with empty coordinates");
-                return false;
-            }
-
-            $user = DB::factory()->model('User')->select()->where('email', $email)->first();
-
-            if ($user == null) {
-                Log::print("Auth: No user was found with email " . $email);
-                return false;
-            }
+        public function orWhere($column, $value, $condition="="){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
             
-            Cookie::store('ses_user_id', $user->id, ['expires' => time() + 3600]);
-            Cookie::store('ses_user_email', $user->email, ['expires' => time() + 3600]);
-            Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
 
-            if($remember){
-                $token = self::generateRandomString(36);
-                DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
-                Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
-                Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
-            }
+            if(empty($column))
+                throw new DatabaseException('No valid column were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
 
-            Log::print("Auth: user connected " . $email);
-            return true;
-        }
-
-        /**
-         * Login function with only email
-         * @param String
-         * @return Boolean
-         */
-        public static function loginWithId($id, $remember=false){
-            if (empty($id)) {
-                Log::print("Auth: Trying to log with empty coordinates");
-                return false;
-            }
-
-            $user = DB::factory()->model('User')->select()->where('id', $id)->first();
-
-            if ($user == null) {
-                Log::print("Auth: No user was found with id " . $id);
-                return false;
-            }
+            if(!strpos($this->_query, "WHERE"))
+                $this->_query .= " WHERE ";
+            else
+                $this->_query .= " OR ";
             
-            Cookie::store('ses_user_id', $user->id, ['expires' => time() + 3600]);
-            Cookie::store('ses_user_email', $user->email, ['expires' => time() + 3600]);
-            Cookie::store('ses_user_name', $user->username, ['expires' => time() + 3600]);
+            $this->_query .= " `$column`$condition";
 
-            if($remember){
-                $token = self::generateRandomString(36);
-                DB::factory()->table('remembers')->insert(['user_id' => $user->id, 'token' => $token, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")])->run();
-                Cookie::store('ses_user_id', $user->id, ['expires' => strtotime( '+1 year' )]);
-                Cookie::store('ses_user_token', $token, ['expires' => strtotime( '+1 year' )]);
+            if(is_null($value))
+                $this->_query .= "NULL ";
+            else if(is_numeric($value))
+                $this->_query .= "$value ";
+            else if(is_string($value))
+                $this->_query .= "'" . str_replace("'", "", $this->filterInput($value)) . "' ";
+            
+            return $this;
+        }
+
+        /**
+         * Add a limit to the query
+         * @param string $limit number
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function limit($limit){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(empty($limit))
+                throw new DatabaseException('No valid limit was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if(!is_numeric($limit))
+                return $this;
+                
+            if(!strpos($this->_query, "LIMIT"))
+                $this->_query .= " LIMIT $limit";
+            
+            return $this;
+        }
+
+        /**
+         * Get count
+         * 
+         * @return \Showcase\Framework\Database\DB
+         */
+        public function count($column="*"){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+
+            if (strpos($this->_query, "SELECT") !== false) {
+                $search = "#(SELECT).*?(FROM)#";
+                $replace = '$1' . " COUNT($column) " . '$2';
+                $this->_query = preg_replace($search, $replace, $this->_query);
             }
-
-            Log::print("Auth: user connected " . $user->email);
-            return true;
+            return $this;
         }
 
         /**
-         * Log out user if login
-         * @return boolean 
+         * Add Destinct condition
+         * 
+         * @return \Showcase\Framework\Database\DB
          */
-        public static function logout(){
-            if(self::check()){
-                DB::factory()->table('remembers')->delete()->where('user_id', Cookie::retrieve('ses_user_id'))->run();
-                Cookie::clear('ses_user_id');
-                Cookie::clear('ses_user_email');
-                Cookie::clear('ses_user_name');
-                Cookie::clear('ses_user_token');
-                if(!self::check())
-                    return true;
-            }
+        public function distinct($column=""){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
 
-            return false;
+            if(strpos($this->_query, "SELECT") !== false)
+                $this->_query = str_replace("SELECT", "SELECT DISTINCT $column", $this->_query);
+            return $this;
         }
 
         /**
-         * Check if auth is used or not
-         * @return boolean
+         * Check for soft delete columns to add/remove them from the result
          */
-        public static function checkAuth(){
-            $config_file = dirname(__FILE__) . "/Config/config.json";
-            $jsonString = file_get_contents($config_file);
-            $data = json_decode($jsonString, true);
-            return filter_var(strtolower($data["auth"]), FILTER_VALIDATE_BOOLEAN);
-        }
-        
+        private function soft(){
+            if(!is_null($this->_model)){
+                if(!$this->_withTrash){
+                    if (property_exists($this->_model, 'deleted_at')) {
+                        if(!strpos($this->_query, "WHERE"))
+                            $this->_query .= " WHERE ";
+                        else
+                            $this->_query .= " AND ";
 
-        /**
-         * Check if the user is connect
-         * @return Boolean
-         */
-        public static function check(){
-            if(!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id')))
-                return true;
-            return false;
-        }
-
-        /**
-         * Check if the user is not connected
-         * @return Boolean
-         */
-        public static function guest(){
-            if(empty(Cookie::retrieve('ses_user_id')) && is_null(Cookie::retrieve('ses_user_id')))
-                return true;
-            return false;
-        }
-
-        /**
-         * Get the user instance
-         * @return \Showcase\Models\User
-         */
-        public static function user(){
-            if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
-                $user = DB::factory()->model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
-                if (!is_null($user)) {
-                    return $user;
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Get the user name
-         * @return String
-         */
-        public static function username($col='email'){
-            if(self::check()){
-                $user = DB::factory()->model('User')->select()->where('id', Cookie::retrieve('ses_user_id'))->first();
-                if($user != null)
-                    return $user->$col;
-            }
-            return null;
-        }
-
-        /**
-         * Check if the user want to be rememberd
-         */
-        public static function checkRemember(){
-            if (!empty(Cookie::retrieve('ses_user_id')) && !is_null(Cookie::retrieve('ses_user_id'))) {
-                if (!empty(Cookie::retrieve('ses_user_token')) && !is_null(Cookie::retrieve('ses_user_token'))) {
-                    $token = DB::factory()->table('remembers')->select()->where('user_id', Cookie::retrieve('ses_user_id'))->where('token', Cookie::retrieve('ses_user_token'))->first();
-                    if(!empty($token) && !is_null($token)){
-                        Cookie::clear('ses_user_id');
-                        Cookie::clear('ses_user_token');
-                        self::loginWithId(Cookie::retrieve('ses_user_id'), true);
-                        return true;
+                        $this->_query .= "`deleted_at` IS null AND `active`=1";
                     }
                 }
             }
-            return false;
+
+            return $this;
         }
 
         /**
-         * Generate a string as token
-         * @param int $length token lenght
+         * Add trashed rows, if soft delete is activated
          * 
-         * @return string
+         * @return \Showcase\Framework\Database\DB
          */
-       private static function generateRandomString($length = 10) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        public function withTrash(){
+            $this->_withTrash = true;
+
+            return $this;
         }
-        return $randomString;
-    }
 
         /**
-         * Include the routes
+         * Get only the first result, or a null
+         * 
+         * @return object
          */
-        public static function routes($router){
-            include 'Config/Route/Web.php';
+        public function first(){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+                
+            $this->soft();
+                
+            if(!strpos($this->_query, "LIMIT"))
+                $this->_query .= " LIMIT 1";
+            
+            $data = array();
+            $db_type = VarLoader::env('DB_TYPE');
+            switch(strtolower($db_type)){
+                case 'sqlite':
+                    $get = new SQLiteTable($this->_pdo);
+                    $data = $get->query($this->_query);
+                break;
+                case 'mysql':
+                    $get = new MySqlTable($this->_pdo);
+                    $data = $get->query($this->_query);
+                break;
+            }
+
+            if(!empty($data)){
+                if(is_null($this->_model))
+                    return $data[0];
+                $class = get_class($this->_model);
+                $obj = new $class();
+                $class_vars = get_object_vars($obj);
+                foreach($class_vars as $key => $value){
+                    if (array_key_exists($key, $class_vars) && array_key_exists($key, $data[0]))
+                        $obj->{$key} = $this->filterOutput($data[0][$key]);
+                }
+                return $obj;
+            }
+
+            return null;
+        }
+
+               /**
+         * Get only the first result, or a null
+         * 
+         * @return object
+         */
+        public function run(){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+                
+            $data = array();
+            $db_type = VarLoader::env('DB_TYPE');
+            switch(strtolower($db_type)){
+                case 'sqlite':
+                    $get = new SQLiteTable($this->_pdo);
+                    $data = $get->query($this->_query);
+                break;
+                case 'mysql':
+                    $get = new MySqlTable($this->_pdo);
+                    $data = $get->query($this->_query);
+                break;
+            }
+
+            if(!empty($data) && is_array($data)){
+                if(is_null($this->_model))
+                    return $data;
+                
+                $objects = array();
+                $class = get_class($this->_model);
+                foreach($data as $record){
+                    $obj = new $class();
+                    $class_vars = get_object_vars($obj);
+                    foreach($class_vars as $key => $value){
+                        if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
+                            $obj->{$key} = $this->filterOutput($record[$key]);
+                    }
+                    $objects[] =$obj;
+                }
+                return $objects;
+            }
+
+            return $data;
+        }
+
+        /**
+         * Get all results
+         * if a model is giving, a list of model objects are returned
+         * if not, an array of data is returned
+         * 
+         * @return array
+         */
+        public function get(){
+            if(empty($this->_table))
+                throw new DatabaseException('No valid table name was giving', ExecptionEnum::DATABASE_QUERY_ERROR);
+            
+            if(is_null(self::$_instance))
+                throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
+                
+            //check for soft delete
+            $this->soft();
+            $data = array();
+            $db_type = VarLoader::env('DB_TYPE');
+            switch(strtolower($db_type)){
+                case 'sqlite':
+                    $get = new SQLiteTable($this->_pdo);
+                    $data = $get->query($this->_query);
+                break;
+                case 'mysql':
+                    $get = new MySqlTable($this->_pdo);
+                    $data = $get->query($this->_query);
+                break;
+            }
+
+            if(!empty($data)){
+                if(is_null($this->_model))
+                    return $data;
+                
+                $objects = array();
+                $class = get_class($this->_model);
+                foreach($data as $record){
+                    $obj = new $class();
+                    $class_vars = get_object_vars($obj);
+                    foreach($class_vars as $key => $value){
+                        if (array_key_exists($key, $class_vars) && array_key_exists($key, $record))
+                            $obj->{$key} = $this->filterOutput($record[$key]);
+                    }
+                    $objects[] =$obj;
+                }
+                return $objects;
+            }
+
+            return array();
         }
     }
 }
