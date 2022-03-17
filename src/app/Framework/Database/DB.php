@@ -302,8 +302,8 @@ namespace  Showcase\Framework\Database {
             if(is_null(self::$_instance))
                 throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
 
-            if(empty($columns))
-                throw new DatabaseException('No valid columns were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
+            if(empty($column))
+                throw new DatabaseException('No valid column were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             if(!strpos($this->_query, "WHERE"))
                 $this->_query .= " WHERE ";
@@ -337,8 +337,8 @@ namespace  Showcase\Framework\Database {
             if(is_null(self::$_instance))
                 throw new DatabaseException('No valid DB object was found', ExecptionEnum::DATABASE_QUERY_ERROR);
 
-            if(empty($columns))
-                throw new DatabaseException('No valid columns were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
+            if(empty($column))
+                throw new DatabaseException('No valid column were giving to the where', ExecptionEnum::DATABASE_QUERY_ERROR);
 
             if(!strpos($this->_query, "WHERE"))
                 $this->_query .= " WHERE ";
