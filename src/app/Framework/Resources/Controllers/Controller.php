@@ -34,7 +34,7 @@ namespace  Showcase\Controllers{
         static function store(Request $request){
             if(Validator::validate($request->get(), ['email', 'password'])){
                 // email and password found
-                throw new StorageException('email and password found', GeneralException::CUSTOM);
+                throw new GeneralException('email and password found', ExecptionEnum::CUSTOM);
             }
             return self::response()->redirect('/create', 'please fill all inputs', 'error'); 
         }
