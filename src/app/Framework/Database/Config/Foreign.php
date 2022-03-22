@@ -16,7 +16,7 @@ namespace  Showcase\Framework\Database\Config {
         /**
          * @var string column name
          */
-        private $current_table_column_name = '';
+        public $current_table_column_name = '';
 
         /**
          * @var string table name
