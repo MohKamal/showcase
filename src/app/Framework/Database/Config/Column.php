@@ -234,8 +234,8 @@ namespace  Showcase\Framework\Database\Config {
          * @return \Framework\Database\Config\Column
          */
         public function default($value){
-            if(!$value)
-                throw new DatabaseException('No value was giving to the default index in the migration', ExecptionEnum::NULL_VALUE);
+            /*if(!$value)
+                throw new DatabaseException('No value was giving to the default index in the migration', ExecptionEnum::NULL_VALUE);*/
             array_push($this->options, "DEFAULT '" . $value . "'");
             return $this;
         }
