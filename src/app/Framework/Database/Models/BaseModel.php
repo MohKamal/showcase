@@ -113,7 +113,8 @@ namespace  Showcase\Framework\Database\Models {
                                     $setter = function ($arg) use ($foreign) {
                                         $foreignModel = $arg[0];
                                         $this->{$foreign->current_table_column_name} = $foreignModel->{$foreignModel->getIdName()};
-                                        $this->save();
+                                        if(!empty($this->{$this->idDetails["name"]}))
+                                            $this->save();
                                     };
                                 } else {
                                     $value = function () use ($foreign) {
