@@ -10,6 +10,7 @@ namespace  Showcase\Framework\HTTP\Routing {
     use \Showcase\Framework\HTTP\Gards\Auth;
     use \Showcase\Framework\Utils\Utilities;
     use \Showcase\Framework\Database\DB;
+    use \Showcase\Framework\Initializer\VarLoader;
 
     /**
      * More at : https://medium.com/the-andela-way/how-to-build-a-basic-server-side-routing-system-in-php-e52e613cf241
@@ -23,7 +24,8 @@ namespace  Showcase\Framework\HTTP\Routing {
             "GET",
             "POST",
             "PUT",
-            "DELETE"
+            "DELETE",
+            "OPTIONS"
         );
 
         public function __construct(IRequest $request)
@@ -32,8 +34,21 @@ namespace  Showcase\Framework\HTTP\Routing {
             $this->response = new Response();
         }
 
+        /**
+         * 
+         */
+        private function setHeadersForApi() {
+            if (filter_var(strtolower(VarLoader::env('API')), FILTER_VALIDATE_BOOLEAN)) {
+                header('Access-Control-Allow-Origin: *');
+                header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+                header("Access-Control-Allow-Headers: X-Requested-With");
+                header("Content-Type: application/x-www-form-urlencoded");
+            }
+        }
+
         public function __call($name, $args)
         {
+            $this->setHeadersForApi();
             if(count($args) < 3) {
                 $args[] = false;
             }
@@ -75,11 +90,41 @@ namespace  Showcase\Framework\HTTP\Routing {
             return $this->response->notFound();
         }
 
+        private function resolveOptionsRequest() {
+             // Allow from any origin
+             if (isset($this->request->httpOrigin)) {
+                // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
+                // you want to allow, and if so:
+                header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+                header('Access-Control-Allow-Credentials: true');
+                header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            }
+            
+            // Access-Control headers are received during OPTIONS requests
+            if ($this->request->requestMethod === 'OPTIONS') {
+                
+                if (isset($this->request->httpAccessControlRequestMethod))
+                    // may also be using PUT, PATCH, HEAD etc
+                    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+                
+                if (isset($this->request->httpAccessControlRequestHeaders))
+                    header("Access-Control-Allow-Headers: {$this->request->httpAccessControlRequestHeaders}");
+            
+                exit(0);
+            }
+        }
+
         /**
          * Resolves a route
          */
         public function resolve()
         {
+            /**
+             * Resolve the options request
+             * if the request is OPTIONS, it will exit(0)
+             */
+            $this->resolveOptionsRequest();
+
             /**
              * If Auth is activated
              * Need to check if the user is logged
