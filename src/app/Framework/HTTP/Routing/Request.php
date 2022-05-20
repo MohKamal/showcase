@@ -50,6 +50,12 @@ namespace  Showcase\Framework\HTTP\Routing{
             }
             if ($this->requestMethod == "POST" || $this->requestMethod == "PUT" || $this->requestMethod == "DELETE") {
                 $body = array();
+                if($this->contentType === "application/json") {
+                    $stringData = file_get_contents('php://input');
+                    $data = json_decode($stringData);
+                    return $data;
+                }
+                
                 foreach ($_POST as $key => $value) {
                     if (is_array($value)) {
                         $data = array();
