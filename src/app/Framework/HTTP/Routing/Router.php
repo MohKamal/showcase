@@ -173,20 +173,22 @@ namespace  Showcase\Framework\HTTP\Routing {
             }
 
             //Check for CSRF
-            if (strtoupper($this->request->requestMethod) === "POST"|| strtoupper($this->request->requestMethod) === "PUT" || strtoupper($this->request->requestMethod) === "DELETE") {
-                if (!isset($this->request->get()['CSRFName']) or !isset($this->request->get()['CSRFToken'])) {
-                    //trigger_error("No CSRFName found, probable invalid request.", E_USER_ERROR);
-                    Log::print("No CSRFName found, probable invalid request.");
-                    return $this->response->unauthorized();
-                }
-                $name = $this->request->get()['CSRFName'];
-                $token= $this->request->get()['CSRFToken'];
-                $csrf = new CSRF();
-                if (!$csrf->csrfguard_validate_token($name, $token)) {
-                    //throw new \Exception("Invalid CSRF token.");
-                    Log::print("Invalid CSRF token.");
-                    $this->response->unauthorized();
-                    return;
+            if(!filter_var(strtolower(VarLoader::env('NoCSRF')), FILTER_VALIDATE_BOOLEAN)) {
+                if (strtoupper($this->request->requestMethod) === "POST"|| strtoupper($this->request->requestMethod) === "PUT" || strtoupper($this->request->requestMethod) === "DELETE") {
+                    if (!isset($this->request->get()['CSRFName']) or !isset($this->request->get()['CSRFToken'])) {
+                        //trigger_error("No CSRFName found, probable invalid request.", E_USER_ERROR);
+                        Log::print("No CSRFName found, probable invalid request.");
+                        return $this->response->unauthorized();
+                    }
+                    $name = $this->request->get()['CSRFName'];
+                    $token= $this->request->get()['CSRFToken'];
+                    $csrf = new CSRF();
+                    if (!$csrf->csrfguard_validate_token($name, $token)) {
+                        //throw new \Exception("Invalid CSRF token.");
+                        Log::print("Invalid CSRF token.");
+                        $this->response->unauthorized();
+                        return;
+                    }
                 }
             }
 
