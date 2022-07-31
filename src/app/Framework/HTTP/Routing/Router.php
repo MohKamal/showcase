@@ -166,6 +166,9 @@ namespace  Showcase\Framework\HTTP\Routing {
                     if ($no_auth) {
                         if (!Auth::checkRemember()) {
                             Session::store('backBeforeLogin', $this->request->requestUri);
+                            if(filter_var(strtolower(VarLoader::env('API')), FILTER_VALIDATE_BOOLEAN)) {
+                                $this->response->unauthorized();
+                            }
                             $this->response->redirect("/login");
                         }
                     }
